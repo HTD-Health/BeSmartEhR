@@ -1,23 +1,35 @@
 import logo from './logo.svg';
 import './App.css';
+import { fhirclient } from 'fhirclient/lib/types';
+
+
 
 function App() {
+
+  const fhirUrl = "https://launch.smarthealthit.org/v/r4/sim/eyJoIjoiMSIsImUiOiJlNDQzYWM1OC04ZWNlLTQzODUtOGQ1NS03NzVjMWI4ZjNhMzcifQ/fhir";
+  const audValue = "";
+
+  const client_id = "be-smart-ehr";
+  const client_secret = "clientSecretSuperSecret";
+
+  // GET /.well-known/smart-configuration HTTP/1.1
+
+  fhirclient.client_id = client_id;
+  fhirclient.client_secret = client_secret;
+  fhirclient.fhirUrl = fhirUrl;
+  //fhirclient.audValue
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <strong>BeSmartEhR</strong>
       </header>
+
+      <div className='App-body'>
+
+      </div>
+
     </div>
   );
 }
