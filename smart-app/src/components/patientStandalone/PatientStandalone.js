@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import React from "react";
 import jwt_decode from "jwt-decode";
 
-const ProviderStandalone = ({fhirClient}) => {
+const PatientStandalone = ({fhirClient}) => {
   const [patients, setPatients] = React.useState(null);
   const [practitioner, setPractitioner] = React.useState(null);
   const [scope, setScope] = React.useState(null);
@@ -54,4 +54,4 @@ const ProviderStandalone = ({fhirClient}) => {
     </div>
   );
 };
-export default ProviderStandalone;
+export default PatientStandalone;
