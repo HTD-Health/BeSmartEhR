@@ -1,35 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
-import { fhirclient } from 'fhirclient/lib/types';
+import "./App.css";
+import { useEffect } from "react";
+import React from "react";
 
+function App({ client }) {
+  const [patients, setPatients] = React.useState(null);
 
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-function App() {
-
-  const fhirUrl = "https://launch.smarthealthit.org/v/r4/sim/eyJoIjoiMSIsImUiOiJlNDQzYWM1OC04ZWNlLTQzODUtOGQ1NS03NzVjMWI4ZjNhMzcifQ/fhir";
-  const audValue = "";
-
-  const client_id = "be-smart-ehr";
-  const client_secret = "clientSecretSuperSecret";
-
-  // GET /.well-known/smart-configuration HTTP/1.1
-
-  fhirclient.client_id = client_id;
-  fhirclient.client_secret = client_secret;
-  fhirclient.fhirUrl = fhirUrl;
-  //fhirclient.audValue
-
+  const getData = async () => {
+    try {
+      const resp = await client.request("Patient")
+      setPatients(resp);
+      console.log(await client.request("/metadata"))
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <strong>BeSmartEhR</strong>
-      </header>
-
-      <div className='App-body'>
-
+      <strong>BeSmartEhR</strong>
+      <div>Logged as:</div>
+      <div >
+        {patients &&
+          patients.entry.map((patient) => (
+            <div key={patient.resource.id}>
+              <p>{patient.resource.id}</p>
+              <p>
+                {patient.resource.name[0].given[0]}{" "}
+                {patient.resource.name[0].family}
+              </p>
+            </div>
+          ))}
       </div>
-
     </div>
   );
 }
