@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import React from "react";
 import jwt_decode from "jwt-decode";
 
-const ProviderStandaloneScope = ({fhirClient}) => {
-    
+const ProviderStandalone = ({fhirClient}) => {
   const [patients, setPatients] = React.useState(null);
   const [practitioner, setPractitioner] = React.useState(null);
   const [scope, setScope] = React.useState(null);
@@ -12,7 +11,7 @@ const ProviderStandaloneScope = ({fhirClient}) => {
     getData();
     getUserDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fhirClient]);
 
   const getData = async () => {
     try {
@@ -56,4 +55,4 @@ const ProviderStandaloneScope = ({fhirClient}) => {
     </div>
   );
 };
-export default ProviderStandaloneScope;
+export default ProviderStandalone;
