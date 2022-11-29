@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 
 const PatientStandalone = ({fhirClient}) => {
   const [patients, setPatients] = React.useState(null);
-  const [practitioner, setPractitioner] = React.useState(null);
+  const [currentPatient, setCurrentPatient] = React.useState(null);
   const [scope, setScope] = React.useState(null);
 
   useEffect(() => {
@@ -30,13 +30,13 @@ const PatientStandalone = ({fhirClient}) => {
     const decoded = jwt_decode(token)
 
     const resp = await fhirClient.request(decoded.fhirUser)
-    setPractitioner(resp);
+    setCurrentPatient(resp);
   }
 
   return (
     <div className="App">
       <strong>BeSmartEhR</strong>
-      <div>Logged as: {practitioner && (practitioner.name[0].given[0] + " " + practitioner.name[0].family) }</div>
+      <div>Logged as: {currentPatient && (currentPatient.name[0].given[0] + " " + currentPatient.name[0].family) }</div>
       <div>scope: {scope}</div>
       <br/>
       <div >

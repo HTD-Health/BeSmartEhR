@@ -5,7 +5,7 @@ import PatientStandaloneWrapper from "./components/patientStandalone/PatientStan
 
 function App() {
   // PATIENT STANDALONE
-  return (<PatientStandaloneWrapper/>);
+  // return (<PatientStandaloneWrapper/>);
 
   // PROVIDER STANDALONE
   // eslint-disable-next-line no-unreachable
