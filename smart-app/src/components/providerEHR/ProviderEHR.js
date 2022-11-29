@@ -1,8 +1,7 @@
-import { useEffect } from "react";
-import React from "react";
 import jwt_decode from "jwt-decode";
+import React, { useEffect } from "react";
 
-const ProviderEHR = ({fhirClient}) => {
+const ProviderEHR = ({ fhirClient }) => {
   const [patients, setPatients] = React.useState(null);
   const [practitioner, setPractitioner] = React.useState(null);
   const [scope, setScope] = React.useState(null);
@@ -15,7 +14,7 @@ const ProviderEHR = ({fhirClient}) => {
 
   const getData = async () => {
     try {
-      const resp = await fhirClient.request("Patient")
+      const resp = await fhirClient.request("Patient");
       setPatients(resp);
     } catch (e) {
       console.log(e);
@@ -27,21 +26,23 @@ const ProviderEHR = ({fhirClient}) => {
     setScope(scope);
 
     const token = fhirClient.state.tokenResponse.id_token;
-    const decoded = jwt_decode(token)
+    const decoded = jwt_decode(token);
 
-    console.log(fhirClient)
-
-    const resp = await fhirClient.request(decoded.fhirUser)
+    const resp = await fhirClient.request(decoded.fhirUser);
     setPractitioner(resp);
-  }
+  };
 
   return (
     <div className="App">
       <strong>BeSmartEhR</strong>
-      <div>Logged as: {practitioner && (practitioner.name[0].given[0] + " " + practitioner.name[0].family) }</div>
+      <div>
+        Logged as:{" "}
+        {practitioner &&
+          practitioner.name[0].given[0] + " " + practitioner.name[0].family}
+      </div>
       <div>scope: {scope}</div>
-      <br/>
-      <div >
+      <br />
+      <div>
         {patients &&
           patients.entry.map((patient) => (
             <div key={patient.resource.id}>

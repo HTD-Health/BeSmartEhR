@@ -16,8 +16,11 @@ const ProviderEHRWrapper = () => {
     try {
       const client = await FHIR.oauth2.init({
         clientId: client_id,
-        scope: "launch/provider openid profile",
+        scope: "launch launch/provider openid profile",
       });
+
+      console.log(client);
+
       setClient(client);
     } catch (e) {
       setError(e)

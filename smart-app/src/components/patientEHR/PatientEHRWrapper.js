@@ -20,6 +20,8 @@ const PatientEHRWrapper = () => {
         clientSecret: client_secret,
         scope: "launch/patient openid profile",
       });
+
+      console.log(client);
       
       setClient(client);
     } catch (e) {
