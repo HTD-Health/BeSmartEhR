@@ -1,20 +1,22 @@
 import { useEffect } from "react";
 import React from "react";
 import jwt_decode from "jwt-decode";
+import FHIR from "fhirclient";
 
-const ProviderEHR = ({fhirClient}) => {
+const ProviderEHR = () => {
   const [patients, setPatients] = React.useState(null);
   const [practitioner, setPractitioner] = React.useState(null);
   const [scope, setScope] = React.useState(null);
 
   useEffect(() => {
     getData();
-    getUserDetails();
+    // getUserDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fhirClient]);
+  }, []);
 
   const getData = async () => {
     try {
+      const fhirClient = await FHIR.oauth2.ready()
       const resp = await fhirClient.request("Patient")
       setPatients(resp);
     } catch (e) {
@@ -23,9 +25,12 @@ const ProviderEHR = ({fhirClient}) => {
   };
 
   const getUserDetails = async () => {
+    const fhirClient = await FHIR.oauth2.ready()
+
     const scope = fhirClient.state.tokenResponse.scope;
     setScope(scope);
 
+    console.log(fhirClient.state)
     const token = fhirClient.state.tokenResponse.id_token;
     const decoded = jwt_decode(token)
 

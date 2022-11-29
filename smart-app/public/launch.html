@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <link rel='stylesheet' type='text/css' href='./src/css/example-smart-app.css'>
+        <title>Example-SMART-App</title>
+      </head>
+  <body>
+    <script src="./lib/fhir-client.js"></script>
+    <script>
+      FHIR.oauth2.authorize({
+        client_id: "my_web_app",
+        scope: "launch/provider openid profile",
+      });
+    </script>
+  </body>
+</html>

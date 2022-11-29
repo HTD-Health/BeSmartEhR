@@ -27,6 +27,14 @@
     <title>React App</title>
   </head>
   <body>
+    <script src="./lib/fhir-client.js"></script>
+    <script>
+      FHIR.oauth2
+        .ready()
+        .then((client) => client.request("Patient"))
+        .then(console.log)
+        .catch(console.error);
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

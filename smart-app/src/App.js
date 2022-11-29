@@ -2,16 +2,15 @@ import "./App.css";
 import React from "react";
 import ProviderStandaloneWrapper from "./components/providerStandalone/ProviderStandaloneWrapper";
 import PatientStandaloneWrapper from "./components/patientStandalone/PatientStandaloneWrapper";
-import ProviderEHRWrapper from "./components/providerEHR/ProviderEHRWrapper";
-import PatientEHRWrapper from "./components/patientEHR/PatientEHRWrapper";
+import ProviderEHR from "./components/providerEHR/ProviderEHR";
 
 function App() {
   // PATIENT EHR
-  return <PatientEHRWrapper/>;
+  // return <PatientEHRWrapper/>;
 
   // PROVIDER EHR
   // eslint-disable-next-line no-unreachable
-  return (<ProviderEHRWrapper/>);
+  return (<ProviderEHR/>);
 
   // PATIENT STANDALONE
   // eslint-disable-next-line no-unreachable
