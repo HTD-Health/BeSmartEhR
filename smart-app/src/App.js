@@ -6,6 +6,7 @@ import ProviderEHRWrapper from "./components/providerEHR/ProviderEHRWrapper";
 import PatientEHRWrapper from "./components/patientEHR/PatientEHRWrapper";
 
 function App() {
+
   // PATIENT EHR
   return <PatientEHRWrapper/>;
 
