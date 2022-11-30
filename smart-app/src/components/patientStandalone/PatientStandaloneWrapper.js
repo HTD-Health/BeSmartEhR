@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import PatientStandalone from "./PatientStandalone";
 
 const fhirUrlPatientStandAlone =
-  "https://launch.smarthealthit.org/v/r4/sim/eyJrIjoiMSIsImoiOiIxIiwiYiI6Ijg3YTMzOWQwLThjYWUtNDE4ZS04OWM3LTg2NTFlNmFhYjNjNiJ9/fhir";
+  "https://launch.smarthealthit.org/v/r4/sim/eyJrIjoiMSIsImIiOiI5YmY1OTcxNS0yNDZmLTRjZTItODVhNi01OGMxNzU3ZjhkMjEifQ/fhir";
 const client_id = "be-smart-ehr"; // whatever - as smart app launcher ignores this
 const client_secret = "completeRandom"; // whatever - as smart app launcher ignores this
 
@@ -25,7 +25,7 @@ const PatientStandaloneWrapper = () => {
       });
       setClient(client);
     } catch (e) {
-      setError(e)
+      setError(e);
     }
   };
 
@@ -40,7 +40,7 @@ const PatientStandaloneWrapper = () => {
   if (!client) {
     return <div>Loading...</div>;
   }
-  return <PatientStandalone fhirClient={client}/>;
+  return <PatientStandalone fhirClient={client} />;
 };
 
 export default PatientStandaloneWrapper;

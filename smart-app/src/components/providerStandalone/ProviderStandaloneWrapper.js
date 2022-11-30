@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import ProviderStandalone from "./ProviderStandalone";
 
 const fhirUrlProviderStandAlone =
-  "https://launch.smarthealthit.org/v/r4/sim/eyJoIjoiMSIsImUiOiJlNDQzYWM1OC04ZWNlLTQzODUtOGQ1NS03NzVjMWI4ZjNhMzcifQ/fhir";
+  "https://launch.smarthealthit.org/v/r4/sim/eyJoIjoiMSIsImIiOiI2ZTQxMmVkZC03MGE2LTQ0Y2QtYTEwOS0yYTkwOGFiYTg0OWYiLCJpIjoiMSIsImoiOiIxIiwiZSI6IjFjYjUxMTU3LTgwODMtNDEwZi04N2QxLTA3YTk0NjI5MjIyYSJ9/fhir";
 const client_id = "be-smart-ehr"; // whatever - as smart app launcher ignores this
 const client_secret = "completeRandom"; // whatever - as smart app launcher ignores this
 
