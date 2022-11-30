@@ -1,26 +1,28 @@
 import "./App.css";
 import React from "react";
-import ProviderStandaloneWrapper from "./components/providerStandalone/ProviderStandaloneWrapper";
-import PatientStandaloneWrapper from "./components/patientStandalone/PatientStandaloneWrapper";
-import ProviderEHRWrapper from "./components/providerEHR/ProviderEHRWrapper";
-import PatientEHRWrapper from "./components/patientEHR/PatientEHRWrapper";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import MasterPage from "./pages/MasterPage";
+import HomePage from "./pages/HomePage";
+import PatientEHRPage from "./pages/PatientEHRPage";
+import PatientStandalonePage from "./pages/PatientStandalonePage";
+import ProviderEHRPage from "./pages/ProviderEHRPage";
+import ProviderStandalonePage from "./pages/ProviderStandalonePage";
 
 function App() {
-
-  // PATIENT EHR
-  return <PatientEHRWrapper/>;
-
-  // PROVIDER EHR
-  // eslint-disable-next-line no-unreachable
-  return (<ProviderEHRWrapper/>);
-
-  // PATIENT STANDALONE
-  // eslint-disable-next-line no-unreachable
-  return (<PatientStandaloneWrapper/>);
-
-  // PROVIDER STANDALONE
-  // eslint-disable-next-line no-unreachable
-  return (<ProviderStandaloneWrapper/>);
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MasterPage />}>
+          <Route index element={<HomePage />} />
+          <Route path="patientEHR" element={<PatientEHRPage />} />
+          <Route path="patientSA" element={<PatientStandalonePage />} />
+          <Route path="providerEHR" element={<ProviderEHRPage />} />
+          <Route path="providerSA" element={<ProviderStandalonePage />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
