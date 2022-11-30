@@ -1,16 +1,10 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {clientId, redirectUrl, useQuery} from "../common";
 
 export const StandalonePage = () => {
     const query = useQuery();
-    const [code, setCode] = useState();
-
-    useEffect(() => {
-        if (query.get('code') !== code) {
-            setCode(query.get('code'));
-        }
-    }, [query])
+    const code = useMemo(() => query.get('code'), [query]);
 
     const [accessToken, setAccessToken] = useState();
     const [patient, setPatient] = useState();
