@@ -1,16 +1,8 @@
-import {useLocation} from "react-router-dom";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import {clientId, redirectUrl, useQuery} from "../common";
 
-const redirectUrl = 'http://localhost:3000';
-const clientId = "9976354f-e38c-406e-9827-3b7ede3e2061";
-
-function useQuery() {
-    const {search} = useLocation();
-    return useMemo(() => new URLSearchParams(search), [search]);
-}
-
-function App() {
+export const StandalonePage = () => {
     const query = useQuery();
     const [code, setCode] = useState();
 
@@ -91,5 +83,3 @@ function App() {
         </div>
     );
 }
-
-export default App;
