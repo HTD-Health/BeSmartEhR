@@ -1,79 +1,95 @@
-import {useEffect, useMemo, useState} from "react";
-import axios from "axios";
-import {clientId, redirectUrl, useQuery} from "../common";
+import FHIR from "fhirclient";
+import jwt_decode from "jwt-decode";
+import { useEffect, useState } from "react";
+import { clientId, fhirUrl, redirectUrl } from "../common";
 
 export const StandalonePage = () => {
-    const query = useQuery();
-    const code = useMemo(() => query.get('code'), [query]);
+  const [patients, setPatients] = useState();
+  const [currentPatient, setCurrentPatient] = useState();
 
-    const [accessToken, setAccessToken] = useState();
-    const [patient, setPatient] = useState();
-    const [patientData, setPatientData] = useState();
+  const [client, setClient] = useState(null);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (!code) {
-            return;
-        }
+  const smartLaunch = async () => {
+    try {
+      const client = await FHIR.oauth2.init({
+        iss: fhirUrl,
+        clientId: clientId,
+        // grant_type: "authorization_code",
+        // clientSecret: client_secret,
+        // scope: "launch/patient openid profile",
+        redirectUri: redirectUrl,
+      });
+      setClient(client);
+    } catch (e) {
+      setError(e);
+    }
+  };
 
-        (async () => {
-            const params = new URLSearchParams();
-            params.append("grant_type", "authorization_code");
-            params.append("redirect_uri", redirectUrl);
-            params.append("code", code);
-            params.append("client_id", clientId);
-            params.append("state", "1234");
+  const getData = async () => {
+    try {
+      const resp = await client.request("Patient");
+      setPatients(resp);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-            const response = await axios
-                .post(
-                    "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token",
-                    params,
-                    {
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                    }
-                );
+  const getUserDetails = async () => {
+    const token = client.state.tokenResponse.id_token;
+    const decoded = jwt_decode(token);
 
-            setPatient(response.data.patient);
-            setAccessToken(response.data.access_token);
-        })()
-    }, [code]);
+    const resp = await client.request(decoded.fhirUser);
+    setCurrentPatient(resp);
+  };
 
-    useEffect(() => {
-        if (!accessToken) {
-            return;
-        }
+  useEffect(() => {
+    if (!client) {
+      return;
+    }
+    getData();
+    getUserDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [client]);
 
-        (async () => {
-            const response = await axios
-                .get(
-                    `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${patient}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
-                        }
-                    }
-                )
-
-            setPatientData(response.data);
-        })()
-    }, [accessToken])
-
+  if (error) {
     return (
-        <div className="App">
-            <a href={`https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=${redirectUrl}&client_id=${clientId}&state=1234&scope=patient.read, patient.search`}>
-                <button>Sign in</button>
-            </a>
-            {patientData && (
-                <div>
-                    <div>
-                        <span>First Name: </span><span>{patientData.name[0].given[0]}</span>
-                    </div>
-                    <div>
-                        <span>Last Name: </span><span>{patientData.name[0].family}</span>
-                    </div>
-                </div>
-            )}
-        </div>
+      <div>
+        <h3>Patient Standalone Launch failed</h3>
+        <p>error: {error}</p>
+      </div>
     );
-}
+  }
+
+  return (
+    <div className="App">
+      <button onClick={smartLaunch}>Sign in</button>
+      {currentPatient && (
+        <div>
+          <div>Current Patient:</div>
+          <div>
+            <span>First Name: </span>
+            <span>{currentPatient.name[0].given[0]}</span>
+          </div>
+          <div>
+            <span>Last Name: </span>
+            <span>{currentPatient.name[0].family}</span>
+          </div>
+          <div>
+            <div>Patients fetched:</div>
+            {patients &&
+              patients.entry.map((patient) => (
+                <div key={patient.resource.id}>
+                  <p>{patient.resource.id}</p>
+                  <p>
+                    {patient.resource.name[0].given[0]}{" "}
+                    {patient.resource.name[0].family}
+                  </p>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
