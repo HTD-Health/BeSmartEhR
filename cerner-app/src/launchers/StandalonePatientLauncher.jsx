@@ -2,7 +2,7 @@ import FHIR from "fhirclient";
 import React, { useEffect } from "react";
 import PatientDataViewer from "../viewers/PatientDataViewer";
 
-const ProviderEhrLauncher = () => {
+const StandalonePatientLauncher = () => {
   const [client, setClient] = React.useState(null);
   const [error, setError] = React.useState(null);
 
@@ -12,14 +12,14 @@ const ProviderEhrLauncher = () => {
 
   const smartLaunch = async () => {
     try {
+      // Cerner Secure Sandbox
+      // Patient-scoped
       const client = await FHIR.oauth2.init({
-        clientId: process.env.REACT_APP_EHR_PROVIDER_CLIENT_ID,
-        scope: "user/Patient.read user/Practitioner.read launch openid profile",
-        redirectUri: process.env.REACT_APP_EHR_PROVIDER_REDIRECT_URI,
+        clientId: process.env.REACT_APP_STANDALONE_PATIENT_CLIENT_ID,
+        scope: "patient/Patient.read launch/patient online_access openid profile",
+        iss: process.env.REACT_APP_CERNER_SECURED_PATIENT_R4_URL,
+        redirectUri: process.env.REACT_APP_STANDALONE_PATIENT_REDIRECT_URI,
       });
-
-      console.log(client)
-
       setClient(client);
     } catch (e) {
       setError(e);
@@ -29,7 +29,7 @@ const ProviderEhrLauncher = () => {
   if (error) {
     return (
       <div>
-        <h3>Provider EHR Launch failed</h3>
+        <h3>Patient Standalone Launch failed</h3>
         <p>error: {error}</p>
       </div>
     );
@@ -40,4 +40,4 @@ const ProviderEhrLauncher = () => {
   return <PatientDataViewer fhirClient={client} />;
 };
 
-export default ProviderEhrLauncher;
+export default StandalonePatientLauncher;
