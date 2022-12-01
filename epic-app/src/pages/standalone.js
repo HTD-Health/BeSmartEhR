@@ -1,5 +1,4 @@
 import FHIR from "fhirclient";
-import jwt_decode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { clientId, fhirUrl, redirectUrl } from "../common";
 
@@ -36,10 +35,7 @@ export const StandalonePage = () => {
   };
 
   const getUserDetails = async () => {
-    const token = client.state.tokenResponse.id_token;
-    const decoded = jwt_decode(token);
-
-    const resp = await client.request(decoded.fhirUser);
+    const resp = await client.request(`Patient/${client.patient.id}`);
     setCurrentPatient(resp);
   };
 
@@ -47,8 +43,8 @@ export const StandalonePage = () => {
     if (!client) {
       return;
     }
-    getData();
     getUserDetails();
+    getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client]);
 
@@ -75,19 +71,17 @@ export const StandalonePage = () => {
             <span>Last Name: </span>
             <span>{currentPatient.name[0].family}</span>
           </div>
-          <div>
-            <div>Patients fetched:</div>
-            {patients &&
-              patients.entry.map((patient) => (
-                <div key={patient.resource.id}>
-                  <p>{patient.resource.id}</p>
-                  <p>
-                    {patient.resource.name[0].given[0]}{" "}
-                    {patient.resource.name[0].family}
-                  </p>
+          <br />
+          {patients && (
+            <div>
+              <div>{`Patients fetched [${patients.entry.length}]:`}</div>
+              {patients.entry.map((item) => (
+                <div key={item.resource.id}>
+                  <p>{`${item.resource.resourceType}/${item.resource.id}`}</p>
                 </div>
               ))}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>
