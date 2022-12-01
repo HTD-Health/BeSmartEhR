@@ -1,0 +1,356 @@
+{
+  "id": "55744-7",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2021-03-02T15:07:21.000-05:00",
+    "source": "#FHq46AjYEPu6Vjxt",
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+    ],
+    "tag": [
+      {
+        "code": "lformsVersion: 33.0.0"
+      }
+    ]
+  },
+  "code": [
+    {
+      "system": "http://loinc.org",
+      "code": "55744-7",
+      "display": "howRU"
+    }
+  ],
+  "status": "draft",
+  "title": "howRU",
+  "resourceType": "Questionnaire",
+  "item": [
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "55745-4",
+          "display": "Pain or discomfort"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/55745-4",
+      "text": "Pain or discomfort",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "LA137-2",
+            "display": "None"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "3"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA13940-4",
+            "display": "A little"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA11911-7",
+            "display": "Quite a lot"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "1"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA11912-5",
+            "display": "Extreme"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "55746-2",
+          "display": "Feeling low or worried"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/55746-2",
+      "text": "Feeling low or worried",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "LA137-2",
+            "display": "None"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "3"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA13940-4",
+            "display": "A little"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA11911-7",
+            "display": "Quite a lot"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "1"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA11912-5",
+            "display": "Extreme"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "55747-0",
+          "display": "Limited in what I can do"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/55747-0",
+      "text": "Limited in what I can do",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "LA137-2",
+            "display": "None"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "3"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA13940-4",
+            "display": "A little"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA11911-7",
+            "display": "Quite a lot"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "1"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA11912-5",
+            "display": "Extreme"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "55748-8",
+          "display": "Require help from others"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/55748-8",
+      "text": "Require help from others",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "LA137-2",
+            "display": "None"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "3"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA13940-4",
+            "display": "A little"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA11911-7",
+            "display": "Quite a lot"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "1"
+            }
+          ]
+        },
+        {
+          "valueCoding": {
+            "code": "LA11912-5",
+            "display": "Extreme"
+          },
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+              "valueString": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "55749-6",
+          "display": "howRu summary score"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "{score}",
+            "display": "{score}",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/55749-6",
+      "text": "howRu summary score",
+      "item": [
+        {
+          "text": "A simple aggregate howRU score is calculated by adding the scores for each dimension, giving a range from 12 (4 x none, ceiling) to 0 (4 x extreme, floor).",
+          "type": "display",
+          "linkId": "/55749-6-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

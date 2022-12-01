@@ -1,0 +1,95 @@
+{
+  "fullUrl": "https://fhir.loinc.org/Questionnaire/97845-2",
+  "resource": {
+    "resourceType": "Questionnaire",
+    "id": "97845-2",
+    "meta": {
+      "versionId": "5",
+      "lastUpdated": "2022-08-08T14:36:19.332+00:00",
+      "source": "#tXqw26S1HS9J6r1a"
+    },
+    "url": "http://loinc.org/q/97845-2",
+    "name": "Name_panel_Person",
+    "title": "Name panel Person",
+    "status": "draft",
+    "publisher": "Regenstrief Institute, Inc.",
+    "contact": [ {
+      "name": "Regenstrief Institute, Inc.",
+      "telecom": [ {
+        "system": "url",
+        "value": "http://loinc.org"
+      } ]
+    } ],
+    "copyright": "This content from LOINC® is copyright © 1995 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at https://loinc.org/license/",
+    "code": [ {
+      "system": "http://loinc.org",
+      "code": "97845-2",
+      "display": "Name panel Person"
+    } ],
+    "item": [ {
+      "linkId": "124477",
+      "code": [ {
+        "system": "http://loinc.org",
+        "code": "97846-0",
+        "display": "Name use Person"
+      } ],
+      "text": "Name use Person",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [ {
+        "valueCoding": {
+          "system": "http://loinc.org"
+        }
+      } ]
+    }, {
+      "linkId": "124476",
+      "code": [ {
+        "system": "http://loinc.org",
+        "code": "97847-8",
+        "display": "Last name Person"
+      } ],
+      "text": "Last name Person",
+      "type": "string",
+      "repeats": false
+    }, {
+      "linkId": "124475",
+      "code": [ {
+        "system": "http://loinc.org",
+        "code": "97848-6",
+        "display": "First name Person"
+      } ],
+      "text": "First name Person",
+      "type": "string",
+      "repeats": false
+    }, {
+      "linkId": "124474",
+      "code": [ {
+        "system": "http://loinc.org",
+        "code": "97849-4",
+        "display": "Name prefix Person"
+      } ],
+      "text": "Name prefix Person",
+      "type": "string",
+      "repeats": false
+    }, {
+      "linkId": "124473",
+      "code": [ {
+        "system": "http://loinc.org",
+        "code": "97850-2",
+        "display": "Name suffix Person"
+      } ],
+      "text": "Name suffix Person",
+      "type": "string",
+      "repeats": false
+    }, {
+      "linkId": "124472",
+      "code": [ {
+        "system": "http://loinc.org",
+        "code": "97851-0",
+        "display": "Subject of Person"
+      } ],
+      "text": "Subject of Person",
+      "type": "string",
+      "repeats": false
+    } ]
+  }

@@ -1,0 +1,374 @@
+{
+  "id": "79191-3",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2021-03-02T15:07:59.000-05:00",
+    "source": "#lf43fHzEe1HSmPLv",
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+    ],
+    "tag": [
+      {
+        "code": "lformsVersion: 33.0.0"
+      }
+    ]
+  },
+  "code": [
+    {
+      "system": "http://loinc.org",
+      "code": "79191-3",
+      "display": "Patient demographics panel"
+    }
+  ],
+  "status": "draft",
+  "title": "Patient demographics panel",
+  "resourceType": "Questionnaire",
+  "item": [
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "45392-8",
+          "display": "First name"
+        }
+      ],
+      "required": false,
+      "linkId": "/45392-8",
+      "text": "First name"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "45394-4",
+          "display": "Last name"
+        }
+      ],
+      "required": false,
+      "linkId": "/45394-4",
+      "text": "Last name"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "56799-0",
+          "display": "Address"
+        }
+      ],
+      "required": false,
+      "linkId": "/56799-0",
+      "text": "Address"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "68997-6",
+          "display": "City"
+        }
+      ],
+      "required": false,
+      "linkId": "/68997-6",
+      "text": "City"
+    },
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "46499-0",
+          "display": "State of residence"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/46499-0",
+      "text": "State of residence",
+      "item": [
+        {
+          "text": "The state in which the patient is currently residing while receiving care.",
+          "type": "display",
+          "linkId": "/46499-0-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "45401-7",
+          "display": "Postal code"
+        }
+      ],
+      "required": false,
+      "linkId": "/45401-7",
+      "text": "Postal code"
+    },
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "87721-7",
+          "display": "County of residence"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/87721-7",
+      "text": "County of residence"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "66477-1",
+          "display": "Country of current residence"
+        }
+      ],
+      "required": false,
+      "linkId": "/66477-1",
+      "text": "Country of current residence"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "79183-0",
+          "display": "First name Guardian"
+        }
+      ],
+      "required": false,
+      "linkId": "/79183-0",
+      "text": "First name Guardian"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "79184-8",
+          "display": "Last name Guardian"
+        }
+      ],
+      "required": false,
+      "linkId": "/79184-8",
+      "text": "Last name Guardian"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "42077-8",
+          "display": "Phone #"
+        }
+      ],
+      "required": false,
+      "linkId": "/42077-8",
+      "text": "Phone #",
+      "item": [
+        {
+          "text": "The patient's telephone number.",
+          "type": "display",
+          "linkId": "/42077-8-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "76458-9",
+          "display": "Patient Email address"
+        }
+      ],
+      "required": false,
+      "linkId": "/76458-9",
+      "text": "Patient Email address"
+    },
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "32624-9",
+          "display": "Race"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/32624-9",
+      "text": "Race",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "LA10608-0",
+            "display": "American  Indian or Alaska Native"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA6156-9",
+            "display": "Asian"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA10610-6",
+            "display": "Black or African American"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA10611-4",
+            "display": "Native Hawaiian or Other Pacific Islander"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA4457-3",
+            "display": "White"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA4489-6",
+            "display": "Unknown"
+          }
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "code": [
+        {
+          "code": "69490-1",
+          "display": "Ethnicity OMB.1997"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "drop-down",
+                "display": "Drop down"
+              }
+            ],
+            "text": "Drop down"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/69490-1",
+      "text": "Ethnicity OMB.1997",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "LA6214-6",
+            "display": "Hispanic or Latino"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LA19555-4",
+            "display": "Not Hispanic or Latino"
+          }
+        }
+      ],
+      "item": [
+        {
+          "text": "This term is used for reporting the ethnicity based on classifications provided by the Office of Management and Budget (OMB), Revisions to the Standards for the Classification of Federal Data on Race and Ethnicity (Oct. 30, 1997).",
+          "type": "display",
+          "linkId": "/69490-1-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
