@@ -2,7 +2,7 @@ import FHIR from "fhirclient";
 import React, { useEffect } from "react";
 import PatientDataViewer from "../viewers/PatientDataViewer";
 
-const ProviderEhrLauncher = () => {
+const PatientEhrLauncher = () => {
   const [client, setClient] = React.useState(null);
   const [error, setError] = React.useState(null);
 
@@ -13,9 +13,9 @@ const ProviderEhrLauncher = () => {
   const smartLaunch = async () => {
     try {
       const client = await FHIR.oauth2.init({
-        clientId: process.env.REACT_APP_EHR_PROVIDER_CLIENT_ID,
-        scope: "user/Patient.read user/Practitioner.read launch openid profile",
-        redirectUri: process.env.REACT_APP_EHR_PROVIDER_REDIRECT_URI,
+        clientId: process.env.REACT_APP_EHR_PATIENT_CLIENT_ID,
+        scope: "user/Patient.read launch online_access openid profile",
+        redirectUri: process.env.REACT_APP_EHR_PATIENT_REDIRECT_URI,
       });
 
       console.log(client)
@@ -29,7 +29,7 @@ const ProviderEhrLauncher = () => {
   if (error) {
     return (
       <div>
-        <h3>Provider EHR Launch failed</h3>
+        <h3>Patient EHR Launch failed</h3>
         <p>error: {error}</p>
       </div>
     );
@@ -40,4 +40,4 @@ const ProviderEhrLauncher = () => {
   return <PatientDataViewer fhirClient={client} />;
 };
 
-export default ProviderEhrLauncher;
+export default PatientEhrLauncher;
