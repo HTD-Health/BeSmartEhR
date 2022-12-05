@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import ProviderEHR from "./ProviderEHR";
 
 const client_id = "be-smart-ehr"; // whatever - as smart app launcher ignores this
+const iss = "asdads"; // depends on launch context
 
 const ProviderEHRWrapper = () => {
   const [client, setClient] = React.useState(null);
@@ -14,7 +15,7 @@ const ProviderEHRWrapper = () => {
 
   const smartLaunch = async () => {
     try {
-      const client = await FHIR.oauth2.init({
+      const client = await FHIR.oauth2.authorize({
         clientId: client_id,
         scope: "launch launch/provider openid profile",
       });
@@ -23,7 +24,7 @@ const ProviderEHRWrapper = () => {
 
       setClient(client);
     } catch (e) {
-      setError(e)
+      setError(e);
     }
   };
 
@@ -38,7 +39,7 @@ const ProviderEHRWrapper = () => {
   if (!client) {
     return <div>Loading...</div>;
   }
-  return <ProviderEHR fhirClient={client}/>;
+  return <ProviderEHR fhirClient={client} />;
 };
 
 export default ProviderEHRWrapper;
