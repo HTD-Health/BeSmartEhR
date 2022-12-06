@@ -1,10 +1,10 @@
-import { BrowserRouter as HashRouter, Navigate, Route, Routes } from 'react-router-dom'
-import PatientProfile from './pages/patient_profile/patient_profile'
+import { BrowserRouter as HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import PatientProfile from './pages/patient_profile/patient_profile';
 
 export const routes = {
     root: '/',
-    patientProfile: '/patient-profile',
-}
+    patientProfile: '/patient-profile'
+};
 
 const AppRouter = () => {
     return (
@@ -14,7 +14,7 @@ const AppRouter = () => {
                 <Route path={routes.patientProfile} element={<PatientProfile />} />
             </Routes>
         </HashRouter>
-    )
-}
+    );
+};
 
-export default AppRouter
+export default AppRouter;
