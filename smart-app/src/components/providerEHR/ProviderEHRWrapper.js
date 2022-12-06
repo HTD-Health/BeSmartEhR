@@ -15,7 +15,7 @@ const ProviderEHRWrapper = () => {
 
   const smartLaunch = async () => {
     try {
-      const client = await FHIR.oauth2.authorize({
+      const client = await FHIR.oauth2.init({
         clientId: client_id,
         scope: "launch launch/provider openid profile",
       });
