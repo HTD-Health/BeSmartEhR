@@ -9,8 +9,13 @@ const PatientProfile = () => {
   const [patient, setPatient] = useState(null);
 
   useEffect(() => {
-    getPatient();
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    const patient = await getPatient();
+    setPatient(patient);
+  };
 
   return (
     <>
@@ -30,7 +35,7 @@ const PatientProfile = () => {
                 height: "100%",
               }}
             >
-              <PatientCard />
+              <PatientCard patient={patient} />
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
