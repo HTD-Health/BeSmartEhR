@@ -1,4 +1,12 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { clientId, redirectUrl, useQuery } from "../common";
@@ -258,33 +266,44 @@ export const LaunchPage = () => {
     <div className="App">
       {examplePatient && (
         <>
-          <AppBar position="static">
+          <AppBar position="static" style={{ marginBottom: 20 }}>
             <Toolbar variant="dense">
               <Typography variant="h6" color="inherit" component="div">
                 BeSmartEhR - Dashboard
               </Typography>
             </Toolbar>
           </AppBar>
-          <div>
-            <div>
-              <span>Full name: </span>
-              <span>{examplePatient.name[0].text}</span>
-            </div>
-            <div>
-              <span>Gender: </span>
-              <span>{examplePatient.gender}</span>
-            </div>
-            <div>
-              <span>Birth date: </span>
-              <span>{examplePatient.birthDate}</span>
-            </div>
-            <div>
-              <span>Address: </span>
-              <span>
-                {examplePatient.address.find((x) => x.use === "home").line[0]}
-              </span>
-            </div>
-          </div>
+          <Container sx={{ display: "flex" }}>
+            <Card sx={{ minWidth: 275 }}>
+              <CardContent>
+                <div>
+                  <span>Full name: </span>
+                  <span>{examplePatient.name[0].text}</span>
+                </div>
+                <div>
+                  <span>Gender: </span>
+                  <span>{examplePatient.gender}</span>
+                </div>
+                <div>
+                  <span>Birth date: </span>
+                  <span>{examplePatient.birthDate}</span>
+                </div>
+                <div>
+                  <span>Address: </span>
+                  <span>
+                    {
+                      examplePatient.address.find((x) => x.use === "home")
+                        .line[0]
+                    }
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+            <Container sx={{ display: "flex", flexFlow: "column" }}>
+              <Button variant="contained">Assigned forms</Button>
+              <Button variant="outlined">Already filled forms</Button>
+            </Container>
+          </Container>
         </>
       )}
     </div>
