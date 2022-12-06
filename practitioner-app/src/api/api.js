@@ -1,12 +1,22 @@
 import FHIR from "fhirclient";
 
+let client;
+
 const getClient = async () => {
-  await FHIR.oauth2.ready();
+  if (!client) {
+    client = await FHIR.oauth2.ready();
+  }
+  return client;
 };
 
 const getPatient = async () => {
-  const client = await getClient();
-  console.log(client);
+  const c = await getClient();
+  return await c.request(c.patient.fhirUser);
 };
 
-export { getPatient };
+const getUser = async () => {
+  const c = await getClient();
+  return await c.request(client.user.fhirUser);
+};
+
+export { getPatient, getUser };

@@ -8,7 +8,9 @@ import SmartAppBar from "../../components/smart_app_bar/smart_app_bar";
 const PatientProfile = () => {
   const [patient, setPatient] = useState(null);
 
-  useEffect(() => getPatient(), []);
+  useEffect(() => {
+    getPatient();
+  }, []);
 
   return (
     <>
