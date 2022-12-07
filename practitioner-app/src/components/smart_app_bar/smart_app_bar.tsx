@@ -4,9 +4,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
+
 import { getUser } from '../../api/api';
 
-const SmartAppBar = () => {
+const SmartAppBar = (): JSX.Element => {
     const [user, setUser] = useState<Practitioner | null>(null);
 
     useEffect(() => {

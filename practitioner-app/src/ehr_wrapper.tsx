@@ -15,7 +15,8 @@ const EhrWrapper = () => {
         try {
             await FHIR.oauth2.init({
                 clientId: process.env.REACT_APP_CLIENT_ID,
-                scope: process.env.REACT_APP_CLIENT_SCOPE
+                scope: process.env.REACT_APP_CLIENT_SCOPE,
+                iss: process.env.REACT_APP_FHIR_SERVER // TODO: do not commit this
             });
             setLoading(false);
         } catch (e: any) {

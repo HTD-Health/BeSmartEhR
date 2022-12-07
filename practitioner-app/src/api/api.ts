@@ -12,8 +12,9 @@ const getClient = async () => {
 
 const getPatient = async () => {
     const c = await getClient();
-    if (!c.patient) throw new Error('No patient selected');
-    return await c.request(`Patient/${c.patient.id}`);
+    // if (!c.patient) throw new Error('No patient selected');
+    // return await c.request(`Patient/${c.patient.id}`);
+    return await c.request(`Patient/c20ccf5d-19ac-4dfe-bdc3-3d1d6344facc`);
 };
 
 const getUser = async () => {
