@@ -2,7 +2,7 @@ import { Container, Typography } from '@mui/material';
 import FHIR from 'fhirclient';
 import { useEffect, useState } from 'react';
 
-import AppRouter from 'app_router';
+import App from 'app';
 
 const EhrWrapper = (): JSX.Element => {
     const [loading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ const EhrWrapper = (): JSX.Element => {
         );
     }
 
-    return <AppRouter />;
+    return <App />;
 };
 
 export default EhrWrapper;
