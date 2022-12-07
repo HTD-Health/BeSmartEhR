@@ -14,10 +14,8 @@ export const StandalonePage = () => {
       const client = await FHIR.oauth2.init({
         iss: fhirUrl,
         clientId: clientId,
-        // grant_type: "authorization_code",
-        // clientSecret: client_secret,
-        // scope: "launch/patient openid profile",
-        redirectUri: redirectUrl,
+        scope: "launch patient/*.read openid profile",
+        redirectUri: `${redirectUrl}/standalone`,
       });
       setClient(client);
     } catch (e) {

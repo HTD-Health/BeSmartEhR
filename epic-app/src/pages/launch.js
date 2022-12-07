@@ -1,10 +1,8 @@
 import FHIR from "fhirclient";
 import { useEffect, useState } from "react";
-import { clientId, redirectUrl, useQuery } from "../common";
+import { clientId, redirectUrl } from "../common";
 
 export const LaunchPage = () => {
-  const query = useQuery();
-
   const [patients, setPatients] = useState();
   const [currentPatient, setCurrentPatient] = useState();
 
@@ -18,10 +16,7 @@ export const LaunchPage = () => {
   const smartLaunch = async () => {
     try {
       const client = await FHIR.oauth2.init({
-        // iss: iss,
         clientId: clientId,
-        // launch: launch,
-        // clientSecret: client_secret,
         // scope: "launch/patient openid profile",
         redirectUri: redirectUrl,
       });
