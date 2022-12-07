@@ -14,12 +14,12 @@ const SmartAppBar = (): JSX.Element => {
         fetchData();
     }, []);
 
-    const fetchData = async () => {
-        const user = await getUser();
-        setUser(user);
+    const fetchData = async (): Promise<void> => {
+        const fetchedUser = await getUser();
+        setUser(fetchedUser);
     };
 
-    const getUserName = () => {
+    const getUserName = (): string => {
         if (!user || !user.name || user.name.length === 0) {
             return '';
         }

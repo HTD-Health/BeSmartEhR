@@ -1,22 +1,22 @@
 import { Container, Typography } from '@mui/material';
-import AppRouter from 'app_router';
 import FHIR from 'fhirclient';
 import { useEffect, useState } from 'react';
 
-const EhrWrapper = () => {
+import AppRouter from 'app_router';
+
+const EhrWrapper = (): JSX.Element => {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<any>(null);
 
     useEffect(() => {
         smartLaunch();
     }, []);
 
-    const smartLaunch = async () => {
+    const smartLaunch = async (): Promise<void> => {
         try {
             await FHIR.oauth2.init({
                 clientId: process.env.REACT_APP_CLIENT_ID,
-                scope: process.env.REACT_APP_CLIENT_SCOPE,
-                iss: process.env.REACT_APP_FHIR_SERVER // TODO: do not commit this
+                scope: process.env.REACT_APP_CLIENT_SCOPE
             });
             setLoading(false);
         } catch (e: any) {

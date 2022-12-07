@@ -1,6 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
 import EhrWrapper from './ehr_wrapper';
 import reportWebVitals from './reportWebVitals';
 
