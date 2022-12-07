@@ -80,12 +80,12 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
         return Object.keys(data).map((key: string) => {
             const el = data[key as keyof PatientDisplayData];
             return (
-                <div key={key}>
+                <Box key={key}>
                     <Box component="span" sx={{ fontWeight: 'bold' }}>
                         {el?.label}
                     </Box>
                     : {el?.value}
-                </div>
+                </Box>
             );
         });
     };
@@ -96,9 +96,7 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
                 <Typography sx={{ mb: '0.5rem' }} variant="h5" color="inherit" noWrap>
                     {getPatientName()}
                 </Typography>
-                <Typography variant="body1" color="inherit" noWrap>
-                    {renderPatientData()}
-                </Typography>
+                {renderPatientData()}
             </Card>
         </>
     );
