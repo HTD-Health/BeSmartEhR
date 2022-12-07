@@ -24,7 +24,7 @@
             }
         }
     },
-    "ignorePatterns": ["public/builders/**/*.js"],
+    "ignorePatterns": ["public/builders/**/*.js", "build/**/*.js"],
     "rules": {
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
@@ -39,7 +39,8 @@
                 // Recommmended that no-undef is turned off for TS files since the eslint rule doesn't use TS to determine what global variables exist
                 // and the checks it provides are covered by TS
                 // https://github.com/typescript-eslint/typescript-eslint/blob/main/docs/linting/TROUBLESHOOTING.md
-                "no-undef": "off" // Recommmended that no-undef is turned off for TS files
+                "no-undef": "off", // Recommmended that no-undef is turned off for TS files
+                "@typescript-eslint/no-explicit-any": "off"
             }
         }
     ]

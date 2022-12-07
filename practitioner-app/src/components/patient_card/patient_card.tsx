@@ -5,10 +5,17 @@ type PatientCardProps = {
     patient: Patient | null;
 };
 
-const PatientCard = (props: PatientCardProps) => {
+type PatientDisplayData = {
+    [key in keyof (Partial<Patient> & { addressCity?: string; addressState?: string; addressStreet?: string })]: {
+        label: string;
+        value?: string;
+    };
+};
+
+const PatientCard = (props: PatientCardProps): JSX.Element => {
     const { patient } = props;
 
-    const getPatientName = () => {
+    const getPatientName = (): string | undefined => {
         if (!patient || !patient.name || patient.name.length === 0) {
             return '';
         }
@@ -19,8 +26,8 @@ const PatientCard = (props: PatientCardProps) => {
         return `${name.given[0]} ${name.family}`;
     };
 
-    const getPatientDataMap = () => {
-        const data: any = {};
+    const getPatientDataMap = (): PatientDisplayData => {
+        const data: PatientDisplayData = {};
         if (!patient) {
             return data;
         }
@@ -67,16 +74,17 @@ const PatientCard = (props: PatientCardProps) => {
         return data;
     };
 
-    const renderPatientData = () => {
-        const data = getPatientDataMap();
-        return Object.keys(data).map((key) => {
-            const el = data[key];
+    const renderPatientData = (): JSX.Element[] => {
+        const data: PatientDisplayData = getPatientDataMap();
+
+        return Object.keys(data).map((key: string) => {
+            const el = data[key as keyof PatientDisplayData];
             return (
                 <div key={key}>
                     <Box component="span" sx={{ fontWeight: 'bold' }}>
-                        {el.label}
+                        {el?.label}
                     </Box>
-                    : {el.value}
+                    : {el?.value}
                 </div>
             );
         });

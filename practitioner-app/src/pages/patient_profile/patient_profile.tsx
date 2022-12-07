@@ -1,20 +1,22 @@
 import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import type { Patient } from 'fhir/r4';
 import { useEffect, useState } from 'react';
+
 import { getPatient } from '../../api/api';
 import PatientCard from '../../components/patient_card/patient_card';
 import SmartAppBar from '../../components/smart_app_bar/smart_app_bar';
 
-const PatientProfile = () => {
-    const [patient, setPatient] = useState(null);
+const PatientProfile = (): JSX.Element => {
+    const [patient, setPatient] = useState<Patient | null>(null);
 
     useEffect(() => {
         fetchData();
     }, []);
 
-    const fetchData = async () => {
-        const patient = await getPatient();
-        setPatient(patient);
+    const fetchData = async (): Promise<void> => {
+        const fetchedPatient = await getPatient();
+        setPatient(fetchedPatient);
     };
 
     return (
