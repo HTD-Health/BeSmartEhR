@@ -1,9 +1,22 @@
 import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { useEffect, useState } from "react";
+import { getPatient } from "../../api/api";
 import PatientCard from "../../components/patient_card/patient_card";
 import SmartAppBar from "../../components/smart_app_bar/smart_app_bar";
 
 const PatientProfile = () => {
+  const [patient, setPatient] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const patient = await getPatient();
+    setPatient(patient);
+  };
+
   return (
     <>
       <SmartAppBar />
@@ -22,7 +35,7 @@ const PatientProfile = () => {
                 height: "100%",
               }}
             >
-              <PatientCard />
+              <PatientCard patient={patient} />
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
