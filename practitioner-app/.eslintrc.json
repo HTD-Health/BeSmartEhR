@@ -24,7 +24,7 @@
             }
         }
     },
-    "ignorePatterns": ["public/builders/**/*.js"],
+    "ignorePatterns": ["public/builders/**/*.js", "build/**/*.js"],
     "rules": {
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
