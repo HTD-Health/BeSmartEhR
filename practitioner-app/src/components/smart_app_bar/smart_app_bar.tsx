@@ -4,23 +4,24 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
-import { getUser } from '../../api/api';
+import AlertSnackbar from 'components/alert_snackbar/alert_snackbar';
+import { getUserQuery } from 'api/queries';
 
 const SmartAppBar = (): JSX.Element => {
-    const [user, setUser] = useState<Practitioner | null>(null);
+    const [errorSnackbar, setErrorSnackbar] = useState(false);
+    const { error, data } = useQuery(getUserQuery);
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (error) {
+            setErrorSnackbar(true);
+            console.error(error);
+        }
+    }, [error]);
 
-    const fetchData = async (): Promise<void> => {
-        const fetchedUser = await getUser();
-        setUser(fetchedUser);
-    };
-
-    const getUserName = (): string => {
-        if (!user || !user.name || user.name.length === 0) {
+    const getUserName = (user: Practitioner): string => {
+        if (!user.name || user.name.length === 0) {
             return '';
         }
         const name = user.name[0];
@@ -33,8 +34,27 @@ const SmartAppBar = (): JSX.Element => {
         return '';
     };
 
+    const renderUserData = (): JSX.Element => {
+        if (!data) {
+            return <Box />;
+        }
+        return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <PersonIcon sx={{ mr: '0.5rem' }} />
+                <Typography variant="body1" color="inherit" noWrap>
+                    {getUserName(data)}
+                </Typography>
+            </Box>
+        );
+    };
+
     return (
         <AppBar position="relative">
+            <AlertSnackbar
+                open={errorSnackbar}
+                onClose={() => setErrorSnackbar(false)}
+                message="Failed to get current user data"
+            />
             <Box
                 sx={{
                     display: 'flex',
@@ -46,12 +66,7 @@ const SmartAppBar = (): JSX.Element => {
                 <Typography variant="h5" color="inherit" noWrap>
                     BeSmartEhR - Practitioner App
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <PersonIcon sx={{ mr: '0.5rem' }} />
-                    <Typography variant="body1" color="inherit" noWrap>
-                        {getUserName()}
-                    </Typography>
-                </Box>
+                {renderUserData()}
             </Box>
         </AppBar>
     );
