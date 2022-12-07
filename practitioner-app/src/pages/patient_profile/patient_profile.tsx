@@ -1,27 +1,32 @@
 import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import type { Patient } from 'fhir/r4';
 import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
-import { getPatient } from '../../api/api';
-import PatientCard from '../../components/patient_card/patient_card';
-import SmartAppBar from '../../components/smart_app_bar/smart_app_bar';
+import PatientCard from 'components/patient_card/patient_card';
+import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
+import AlertSnackbar from 'components/alert_snackbar/alert_snackbar';
+import { getPatientQuery } from 'api/queries';
 
 const PatientProfile = (): JSX.Element => {
-    const [patient, setPatient] = useState<Patient | null>(null);
+    const [errorSnackbar, setErrorSnackbar] = useState(false);
+    const { error, data, isLoading } = useQuery(getPatientQuery);
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async (): Promise<void> => {
-        const fetchedPatient = await getPatient();
-        setPatient(fetchedPatient);
-    };
+        if (error) {
+            setErrorSnackbar(true);
+            console.error(error);
+        }
+    }, [error]);
 
     return (
         <>
             <SmartAppBar />
+            <AlertSnackbar
+                open={errorSnackbar}
+                onClose={() => setErrorSnackbar(false)}
+                message="Failed to get patient data"
+            />
             <Box
                 sx={{
                     p: '2rem'
@@ -37,7 +42,7 @@ const PatientProfile = (): JSX.Element => {
                                 height: '100%'
                             }}
                         >
-                            <PatientCard patient={patient} />
+                            <PatientCard patient={data} isLoading={isLoading} />
                         </Box>
                     </Grid>
                     <Grid item xs={12} md={6}>

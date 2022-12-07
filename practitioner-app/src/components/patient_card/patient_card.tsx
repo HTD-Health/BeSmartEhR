@@ -1,8 +1,10 @@
 import { Box, Card, Typography } from '@mui/material';
 import type { Patient } from 'fhir/r4';
+import CircularProgress from '@mui/material/CircularProgress';
 
 type PatientCardProps = {
-    patient: Patient | null;
+    patient: Patient | undefined;
+    isLoading: boolean;
 };
 
 type PatientDisplayData = {
@@ -13,7 +15,7 @@ type PatientDisplayData = {
 };
 
 const PatientCard = (props: PatientCardProps): JSX.Element => {
-    const { patient } = props;
+    const { patient, isLoading } = props;
 
     const getPatientName = (): string | undefined => {
         if (!patient || !patient.name || patient.name.length === 0) {
@@ -90,16 +92,25 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
         });
     };
 
-    return (
-        <>
-            <Card sx={{ p: '1rem' }}>
+    const renderContent = (): JSX.Element => {
+        if (isLoading) {
+            return (
+                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress color="inherit" />;
+                </Box>
+            );
+        }
+        return (
+            <>
                 <Typography sx={{ mb: '0.5rem' }} variant="h5" color="inherit" noWrap>
                     {getPatientName()}
                 </Typography>
                 {renderPatientData()}
-            </Card>
-        </>
-    );
+            </>
+        );
+    };
+
+    return <Card sx={{ p: '1rem' }}>{renderContent()}</Card>;
 };
 
 export default PatientCard;
