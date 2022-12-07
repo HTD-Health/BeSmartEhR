@@ -6,7 +6,7 @@ import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import AlertSnackbar from 'components/alert_snackbar/alert_snackbar';
+import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import { getUserQuery } from 'api/queries';
 
 const SmartAppBar = (): JSX.Element => {

@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import AlertSnackbar from 'components/alert_snackbar/alert_snackbar';
+import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import { getPatientQuery } from 'api/queries';
 
 const PatientProfile = (): JSX.Element => {

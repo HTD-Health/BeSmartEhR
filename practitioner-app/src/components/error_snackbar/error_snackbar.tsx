@@ -7,13 +7,13 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
 ));
 Alert.displayName = 'Alert';
 
-type AlertSnackbarProps = {
+type ErrorSnackbarProps = {
     onClose: () => void;
     open: boolean;
     message: string;
 };
 
-const AlertSnackbar = (props: AlertSnackbarProps): JSX.Element => {
+const ErrorSnackbar = (props: ErrorSnackbarProps): JSX.Element => {
     const { onClose, open, message } = props;
     return (
         <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
@@ -24,4 +24,4 @@ const AlertSnackbar = (props: AlertSnackbarProps): JSX.Element => {
     );
 };
 
-export default AlertSnackbar;
+export default ErrorSnackbar;
