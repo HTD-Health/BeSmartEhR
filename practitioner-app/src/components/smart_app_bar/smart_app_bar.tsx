@@ -6,7 +6,7 @@ import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import AlertSnackbar from 'components/error_snackbar/error_snackbar';
+import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
 import { getUserQuery } from 'api/queries';
 
 const SmartAppBar = (): JSX.Element => {
@@ -50,7 +50,7 @@ const SmartAppBar = (): JSX.Element => {
 
     return (
         <AppBar position="relative">
-            <AlertSnackbar
+            <ErrorSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get current user data"
