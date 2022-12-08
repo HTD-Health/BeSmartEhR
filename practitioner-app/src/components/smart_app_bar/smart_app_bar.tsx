@@ -1,6 +1,6 @@
 import PersonIcon from '@mui/icons-material/Person';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 
 import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import { getUserQuery } from 'api/queries';
+import NavbarMenu from 'components/navbar_menu/navbar_menu';
 
 const SmartAppBar = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
@@ -44,6 +45,7 @@ const SmartAppBar = (): JSX.Element => {
                 <Typography variant="body1" color="inherit" noWrap>
                     {getUserName(data)}
                 </Typography>
+                <NavbarMenu />
             </Box>
         );
     };
