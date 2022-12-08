@@ -1,79 +1,76 @@
-import {useEffect, useMemo, useState} from "react";
-import axios from "axios";
-import {clientId, redirectUrl, useQuery} from "../common";
+import FHIR from "fhirclient";
+import { useEffect, useMemo, useState } from "react";
+import { clientId, fhirUrl, redirectUrl, useQuery } from "../common";
 
 export const StandalonePage = () => {
-    const query = useQuery();
-    const code = useMemo(() => query.get('code'), [query]);
+  const [currentPatient, setCurrentPatient] = useState();
 
-    const [accessToken, setAccessToken] = useState();
-    const [patient, setPatient] = useState();
-    const [patientData, setPatientData] = useState();
+  const [client, setClient] = useState(null);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (!code) {
-            return;
-        }
+  const query = useQuery();
+  const code = useMemo(() => query.get("code"), [query]);
 
-        (async () => {
-            const params = new URLSearchParams();
-            params.append("grant_type", "authorization_code");
-            params.append("redirect_uri", redirectUrl);
-            params.append("code", code);
-            params.append("client_id", clientId);
-            params.append("state", "1234");
+  useEffect(() => {
+    if (!code) {
+      return;
+    }
+    smartLaunch();
+  }, [code]);
 
-            const response = await axios
-                .post(
-                    "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token",
-                    params,
-                    {
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                    }
-                );
+  const smartLaunch = async () => {
+    try {
+      const client = await FHIR.oauth2.init({
+        iss: fhirUrl,
+        clientId: clientId,
+        scope: "launch patient/*.read openid profile offline_access",
+        redirectUri: redirectUrl,
+      });
+      setClient(client);
+    } catch (e) {
+      setError(e);
+      console.log(e);
+    }
+  };
 
-            setPatient(response.data.patient);
-            setAccessToken(response.data.access_token);
-        })()
-    }, [code]);
+  const getUserDetails = async () => {
+    const resp = await client.request(`Patient/${client.patient.id}`);
+    setCurrentPatient(resp);
+  };
 
-    useEffect(() => {
-        if (!accessToken) {
-            return;
-        }
+  useEffect(() => {
+    if (!client) {
+      return;
+    }
+    getUserDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [client]);
 
-        (async () => {
-            const response = await axios
-                .get(
-                    `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${patient}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
-                        }
-                    }
-                )
-
-            setPatientData(response.data);
-        })()
-    }, [accessToken])
-
+  if (error) {
     return (
-        <div className="App">
-            <a href={`https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=${redirectUrl}&client_id=${clientId}&state=1234&scope=patient.read, patient.search`}>
-                <button>Sign in</button>
-            </a>
-            {patientData && (
-                <div>
-                    <div>
-                        <span>First Name: </span><span>{patientData.name[0].given[0]}</span>
-                    </div>
-                    <div>
-                        <span>Last Name: </span><span>{patientData.name[0].family}</span>
-                    </div>
-                </div>
-            )}
-        </div>
+      <div>
+        <h3>Patient Standalone Launch failed</h3>
+        <p>error: {JSON.stringify(error)}</p>
+      </div>
     );
-}
+  }
+
+  return (
+    <div className="App">
+      {!client && <button onClick={smartLaunch}>Sign in</button>}
+      {currentPatient && (
+        <div>
+          <div>Current Patient:</div>
+          <div>
+            <span>First Name: </span>
+            <span>{currentPatient.name[0].given[0]}</span>
+          </div>
+          <div>
+            <span>Last Name: </span>
+            <span>{currentPatient.name[0].family}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

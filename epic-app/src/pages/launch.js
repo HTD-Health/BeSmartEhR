@@ -1,123 +1,67 @@
-import {useEffect, useMemo, useState} from "react";
-import axios from "axios";
-import {clientId, redirectUrl, useQuery} from "../common";
+import FHIR from "fhirclient";
+import { useEffect, useState } from "react";
+import { clientId, redirectUrl } from "../common";
 
 export const LaunchPage = () => {
-    const query = useQuery();
-    const [endpoints, setEndpoints] = useState();
+  const [currentPatient, setCurrentPatient] = useState();
 
-    const [accessToken, setAccessToken] = useState();
-    const [patient, setPatient] = useState();
-    const [patientData, setPatientData] = useState();
+  const [client, setClient] = useState(null);
+  const [error, setError] = useState(null);
 
-    const launch = useMemo(() => query.get('launch'), [query]);
-    const iss = useMemo(() => query.get('iss'), [query]);
-    const code = useMemo(() => query.get('code'), [query]);
+  useEffect(() => {
+    smartLaunch();
+  }, []);
 
-    useEffect(() => {
-        (async () => {
-            const response = await axios.get('https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/metadata', {
-                headers: {
-                    'Accept': 'application/fhir+json',
-                    'Epic-Client-ID': clientId
-                }
-            });
+  const smartLaunch = async () => {
+    try {
+      const client = await FHIR.oauth2.init({
+        clientId: clientId,
+        scope: "launch openid",
+        redirectUri: redirectUrl,
+      });
+      setClient(client);
+    } catch (e) {
+      setError(e);
+    }
+  };
 
-            const data = response.data;
-            const rest = data.rest.find((entry) => entry?.mode === 'server');
-            const oauthUris = rest.security.extension.find((entry => entry.url === 'http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris'));
+  const getUserDetails = async () => {
+    const resp = await client.request(`Patient/${client.patient.id}`);
+    setCurrentPatient(resp);
+  };
 
-            const endpoints = oauthUris.extension;
-            const authorizeUri = endpoints.find(entry => entry.url === 'authorize')?.valueUri;
-            const tokenUri = endpoints.find(entry => entry.url === 'token')?.valueUri;
+  useEffect(() => {
+    if (!client) {
+      return;
+    }
+    getUserDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [client]);
 
-            setEndpoints({
-                'authorize': authorizeUri,
-                'token': tokenUri
-            })
-        })()
-    }, []);
-
-    useEffect(() => {
-        if (!endpoints || !launch || !iss) {
-            return;
-        }
-
-        (async () => {
-            const params = new URLSearchParams();
-            params.append('response_type', 'code');
-            params.append('client_id', clientId);
-            params.append('redirect_uri', redirectUrl);
-            params.append('scope', 'launch');
-            params.append('launch', launch);
-            params.append('aud', 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4');
-            params.append('state', '1234');
-
-            window.location.replace(`${endpoints["authorize"]}/?${params.toString()}`)
-        })()
-    }, [endpoints, launch])
-
-    useEffect(() => {
-        if (!endpoints || !code) {
-            return;
-        }
-
-        (async () => {
-            const params = new URLSearchParams();
-            params.append("grant_type", "authorization_code");
-            params.append("redirect_uri", redirectUrl);
-            params.append("code", code);
-            params.append("client_id", clientId);
-            params.append("state", "1234");
-
-            const response = await axios
-                .post(
-                    endpoints['token'],
-                    params,
-                    {
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                    }
-                );
-
-            setPatient(response.data.patient);
-            setAccessToken(response.data.access_token);
-        })()
-    }, [endpoints, code]);
-
-    useEffect(() => {
-        if (!accessToken) {
-            return;
-        }
-
-        (async () => {
-            const response = await axios
-                .get(
-                    `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${patient}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
-                        }
-                    }
-                )
-
-            setPatientData(response.data);
-        })()
-    }, [accessToken])
-
+  if (error) {
     return (
-        <div className="App">
-            {patientData && (
-                <div>
-                    <div>
-                        <span>First Name: </span><span>{patientData.name[0].given[0]}</span>
-                    </div>
-                    <div>
-                        <span>Last Name: </span><span>{patientData.name[0].family}</span>
-                    </div>
-                </div>
-            )}
-        </div>
+      <div>
+        <h3>Patient EHR Launch failed</h3>
+        <p>error: {JSON.stringify(error)}</p>
+      </div>
     );
-}
+  }
+
+  return (
+    <div className="App">
+      {currentPatient && (
+        <div>
+          <div>Current Patient:</div>
+          <div>
+            <span>First Name: </span>
+            <span>{currentPatient.name[0].given[0]}</span>
+          </div>
+          <div>
+            <span>Last Name: </span>
+            <span>{currentPatient.name[0].family}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
