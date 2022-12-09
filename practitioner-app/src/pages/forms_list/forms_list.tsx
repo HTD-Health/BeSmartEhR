@@ -1,5 +1,5 @@
 import { Pagination, Typography, Grid, CircularProgress } from '@mui/material';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import type { Questionnaire } from 'fhir/r4';
 import { useState, useEffect } from 'react';
 
@@ -12,15 +12,18 @@ const QUESTIONNAIRES_PER_PAGE = 5;
 
 const FormsList = (): JSX.Element => {
     const [page, setPage] = useState(1);
+    const [bundleId, setBundleId] = useState<string | undefined>(undefined);
     const [errorSnackbar, setErrorSnackbar] = useState(false);
 
-    const queryClient = useQueryClient();
-
     const { data, isLoading, error } = useQuery(
-        getQuestionnairesQuery(queryClient, {
-            page,
-            questionnairesPerPage: QUESTIONNAIRES_PER_PAGE
-        })
+        getQuestionnairesQuery(
+            {
+                bundleId,
+                page,
+                questionnairesPerPage: QUESTIONNAIRES_PER_PAGE
+            },
+            setBundleId
+        )
     );
 
     useEffect(() => {

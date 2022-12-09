@@ -1,4 +1,3 @@
-import { QueryClient } from 'react-query';
 import type { Bundle, FhirResource } from 'fhir/r4';
 
 import { getPatient, getUser, getQuestionnaires } from './api';
@@ -17,21 +16,22 @@ type QuestionnairesQuery = {
     queryKey: (string | number)[];
     queryFn: () => Promise<Bundle<FhirResource>>;
     keepPreviousData: boolean;
+    onSuccess: (data: Bundle) => Bundle;
 };
 
 const getQuestionnairesQuery = (
-    queryClient: QueryClient,
     options: {
+        bundleId: string | undefined;
         page: number;
         questionnairesPerPage: number;
-    }
+    },
+    setBundleId: React.Dispatch<React.SetStateAction<string | undefined>>
 ): QuestionnairesQuery => ({
     queryKey: ['getQuestionnaires', options.page],
-    queryFn: async () => {
-        /* fetch the "bundleId" property from initial query (page=1) in case to get next/previous relation for pagination */
-        const bundle: Bundle | undefined = queryClient.getQueryData(['getQuestionnaires', 1]);
-
-        return getQuestionnaires(bundle?.id, options.page - 1, options.questionnairesPerPage);
+    queryFn: async () => getQuestionnaires(options.bundleId, options.page - 1, options.questionnairesPerPage),
+    onSuccess: (data: Bundle) => {
+        setBundleId(data?.id);
+        return data;
     },
     keepPreviousData: true
 });
