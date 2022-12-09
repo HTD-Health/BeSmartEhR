@@ -1,25 +1,34 @@
 import { Pagination, Typography, Grid, CircularProgress } from '@mui/material';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import type { Questionnaire } from 'fhir/r4';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import { getQuestionnaires } from 'api/api';
 import QuestionnaireItem from 'components/questionnaire_item/questonnaire_item';
+import { getQuestionnairesQuery } from 'api/queries';
+import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
+import AlertSnackbar from 'components/error_snackbar/error_snackbar';
+
+const QUESTIONNAIRES_PER_PAGE = 5;
 
 const FormsList = (): JSX.Element => {
-    // currently defined as constant in forms_list.tsx
-    const QUESTIONNAIRES_PER_PAGE = 8;
-
     const [page, setPage] = useState(1);
-    const { data, isLoading } = useQuery(
-        ['getQuestionnaires', page],
-        () => getQuestionnaires(bundleId, page - 1, QUESTIONNAIRES_PER_PAGE),
-        {
-            keepPreviousData: true
-        }
+    const [errorSnackbar, setErrorSnackbar] = useState(false);
+
+    const queryClient = useQueryClient();
+
+    const { data, isLoading, error } = useQuery(
+        getQuestionnairesQuery(queryClient, {
+            page,
+            questionnairesPerPage: QUESTIONNAIRES_PER_PAGE
+        })
     );
-    const bundleId: string | undefined = data?.id;
+
+    useEffect(() => {
+        if (error) {
+            setErrorSnackbar(true);
+            console.error(error);
+        }
+    }, [error]);
 
     const getTotalPagesCount = (): number => {
         if (data?.total) {
@@ -60,24 +69,31 @@ const FormsList = (): JSX.Element => {
         );
     };
 
+    const renderPagination = (): JSX.Element => (
+        <Pagination
+            size="large"
+            color="primary"
+            count={getTotalPagesCount()}
+            page={page}
+            onChange={(_: React.ChangeEvent<unknown>, value: number) => setPage(value)}
+        />
+    );
+
     return (
         <>
             <SmartAppBar />
+            <AlertSnackbar
+                open={errorSnackbar}
+                onClose={() => setErrorSnackbar(false)}
+                message="Failed to get patient data"
+            />
             {renderTitle()}
             <Grid container spacing={2} justifyContent="center">
                 <>
                     <Grid item xs={12}>
                         {renderContent()}
                     </Grid>
-                    <Grid item>
-                        <Pagination
-                            size="large"
-                            color="primary"
-                            count={getTotalPagesCount()}
-                            page={page}
-                            onChange={(_: React.ChangeEvent<unknown>, value: number) => setPage(value)}
-                        />
-                    </Grid>
+                    <Grid item>{renderPagination()}</Grid>
                 </>
             </Grid>
         </>

@@ -43,7 +43,7 @@ const getQuestionnaires = async (
             '_bundletype=searchset'
         ];
 
-        const relationSearch = c.state.serverUrl.concat(params.join('&'));
+        const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
         return c.request(relationSearch);
     }
 
