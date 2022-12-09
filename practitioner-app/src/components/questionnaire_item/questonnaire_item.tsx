@@ -20,7 +20,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
             }}
         >
             <Typography variant="h6" color="inherit" noWrap>
-                {questionnaire?.name}
+                {questionnaire?.status}
             </Typography>
             <Button variant="contained">Assign</Button>
         </Card>

@@ -31,6 +31,10 @@ const getQuestionnaires = async (
 ): Promise<Bundle> => {
     const c = await getClient();
 
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
     if (bundleId) {
         const params = [
             `_getpages=${bundleId}`,
@@ -38,9 +42,11 @@ const getQuestionnaires = async (
             `_count=${questionnairesPerPage}`,
             '_bundletype=searchset'
         ];
-        const relationSearch = `https://launch.smarthealthit.org/v/r4/fhir?`.concat(params.join('&'));
+
+        const relationSearch = c.state.serverUrl.concat(params.join('&'));
         return c.request(relationSearch);
     }
+
     return c.request(`Questionnaire?_count=${questionnairesPerPage}`);
 };
 
