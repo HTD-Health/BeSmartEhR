@@ -8,7 +8,7 @@ import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 
-const PatientProfile = (): JSX.Element => {
+const Home = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const { error, data, isLoading } = useQuery(getPatientQuery);
 
@@ -68,4 +68,4 @@ const PatientProfile = (): JSX.Element => {
     );
 };
 
-export default PatientProfile;
+export default Home;

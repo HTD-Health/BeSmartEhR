@@ -2,7 +2,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import type { Practitioner } from 'fhir/r4';
+import type { Patient } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
@@ -20,7 +20,7 @@ const SmartAppBar = (): JSX.Element => {
         }
     }, [error]);
 
-    const getUserName = (user: Practitioner): string => {
+    const getUserName = (user: Patient): string => {
         if (!user.name || user.name.length === 0) {
             return '';
         }
