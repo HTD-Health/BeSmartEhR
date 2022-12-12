@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Typography } from '@mui/material';
+import { Grid, Typography, Button, Box } from '@mui/material';
+import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 
 import FormsPage from './forms_page';
 
@@ -21,6 +22,34 @@ const FormsContainer = (): JSX.Element => {
         [formsToAssign, errorSnackbar, setFormsToAssign, setErrorSnackbar]
     );
 
+    const renderMultipleAssignBar = (): JSX.Element => (
+        <Grid container spacing={2} px=".5rem">
+            <Grid item xs={12} sm={6}>
+                <Box sx={{ display: 'flex' }}>
+                    <Typography variant="h6" color="inherit" noWrap>
+                        Marked to assign: {formsToAssign.length}
+                    </Typography>
+                    <Button onClick={() => setFormsToAssign([])} sx={{ minHeight: 0, minWidth: 0, padding: 0 }}>
+                        <DisabledByDefaultIcon color="action" />
+                    </Button>
+                </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                    <Button
+                        variant="contained"
+                        onClick={() => {
+                            // prepared for multiple assign feature
+                            console.log(JSON.stringify(formsToAssign));
+                        }}
+                    >
+                        Assign multiple
+                    </Button>
+                </Box>
+            </Grid>
+        </Grid>
+    );
+
     return (
         <>
             <SmartAppBar />
@@ -32,9 +61,7 @@ const FormsContainer = (): JSX.Element => {
             <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
                 Questionnaires
             </Typography>
-            <Typography sx={{ ml: '.5rem' }} variant="h6" color="inherit" noWrap>
-                Questionnaires marked to assign: {formsToAssign.length}
-            </Typography>
+            {formsToAssign.length > 0 && renderMultipleAssignBar()}
             <FormsContext.Provider value={value}>
                 <FormsPage />
             </FormsContext.Provider>

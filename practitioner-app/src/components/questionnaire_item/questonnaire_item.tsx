@@ -37,11 +37,11 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
                 borderColor: 'grey.500'
             }}
         >
-            <Typography variant="h6" color="inherit" noWrap>
+            <Typography variant="h6" color="inherit">
                 {questionnaire?.name || 'Questionnaire name not specified'}
             </Typography>
-            <Box>
-                <Checkbox defaultChecked={isCheckedToAssign()} onChange={handleChange} />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Checkbox checked={isCheckedToAssign()} onChange={handleChange} />
                 <Button variant="contained">Assign</Button>
             </Box>
         </Card>

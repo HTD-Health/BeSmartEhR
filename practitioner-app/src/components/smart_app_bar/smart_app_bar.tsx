@@ -4,15 +4,16 @@ import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
 import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import { getUserQuery } from 'api/queries';
-import NavbarMenu from 'components/navbar_menu/navbar_menu';
 
 const SmartAppBar = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const { error, data } = useQuery(getUserQuery);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (error) {
@@ -45,7 +46,6 @@ const SmartAppBar = (): JSX.Element => {
                 <Typography variant="body1" color="inherit" noWrap>
                     {getUserName(data)}
                 </Typography>
-                <NavbarMenu />
             </Box>
         );
     };
@@ -65,7 +65,13 @@ const SmartAppBar = (): JSX.Element => {
                     px: '2rem'
                 }}
             >
-                <Typography variant="h5" color="inherit" noWrap>
+                <Typography
+                    onClick={() => navigate('/patient-profile')}
+                    sx={{ cursor: 'pointer' }}
+                    variant="h5"
+                    color="inherit"
+                    noWrap
+                >
                     BeSmartEhR - Practitioner App
                 </Typography>
                 {renderUserData()}
