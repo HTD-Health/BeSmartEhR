@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Grid, Typography, Button, Box } from '@mui/material';
+import { Grid, Typography, Button, Box, Pagination } from '@mui/material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 
 import FormsPage from './forms_page';
@@ -9,17 +9,23 @@ import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import { FormsContext } from 'hooks/useFormsData';
 
 const FormsContainer = (): JSX.Element => {
+    const [bundleId, setBundleId] = useState<string | undefined>(undefined);
+    const [page, setPage] = useState(1);
+    const [resultsInTotal, setResultsInTotal] = useState<number>(0);
     const [formsToAssign, setFormsToAssign] = useState<string[]>([]);
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
     const value = useMemo(
         () => ({
+            bundleId,
+            page,
             formsToAssign,
-            errorSnackbar,
+            setBundleId,
             setFormsToAssign,
-            setErrorSnackbar
+            setErrorSnackbar,
+            setResultsInTotal
         }),
-        [formsToAssign, errorSnackbar, setFormsToAssign, setErrorSnackbar]
+        [bundleId, page, formsToAssign, setFormsToAssign, setErrorSnackbar, setResultsInTotal, setBundleId]
     );
 
     const renderMultipleAssignBar = (): JSX.Element => (
@@ -50,6 +56,12 @@ const FormsContainer = (): JSX.Element => {
         </Grid>
     );
 
+    const renderPage = (): JSX.Element => (
+        <FormsContext.Provider value={value}>
+            <FormsPage />
+        </FormsContext.Provider>
+    );
+
     return (
         <>
             <SmartAppBar />
@@ -61,10 +73,23 @@ const FormsContainer = (): JSX.Element => {
             <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
                 Questionnaires
             </Typography>
+
             {formsToAssign.length > 0 && renderMultipleAssignBar()}
-            <FormsContext.Provider value={value}>
-                <FormsPage />
-            </FormsContext.Provider>
+
+            <Grid container spacing={2} justifyContent="center">
+                <Grid item xs={12}>
+                    {renderPage()}
+                </Grid>
+                <Grid item>
+                    <Pagination
+                        size="large"
+                        color="primary"
+                        count={resultsInTotal}
+                        page={page}
+                        onChange={(_: React.ChangeEvent<unknown>, val: number) => setPage(val)}
+                    />
+                </Grid>
+            </Grid>
         </>
     );
 };
