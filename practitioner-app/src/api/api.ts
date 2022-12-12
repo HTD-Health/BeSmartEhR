@@ -29,7 +29,13 @@ const getUser = async (): Promise<Practitioner> => {
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html
 // Task connects a patient to a practitioner and a form
-const assignForm = async (formData: FormMeta): Promise<string> => {
+const assignForms = async (formDataList: FormMeta[]): Promise<string[]> => {
+    if (!formDataList.length) return [];
+    if (formDataList.length === 1) return [await assignSingleForm(formDataList[0])];
+    return assignBundleForms(formDataList);
+};
+
+const assignSingleForm = async (formData: FormMeta): Promise<string> => {
     const c = await getClient();
     const userUrl = c.user.fhirUser;
     if (!userUrl) throw new Error('Missing current user data');
@@ -42,10 +48,7 @@ const assignForm = async (formData: FormMeta): Promise<string> => {
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
-// Same as `assignForm`, but uses a Bundle FHIR resource
-// https://www.hl7.org/FHIR/bundle.html
-// to assign multiple forms at once
-const assignForms = async (formDataList: FormMeta[]): Promise<string[]> => {
+const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> => {
     const c = await getClient();
     const userUrl = c.user.fhirUser;
     if (!userUrl) throw new Error('Missing current user data');
@@ -69,4 +72,4 @@ const assignForms = async (formDataList: FormMeta[]): Promise<string[]> => {
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, assignForm, assignForms };
+export { getPatient, getUser, assignForms };
