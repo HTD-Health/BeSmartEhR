@@ -2,6 +2,7 @@ import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 import { getPatientQuery } from 'api/queries';
 import AlertSnackbar from 'components/error_snackbar/error_snackbar';
@@ -11,6 +12,7 @@ import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 const Home = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const { error, data, isLoading } = useQuery(getPatientQuery);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (error) {
@@ -54,10 +56,14 @@ const Home = (): JSX.Element => {
                                 height: '100%'
                             }}
                         >
-                            <Button variant="contained" sx={{ my: '0.5rem' }}>
+                            <Button
+                                variant="contained"
+                                onClick={() => navigate('/assigned-list')}
+                                sx={{ my: '0.5rem' }}
+                            >
                                 Assigned Forms
                             </Button>
-                            <Button variant="contained" sx={{ my: '0.5rem' }}>
+                            <Button variant="contained" onClick={() => navigate('/filled-list')} sx={{ my: '0.5rem' }}>
                                 Filled Forms
                             </Button>
                         </Box>
