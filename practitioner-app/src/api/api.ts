@@ -1,9 +1,8 @@
-import type { Task, Patient, Practitioner } from 'fhir/r4';
+import type { Patient, Practitioner, Bundle, BundleEntry, FhirResource } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
-// Tag used to identify Tasks that assign forms to patients
-const taskQuestionnaireTag = 'be-smart-ehr-questionnaire';
+import { createAssignmentTask, FormMeta } from './models';
 
 let client: Client;
 
@@ -30,27 +29,44 @@ const getUser = async (): Promise<Practitioner> => {
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html
 // Task connects a patient to a practitioner and a form
-const assignForm = async (formId: string, formName: string): Promise<Task> => {
+const assignForm = async (formData: FormMeta): Promise<string> => {
     const c = await getClient();
     const userUrl = c.user.fhirUser;
     if (!userUrl) throw new Error('Missing current user data');
     const patientId = c.patient.id;
     if (!patientId) throw new Error('Missing selected patient data');
 
-    const task: Task = {
-        resourceType: 'Task',
-        status: 'ready',
-        intent: 'order',
-        description: formName,
-        for: { reference: `Patient/${patientId}` },
-        owner: { reference: userUrl },
-        focus: { reference: `Questionnaire/${formId}` },
-        authoredOn: new Date().toISOString(),
-        meta: { tag: [{ code: taskQuestionnaireTag }] }
-    };
+    const task = createAssignmentTask(formData, patientId, userUrl);
 
     const createdResource = await client.create(task as any);
-    return createdResource as Task;
+    return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
-export { getPatient, getUser, assignForm };
+// Same as `assignForm`, but uses a Bundle FHIR resource
+// https://www.hl7.org/FHIR/bundle.html
+// to assign multiple forms at once
+const assignForms = async (formDataList: FormMeta[]): Promise<string[]> => {
+    const c = await getClient();
+    const userUrl = c.user.fhirUser;
+    if (!userUrl) throw new Error('Missing current user data');
+    const patientId = c.patient.id;
+    if (!patientId) throw new Error('Missing selected patient data');
+
+    const tasks = formDataList.map((formData) => createAssignmentTask(formData, patientId, userUrl));
+    const tasksBundleEntries: BundleEntry<FhirResource>[] = tasks.map((task) => ({
+        request: { method: 'POST', url: 'Task' },
+        resource: task
+    }));
+    const bundle: Bundle = { resourceType: 'Bundle', type: 'transaction', entry: tasksBundleEntries };
+
+    const requestOptions = {
+        url: ``,
+        method: 'POST',
+        body: JSON.stringify(bundle),
+        headers: { 'content-type': 'application/json' }
+    };
+    const createdBundle = await client.request(requestOptions);
+    return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
+};
+
+export { getPatient, getUser, assignForm, assignForms };

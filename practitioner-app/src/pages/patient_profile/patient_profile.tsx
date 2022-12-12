@@ -7,7 +7,7 @@ import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
 import { getPatientQuery } from 'api/queries';
-import { assignForm } from 'api/api';
+import { assignForms } from 'api/api';
 
 const PatientProfile = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
@@ -22,7 +22,10 @@ const PatientProfile = (): JSX.Element => {
 
     // TODO: Its just an example of assigning a hardcoded form, actual assignment shall be added when Questionnaires list is implemented
     const assignExampleForm = async (): Promise<void> => {
-        const response = await assignForm('1444913', 'Some Example Form');
+        const response = await assignForms([
+            { id: '1444945', name: 'First questionnaire' },
+            { id: '1444946', name: 'second questionnaire' }
+        ]);
         console.log(response);
     };
 
