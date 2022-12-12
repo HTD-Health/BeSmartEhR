@@ -1,19 +1,18 @@
 import { Pagination, Typography, Grid, CircularProgress } from '@mui/material';
 import { useQuery } from 'react-query';
 import type { Questionnaire } from 'fhir/r4';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import QuestionnaireItem from 'components/questionnaire_item/questonnaire_item';
 import { getQuestionnairesQuery } from 'api/queries';
-import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import AlertSnackbar from 'components/error_snackbar/error_snackbar';
+import { FormsContext } from 'hooks/useFormsData';
 
 const QUESTIONNAIRES_PER_PAGE = 5;
 
-const FormsList = (): JSX.Element => {
+const FormsPage = (): JSX.Element => {
     const [page, setPage] = useState(1);
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
-    const [errorSnackbar, setErrorSnackbar] = useState(false);
+    const { setErrorSnackbar } = useContext(FormsContext);
 
     const { data, isLoading, error } = useQuery(
         getQuestionnairesQuery(
@@ -41,12 +40,6 @@ const FormsList = (): JSX.Element => {
         return 0;
     };
 
-    const renderTitle = (): JSX.Element => (
-        <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
-            Questionnaires
-        </Typography>
-    );
-
     const renderContent = (): JSX.Element => {
         if (isLoading) {
             return <CircularProgress sx={{ m: '2rem' }} />;
@@ -72,35 +65,24 @@ const FormsList = (): JSX.Element => {
         );
     };
 
-    const renderPagination = (): JSX.Element => (
-        <Pagination
-            size="large"
-            color="primary"
-            count={getTotalPagesCount()}
-            page={page}
-            onChange={(_: React.ChangeEvent<unknown>, value: number) => setPage(value)}
-        />
-    );
-
     return (
-        <>
-            <SmartAppBar />
-            <AlertSnackbar
-                open={errorSnackbar}
-                onClose={() => setErrorSnackbar(false)}
-                message="Failed to get patient data"
-            />
-            {renderTitle()}
-            <Grid container spacing={2} justifyContent="center">
-                <>
-                    <Grid item xs={12}>
-                        {renderContent()}
-                    </Grid>
-                    <Grid item>{renderPagination()}</Grid>
-                </>
-            </Grid>
-        </>
+        <Grid container spacing={2} justifyContent="center">
+            <>
+                <Grid item xs={12}>
+                    {renderContent()}
+                </Grid>
+                <Grid item>
+                    <Pagination
+                        size="large"
+                        color="primary"
+                        count={getTotalPagesCount()}
+                        page={page}
+                        onChange={(_: React.ChangeEvent<unknown>, value: number) => setPage(value)}
+                    />
+                </Grid>
+            </>
+        </Grid>
     );
 };
 
-export default FormsList;
+export default FormsPage;

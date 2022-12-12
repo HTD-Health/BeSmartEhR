@@ -1,5 +1,8 @@
-import { Card, Typography, Button } from '@mui/material';
+import { Card, Typography, Button, Checkbox, Box } from '@mui/material';
 import type { Questionnaire } from 'fhir/r4';
+import { useContext } from 'react';
+
+import { FormsContext } from 'hooks/useFormsData';
 
 type QuestionnaireItemProps = {
     questionnaire: Questionnaire;
@@ -7,6 +10,21 @@ type QuestionnaireItemProps = {
 
 const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
     const { questionnaire } = props;
+    const { formsToAssign, setFormsToAssign } = useContext(FormsContext);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        if (!questionnaire.id) {
+            return;
+        }
+
+        if (event.target.checked) {
+            setFormsToAssign([...formsToAssign, questionnaire.id]);
+        } else {
+            setFormsToAssign(formsToAssign.filter((id) => id !== questionnaire.id));
+        }
+    };
+
+    const isCheckedToAssign = (): boolean => formsToAssign.some((id) => id === questionnaire.id);
 
     return (
         <Card
@@ -22,7 +40,10 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
             <Typography variant="h6" color="inherit" noWrap>
                 {questionnaire?.name || 'Questionnaire name not specified'}
             </Typography>
-            <Button variant="contained">Assign</Button>
+            <Box>
+                <Checkbox defaultChecked={isCheckedToAssign()} onChange={handleChange} />
+                <Button variant="contained">Assign</Button>
+            </Box>
         </Card>
     );
 };

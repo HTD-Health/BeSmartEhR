@@ -2,12 +2,12 @@ import { BrowserRouter as HashRouter, Navigate, Route, Routes } from 'react-rout
 
 import PatientProfile from './pages/patient_profile/patient_profile';
 
-import FormsList from 'pages/forms_list/forms_list';
+import FormsContainer from 'pages/forms/forms_container';
 
 export const routes = {
     root: '/',
     patientProfile: '/patient-profile',
-    formsList: '/forms-list'
+    formsContainer: '/forms-list'
 };
 
 const AppRouter = (): JSX.Element => (
@@ -15,7 +15,7 @@ const AppRouter = (): JSX.Element => (
         <Routes>
             <Route path={routes.root} element={<Navigate to={routes.patientProfile} />} />
             <Route path={routes.patientProfile} element={<PatientProfile />} />
-            <Route path={routes.formsList} element={<FormsList />} />
+            <Route path={routes.formsContainer} element={<FormsContainer />} />
         </Routes>
     </HashRouter>
 );
