@@ -1,9 +1,6 @@
-import type { Bundle, FhirResource, Patient } from 'fhir/r4';
+import type { Bundle, Patient } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
-
-import assignedForms from '../pages/forms_list/forms_assigned.json';
-import filledForms from '../pages/forms_list/forms_filled.json';
 
 let client: Client;
 
@@ -39,28 +36,16 @@ const getTasks = async (
         throw new Error('Incorrect client state - missing "serverUrl"');
     }
 
+    const params = [`status=${status}`, `_count=${itemsPerPage}`, `patient=${c.user.fhirUser}`, `intent=order`];
+
     if (bundleId) {
-        const params = [
-            `status=${status}`,
-            `_getpages=${bundleId}`,
-            `_getpagesoffset=${page * itemsPerPage}`,
-            `_count=${itemsPerPage}`,
-            '_bundletype=searchset'
-        ];
+        params.push(...[`_getpages=${bundleId}`, `_getpagesoffset=${page * itemsPerPage}`]);
 
         const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
         return c.request(relationSearch);
     }
 
-    if (status === 'ready') {
-        const bundle = assignedForms as Bundle<FhirResource>;
-        return bundle;
-    }
-    const bundle = filledForms as Bundle<FhirResource>;
-    return bundle;
-
-    // return c.request(`Task?status=${status}&_count=${itemsPerPage}`);
-    // return c.request(`Task?_count=${itemsPerPage}`);
+    return c.request(`Task?`.concat(params.join('&')));
 };
 
 export { getPatient, getUser, getTasks };
