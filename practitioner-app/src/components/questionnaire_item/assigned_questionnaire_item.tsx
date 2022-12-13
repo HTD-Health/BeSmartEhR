@@ -23,7 +23,7 @@ const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.E
             }}
         >
             <Typography variant="h6" color="inherit">
-                {questionnaire?.title || 'Questionnaire name not specified'}
+                {questionnaire?.name || 'Questionnaire name not specified'}
             </Typography>
             {authoredOn && (
                 <Typography variant="body2" color="inherit">
