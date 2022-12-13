@@ -25,12 +25,22 @@ const getQuestionnairesQuery = (
         bundleId: string | undefined;
         page: number;
         questionnairesPerPage: number;
+        assignedToPatient?: boolean;
     },
     setBundleId: Dispatch<SetStateAction<string | undefined>>,
     setResultsInTotal: Dispatch<SetStateAction<number>>
 ): QuestionnairesQuery => ({
-    queryKey: ['getQuestionnaires', options.page],
-    queryFn: async () => getQuestionnaires(options.bundleId, options.page - 1, options.questionnairesPerPage),
+    queryKey: [options.assignedToPatient ? 'getQuestionnairesAssignedToPatient' : 'getQuestionnaires', options.page],
+    queryFn: async () => {
+        if (options.assignedToPatient) {
+            return getQuestionnairesAssignedToPatient(
+                options.bundleId,
+                options.page - 1,
+                options.questionnairesPerPage
+            );
+        }
+        return getQuestionnaires(options.bundleId, options.page - 1, options.questionnairesPerPage);
+    },
     onSuccess: (data: Bundle) => {
         if (data?.total && options.page === 1) {
             const pages = Math.floor(data.total / options.questionnairesPerPage);
@@ -43,28 +53,4 @@ const getQuestionnairesQuery = (
     keepPreviousData: true
 });
 
-const getQuestionnairesAssignedToPatientQuery = (
-    options: {
-        bundleId: string | undefined;
-        page: number;
-        questionnairesPerPage: number;
-    },
-    setBundleId: Dispatch<SetStateAction<string | undefined>>,
-    setResultsInTotal: Dispatch<SetStateAction<number>>
-): QuestionnairesQuery => ({
-    queryKey: ['getQuestionnairesAssignedToPatient', options.page],
-    queryFn: async () =>
-        getQuestionnairesAssignedToPatient(options.bundleId, options.page - 1, options.questionnairesPerPage),
-    onSuccess: (data: Bundle) => {
-        if (data?.total && options.page === 1) {
-            const pages = Math.floor(data.total / options.questionnairesPerPage);
-            const total = data.total % options.questionnairesPerPage ? pages + 1 : pages;
-            setResultsInTotal(total);
-            setBundleId(data?.id);
-        }
-        return data;
-    },
-    keepPreviousData: true
-});
-
-export { getUserQuery, getPatientQuery, getQuestionnairesQuery, getQuestionnairesAssignedToPatientQuery };
+export { getUserQuery, getPatientQuery, getQuestionnairesQuery };

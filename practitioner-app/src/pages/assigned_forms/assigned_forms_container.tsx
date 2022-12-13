@@ -6,7 +6,7 @@ import AssignedFormsPage from './assigned_forms_page';
 
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 import AlertSnackbar from 'components/error_snackbar/error_snackbar';
-import { getQuestionnairesAssignedToPatientQuery } from 'api/queries';
+import { getQuestionnairesQuery } from 'api/queries';
 
 const AssignedFormsContainer = (): JSX.Element => {
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
@@ -15,11 +15,12 @@ const AssignedFormsContainer = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
     const { data, isLoading, error } = useQuery(
-        getQuestionnairesAssignedToPatientQuery(
+        getQuestionnairesQuery(
             {
                 bundleId,
                 page,
-                questionnairesPerPage: 5
+                questionnairesPerPage: 5,
+                assignedToPatient: true
             },
             setBundleId,
             setResultsInTotal
