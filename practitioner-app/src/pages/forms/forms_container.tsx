@@ -9,6 +9,8 @@ import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import { FormsContext } from 'hooks/useFormsData';
 import { useGetQuestionnaires } from 'api/queries';
 
+const questionnairesPerPage = 5;
+
 const FormsContainer = (): JSX.Element => {
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
     const [page, setPage] = useState(1);
@@ -16,15 +18,11 @@ const FormsContainer = (): JSX.Element => {
     const [formsToAssign, setFormsToAssign] = useState<string[]>([]);
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
-    const { data, isLoading, error } = useGetQuestionnaires(
-        {
-            bundleId,
-            page,
-            questionnairesPerPage: 5
-        },
-        setBundleId,
-        setResultsInTotal
-    );
+    const { data, isLoading, error, isSuccess } = useGetQuestionnaires({
+        bundleId,
+        page,
+        questionnairesPerPage: 5
+    });
 
     useEffect(() => {
         if (error) {
@@ -32,6 +30,15 @@ const FormsContainer = (): JSX.Element => {
             console.error(error);
         }
     }, [error]);
+
+    useEffect(() => {
+        if (isSuccess && data?.total && page === 1) {
+            const pages = Math.floor(data.total / questionnairesPerPage);
+            const total = data.total % questionnairesPerPage ? pages + 1 : pages;
+            setResultsInTotal(total);
+            setBundleId(data?.id);
+        }
+    }, [isSuccess, data, page]);
 
     const value = useMemo(
         () => ({

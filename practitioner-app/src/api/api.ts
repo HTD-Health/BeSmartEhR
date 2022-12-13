@@ -2,7 +2,7 @@ import type { Patient, Practitioner, Bundle, BundleEntry, FhirResource } from 'f
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
-import { createAssignmentTask, FormMeta } from './models';
+import { createAssignmentTask, FormMeta, GetQuestionnairesParams } from './models';
 
 let client: Client;
 
@@ -26,26 +26,25 @@ const getUser = async (): Promise<Practitioner> => {
     return c.request(userUrl);
 };
 
-const getQuestionnaires = async (
-    bundleId: string | undefined,
-    page: number,
-    questionnairesPerPage: number
-): Promise<Bundle> => {
+const getQuestionnaires = async (params: GetQuestionnairesParams): Promise<Bundle> => {
     const c = await getClient();
+
+    const { bundleId, page, questionnairesPerPage } = params;
+    const realPage = page - 1;
 
     if (!c.state.serverUrl) {
         throw new Error('Incorrect client state - missing "serverUrl"');
     }
 
     if (bundleId) {
-        const params = [
+        const p = [
             `_getpages=${bundleId}`,
-            `_getpagesoffset=${page * questionnairesPerPage}`,
+            `_getpagesoffset=${realPage * questionnairesPerPage}`,
             `_count=${questionnairesPerPage}`,
             '_bundletype=searchset'
         ];
 
-        const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
+        const relationSearch = `${c.state.serverUrl}?`.concat(p.join('&'));
         return c.request(relationSearch);
     }
 
