@@ -1,27 +1,16 @@
 import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
+import { getPatientQuery } from 'api/queries';
+import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
-import { getPatientQuery } from 'api/queries';
-import { assignForms } from 'api/api';
 
-const PatientProfile = (): JSX.Element => {
+const Home = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const { error, data, isLoading } = useQuery(getPatientQuery);
-    const navigate = useNavigate();
-
-    // eslint-disable-next-line no-unused-vars
-    const assignFormMutation = useMutation(assignForms, {
-        onSuccess: (d) => {
-            console.log(d);
-            // TODO: invalidate assigned forms query
-        }
-    });
 
     useEffect(() => {
         if (error) {
@@ -33,7 +22,7 @@ const PatientProfile = (): JSX.Element => {
     return (
         <>
             <SmartAppBar />
-            <ErrorSnackbar
+            <AlertSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get patient data"
@@ -71,9 +60,6 @@ const PatientProfile = (): JSX.Element => {
                             <Button variant="contained" sx={{ my: '0.5rem' }}>
                                 Filled Forms
                             </Button>
-                            <Button variant="contained" sx={{ my: '0.5rem' }} onClick={() => navigate('/forms-list')}>
-                                Assign a new Form
-                            </Button>
                         </Box>
                     </Grid>
                 </Grid>
@@ -82,4 +68,4 @@ const PatientProfile = (): JSX.Element => {
     );
 };
 
-export default PatientProfile;
+export default Home;

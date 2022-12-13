@@ -1,21 +1,17 @@
 import PersonIcon from '@mui/icons-material/Person';
 import AppBar from '@mui/material/AppBar';
-import { Box, IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import type { Practitioner } from 'fhir/r4';
+import type { Patient } from 'fhir/r4';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
-import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
 import { getUserQuery } from 'api/queries';
+import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 
 const SmartAppBar = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const { error, data } = useQuery(getUserQuery);
-    const navigate = useNavigate();
-    const location = useLocation();
 
     useEffect(() => {
         if (error) {
@@ -24,7 +20,7 @@ const SmartAppBar = (): JSX.Element => {
         }
     }, [error]);
 
-    const getUserName = (user: Practitioner): string => {
+    const getUserName = (user: Patient): string => {
         if (!user.name || user.name.length === 0) {
             return '';
         }
@@ -54,7 +50,7 @@ const SmartAppBar = (): JSX.Element => {
 
     return (
         <AppBar position="relative">
-            <ErrorSnackbar
+            <AlertSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get current user data"
@@ -67,19 +63,9 @@ const SmartAppBar = (): JSX.Element => {
                     px: '2rem'
                 }}
             >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {!location.pathname.includes('/patient-profile') && (
-                        <IconButton
-                            onClick={() => navigate(-1)}
-                            sx={{ minHeight: 0, minWidth: 0, padding: 0, mr: '.5rem' }}
-                        >
-                            <ArrowCircleLeftIcon fontSize="large" />
-                        </IconButton>
-                    )}
-                    <Typography variant="h5" color="inherit" noWrap>
-                        BeSmartEhR - Practitioner App
-                    </Typography>
-                </Box>
+                <Typography variant="h5" color="inherit" noWrap>
+                    BeSmartEhR - Patient App
+                </Typography>
                 {renderUserData()}
             </Box>
         </AppBar>
