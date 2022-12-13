@@ -36,7 +36,13 @@ const getTasks = async (
         throw new Error('Incorrect client state - missing "serverUrl"');
     }
 
-    const params = [`status=${status}`, `_count=${itemsPerPage}`, `patient=${c.user.fhirUser}`, `intent=order`];
+    const params = [
+        `status=${status}`,
+        `_count=${itemsPerPage}`,
+        `patient=${c.user.fhirUser}`,
+        `intent=order`,
+        `_sort=-authored-on`
+    ];
 
     if (bundleId) {
         params.push(...[`_getpages=${bundleId}`, `_getpagesoffset=${page * itemsPerPage}`]);
