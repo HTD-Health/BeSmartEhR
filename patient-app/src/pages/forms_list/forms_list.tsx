@@ -71,11 +71,11 @@ const FormsList = ({ status }: { status: 'ready' | 'completed' }): JSX.Element =
                         task={entryItem.resource as Task}
                         actionButton={
                             status === 'ready' ? (
-                                <Button variant="text" endIcon={<ArrowRightAltIcon />}>
+                                <Button sx={{ whiteSpace: 'nowrap' }} variant="text" endIcon={<ArrowRightAltIcon />}>
                                     Fill out
                                 </Button>
                             ) : (
-                                <Button variant="text" endIcon={<ArrowRightAltIcon />}>
+                                <Button sx={{ whiteSpace: 'nowrap' }} variant="text" endIcon={<ArrowRightAltIcon />}>
                                     Show
                                 </Button>
                             )
