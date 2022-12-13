@@ -1,27 +1,17 @@
 import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
-import { getPatientQuery } from 'api/queries';
-import { assignForms } from 'api/api';
+import { useGetPatient } from 'api/queries';
 
 const PatientProfile = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
-    const { error, data, isLoading } = useQuery(getPatientQuery);
+    const { error, data, isLoading } = useGetPatient();
     const navigate = useNavigate();
-
-    // eslint-disable-next-line no-unused-vars
-    const assignFormMutation = useMutation(assignForms, {
-        onSuccess: (d) => {
-            console.log(d);
-            // TODO: invalidate assigned forms query
-        }
-    });
 
     useEffect(() => {
         if (error) {
