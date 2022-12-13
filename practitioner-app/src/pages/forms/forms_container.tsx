@@ -1,12 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Grid, Typography, Button, Box, Pagination } from '@mui/material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
+import { useQuery } from 'react-query';
 
 import FormsPage from './forms_page';
 
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import { FormsContext } from 'hooks/useFormsData';
+import { getQuestionnairesQuery } from 'api/queries';
 
 const FormsContainer = (): JSX.Element => {
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
@@ -15,17 +17,33 @@ const FormsContainer = (): JSX.Element => {
     const [formsToAssign, setFormsToAssign] = useState<string[]>([]);
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
+    const { data, isLoading, error } = useQuery(
+        getQuestionnairesQuery(
+            {
+                bundleId,
+                page,
+                questionnairesPerPage: 5
+            },
+            setBundleId,
+            setResultsInTotal
+        )
+    );
+
+    useEffect(() => {
+        if (error) {
+            setErrorSnackbar(true);
+            console.error(error);
+        }
+    }, [error]);
+
     const value = useMemo(
         () => ({
-            bundleId,
-            page,
+            data,
+            isLoading,
             formsToAssign,
-            setBundleId,
-            setFormsToAssign,
-            setErrorSnackbar,
-            setResultsInTotal
+            setFormsToAssign
         }),
-        [bundleId, page, formsToAssign, setFormsToAssign, setErrorSnackbar, setResultsInTotal, setBundleId]
+        [data, isLoading, formsToAssign, setFormsToAssign]
     );
 
     const renderMultipleAssignBar = (): JSX.Element => (
