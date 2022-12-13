@@ -46,7 +46,7 @@ const FormsList = ({ status }: { status: 'ready' | 'completed' }): JSX.Element =
 
     const renderTitle = (): JSX.Element => (
         <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
-            Forms
+            {status === 'ready' ? 'Assigned forms' : 'Filled forms'}
         </Typography>
     );
 
