@@ -41,7 +41,7 @@ const getTasks = async (
         `_count=${itemsPerPage}`,
         `patient=${c.user.fhirUser}`,
         `intent=order`,
-        `_sort=-authored-on`
+        `_sort=authored-on`
     ];
 
     if (bundleId) {
