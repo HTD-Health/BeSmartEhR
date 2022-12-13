@@ -1,3 +1,4 @@
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { Button, CircularProgress, Grid, Pagination, Typography } from '@mui/material';
 import type { Task } from 'fhir/r4';
 import { useEffect, useState } from 'react';
@@ -9,7 +10,7 @@ import TaskItem from '../../components/task_item/task_item';
 import { getTasksQuery } from 'api/queries';
 import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 
-const TASKS_PER_PAGE = 5;
+const TASKS_PER_PAGE = 3;
 
 const FormsList = ({ status }: { status: 'ready' | 'completed' }): JSX.Element => {
     const [page, setPage] = useState(1);
@@ -70,9 +71,13 @@ const FormsList = ({ status }: { status: 'ready' | 'completed' }): JSX.Element =
                         task={entryItem.resource as Task}
                         actionButton={
                             status === 'ready' ? (
-                                <Button variant="contained">Fill out ➞</Button>
+                                <Button variant="text" endIcon={<ArrowRightAltIcon />}>
+                                    Fill out
+                                </Button>
                             ) : (
-                                <Button variant="contained">Show ➞</Button>
+                                <Button variant="text" endIcon={<ArrowRightAltIcon />}>
+                                    Show
+                                </Button>
                             )
                         }
                     />
