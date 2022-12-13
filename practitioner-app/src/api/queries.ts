@@ -31,16 +31,10 @@ const getQuestionnairesQuery = (
     setResultsInTotal: Dispatch<SetStateAction<number>>
 ): QuestionnairesQuery => ({
     queryKey: [options.assignedToPatient ? 'getQuestionnairesAssignedToPatient' : 'getQuestionnaires', options.page],
-    queryFn: async () => {
-        if (options.assignedToPatient) {
-            return getQuestionnairesAssignedToPatient(
-                options.bundleId,
-                options.page - 1,
-                options.questionnairesPerPage
-            );
-        }
-        return getQuestionnaires(options.bundleId, options.page - 1, options.questionnairesPerPage);
-    },
+    queryFn: async () =>
+        options.assignedToPatient
+            ? getQuestionnairesAssignedToPatient(options.bundleId, options.page - 1, options.questionnairesPerPage)
+            : getQuestionnaires(options.bundleId, options.page - 1, options.questionnairesPerPage),
     onSuccess: (data: Bundle) => {
         if (data?.total && options.page === 1) {
             const pages = Math.floor(data.total / options.questionnairesPerPage);
