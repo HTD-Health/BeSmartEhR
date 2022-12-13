@@ -36,18 +36,51 @@ const getQuestionnaires = async (
     }
 
     if (bundleId) {
-        const params = [
-            `_getpages=${bundleId}`,
-            `_getpagesoffset=${page * questionnairesPerPage}`,
-            `_count=${questionnairesPerPage}`,
-            '_bundletype=searchset'
-        ];
-
-        const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
-        return c.request(relationSearch);
+        return performPaginateSearch(bundleId, page * questionnairesPerPage, questionnairesPerPage);
     }
 
+    // the initial call
     return c.request(`Questionnaire?_count=${questionnairesPerPage}`);
 };
 
-export { getPatient, getUser, getQuestionnaires };
+const getQuestionnairesAssignedToPatient = async (
+    bundleId: string | undefined,
+    page: number,
+    tasksPerPage: number
+): Promise<Bundle> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    if (bundleId) {
+        return performPaginateSearch(bundleId, page * tasksPerPage, tasksPerPage);
+    }
+
+    // the initial call
+    const params = [
+        `owner=${c.user.fhirUser}`,
+        `patient=${c.patient.id}`,
+        `_count=${tasksPerPage}`,
+        `_tag=be-smart-ehr-questionnaire`,
+        `_include=Task:focus`
+    ];
+    return c.request(`Task?`.concat(params.join('&')));
+};
+
+const performPaginateSearch = async (bundleId: string, pagesOffset: number, count: number): Promise<Bundle> => {
+    const c = await getClient();
+
+    const params = [
+        `_getpages=${bundleId}`,
+        `_getpagesoffset=${pagesOffset}`,
+        `_count=${count}`,
+        '_bundletype=searchset'
+    ];
+
+    const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
+    return c.request(relationSearch);
+};
+
+export { getPatient, getUser, getQuestionnaires, getQuestionnairesAssignedToPatient };

@@ -38,7 +38,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
             }}
         >
             <Typography variant="h6" color="inherit">
-                {questionnaire?.name || 'Questionnaire name not specified'}
+                {questionnaire?.title || 'Questionnaire name not specified'}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Checkbox checked={isCheckedToAssign()} onChange={handleChange} />

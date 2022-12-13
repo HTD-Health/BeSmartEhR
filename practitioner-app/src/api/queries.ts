@@ -1,7 +1,7 @@
 import type { Bundle, FhirResource } from 'fhir/r4';
 import { Dispatch, SetStateAction } from 'react';
 
-import { getPatient, getUser, getQuestionnaires } from './api';
+import { getPatient, getUser, getQuestionnaires, getQuestionnairesAssignedToPatient } from './api';
 
 const getUserQuery = {
     queryKey: 'getUser',
@@ -43,4 +43,28 @@ const getQuestionnairesQuery = (
     keepPreviousData: true
 });
 
-export { getUserQuery, getPatientQuery, getQuestionnairesQuery };
+const getQuestionnairesAssignedToPatientQuery = (
+    options: {
+        bundleId: string | undefined;
+        page: number;
+        questionnairesPerPage: number;
+    },
+    setBundleId: Dispatch<SetStateAction<string | undefined>>,
+    setResultsInTotal: Dispatch<SetStateAction<number>>
+): QuestionnairesQuery => ({
+    queryKey: ['getQuestionnairesAssignedToPatient', options.page],
+    queryFn: async () =>
+        getQuestionnairesAssignedToPatient(options.bundleId, options.page - 1, options.questionnairesPerPage),
+    onSuccess: (data: Bundle) => {
+        if (data?.total && options.page === 1) {
+            const pages = Math.floor(data.total / options.questionnairesPerPage);
+            const total = data.total % options.questionnairesPerPage ? pages + 1 : pages;
+            setResultsInTotal(total);
+            setBundleId(data?.id);
+        }
+        return data;
+    },
+    keepPreviousData: true
+});
+
+export { getUserQuery, getPatientQuery, getQuestionnairesQuery, getQuestionnairesAssignedToPatientQuery };

@@ -56,7 +56,11 @@ const PatientProfile = (): JSX.Element => {
                                 height: '100%'
                             }}
                         >
-                            <Button variant="contained" sx={{ my: '0.5rem' }}>
+                            <Button
+                                variant="contained"
+                                sx={{ my: '0.5rem' }}
+                                onClick={() => navigate('/assigned-forms-list')}
+                            >
                                 Assigned Forms
                             </Button>
                             <Button variant="contained" sx={{ my: '0.5rem' }}>
