@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 import { useGetPatient } from 'api/queries';
 
 const PatientProfile = (): JSX.Element => {
@@ -23,7 +23,7 @@ const PatientProfile = (): JSX.Element => {
     return (
         <>
             <SmartAppBar />
-            <ErrorSnackbar
+            <CustomSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get patient data"

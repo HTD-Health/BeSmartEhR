@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
-import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
 import { useGetUser } from 'api/queries';
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 
 const SmartAppBar = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
@@ -53,7 +53,7 @@ const SmartAppBar = (): JSX.Element => {
 
     return (
         <AppBar position="relative">
-            <ErrorSnackbar
+            <CustomSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get current user data"
