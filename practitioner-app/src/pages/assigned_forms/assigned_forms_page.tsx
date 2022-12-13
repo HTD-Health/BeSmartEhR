@@ -24,34 +24,37 @@ const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
             );
         }
 
+        console.log(data);
+
         return (
             <>
-                {data.entry &&
-                    data.entry.map((taskItem) => {
-                        if (taskItem.resource?.resourceType === 'Task') {
-                            const currentTask = taskItem.resource as Task;
+                {data.entry.map((entry, index) => {
+                    // assumptions: Patient should have only one Task with single Questionnaire
+                    // we shouldn't create two different Tasks with the same Questionnaire for the same Patient
+                    // in mentioned case there will be duplicate in the Assigned Questionnaries list
+                    if (entry.resource?.resourceType === 'Task') {
+                        const currentTask = entry.resource as Task;
 
-                            const taskRelatedQuestionnaireFromBundle = data.entry?.find((entry) => {
-                                const questionnaireRef = currentTask.focus?.reference;
-
-                                if (questionnaireRef) {
-                                    return entry?.fullUrl?.includes(questionnaireRef);
-                                }
-                                return false;
-                            });
-
-                            if (taskRelatedQuestionnaireFromBundle) {
-                                return (
-                                    <AssignedQuestionnaireItem
-                                        key={(taskRelatedQuestionnaireFromBundle.resource as Questionnaire).id}
-                                        questionnaire={taskRelatedQuestionnaireFromBundle.resource as Questionnaire}
-                                        authoredOn={currentTask.authoredOn}
-                                    />
-                                );
-                            }
+                        let questionnaire;
+                        if (data.entry) {
+                            questionnaire = data.entry.find((item) => {
+                                const questionnaireRef = currentTask?.focus?.reference;
+                                return questionnaireRef ? item.fullUrl?.includes(questionnaireRef) : false;
+                            })?.resource as Questionnaire;
                         }
-                        return null;
-                    })}
+
+                        if (questionnaire && questionnaire.id) {
+                            return (
+                                <AssignedQuestionnaireItem
+                                    key={`${index + 1}-${questionnaire.id}`}
+                                    questionnaire={questionnaire}
+                                    authoredOn={currentTask?.authoredOn}
+                                />
+                            );
+                        }
+                    }
+                    return null;
+                })}
             </>
         );
     };
