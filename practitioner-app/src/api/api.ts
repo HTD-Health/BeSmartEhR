@@ -1,4 +1,4 @@
-import type { Patient, Practitioner } from 'fhir/r4';
+import type { Bundle, Patient, Practitioner } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
@@ -24,4 +24,30 @@ const getUser = async (): Promise<Practitioner> => {
     return c.request(userUrl);
 };
 
-export { getPatient, getUser };
+const getQuestionnaires = async (
+    bundleId: string | undefined,
+    page: number,
+    questionnairesPerPage: number
+): Promise<Bundle> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    if (bundleId) {
+        const params = [
+            `_getpages=${bundleId}`,
+            `_getpagesoffset=${page * questionnairesPerPage}`,
+            `_count=${questionnairesPerPage}`,
+            '_bundletype=searchset'
+        ];
+
+        const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
+        return c.request(relationSearch);
+    }
+
+    return c.request(`Questionnaire?_count=${questionnairesPerPage}`);
+};
+
+export { getPatient, getUser, getQuestionnaires };

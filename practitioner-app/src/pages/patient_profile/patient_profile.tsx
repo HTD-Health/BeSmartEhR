@@ -1,6 +1,7 @@
 import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
 import PatientCard from 'components/patient_card/patient_card';
@@ -11,6 +12,7 @@ import { getPatientQuery } from 'api/queries';
 const PatientProfile = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const { error, data, isLoading } = useQuery(getPatientQuery);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (error) {
@@ -60,7 +62,7 @@ const PatientProfile = (): JSX.Element => {
                             <Button variant="contained" sx={{ my: '0.5rem' }}>
                                 Filled Forms
                             </Button>
-                            <Button variant="contained" sx={{ my: '0.5rem' }}>
+                            <Button variant="contained" sx={{ my: '0.5rem' }} onClick={() => navigate('/forms-list')}>
                                 Assign a new Form
                             </Button>
                         </Box>

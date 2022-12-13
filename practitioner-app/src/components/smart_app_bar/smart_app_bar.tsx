@@ -1,10 +1,12 @@
 import PersonIcon from '@mui/icons-material/Person';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
+import { Box, IconButton } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
 import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
 import { getUserQuery } from 'api/queries';
@@ -12,6 +14,8 @@ import { getUserQuery } from 'api/queries';
 const SmartAppBar = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const { error, data } = useQuery(getUserQuery);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         if (error) {
@@ -63,9 +67,19 @@ const SmartAppBar = (): JSX.Element => {
                     px: '2rem'
                 }}
             >
-                <Typography variant="h5" color="inherit" noWrap>
-                    BeSmartEhR - Practitioner App
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    {!location.pathname.includes('/patient-profile') && (
+                        <IconButton
+                            onClick={() => navigate(-1)}
+                            sx={{ minHeight: 0, minWidth: 0, padding: 0, mr: '.5rem' }}
+                        >
+                            <ArrowCircleLeftIcon fontSize="large" />
+                        </IconButton>
+                    )}
+                    <Typography variant="h5" color="inherit" noWrap>
+                        BeSmartEhR - Practitioner App
+                    </Typography>
+                </Box>
                 {renderUserData()}
             </Box>
         </AppBar>
