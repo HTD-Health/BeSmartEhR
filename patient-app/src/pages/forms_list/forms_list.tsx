@@ -18,7 +18,7 @@ const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
     const [errorSnackbar, setErrorSnackbar] = useState(false);
 
-    const { data, isLoading, error } = useQuery(
+    const { data, isLoading, isSuccess, error } = useQuery(
         getTasksQuery(
             {
                 status,
@@ -28,8 +28,7 @@ const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
                 bundleId,
                 page,
                 itemsPerPage: TASKS_PER_PAGE
-            },
-            setBundleId
+            }
         )
     );
 
@@ -39,6 +38,12 @@ const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
             console.error(error);
         }
     }, [error]);
+
+    useEffect(() => {
+        if (isSuccess && data?.total && page === 1) {
+            setBundleId(data?.id);
+        }
+    }, [isSuccess, data, page]);
 
     const getTotalPagesCount = (): number => {
         if (data?.total) {

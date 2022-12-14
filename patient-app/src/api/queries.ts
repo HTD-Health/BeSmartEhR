@@ -12,11 +12,10 @@ const getPatientQuery = {
     queryFn: getPatient
 };
 
-type TasksQuery = {
+type QueryParams = {
     queryKey: (string | number)[];
     queryFn: () => Promise<Bundle<FhirResource>>;
     keepPreviousData: boolean;
-    onSuccess: (data: Bundle) => Bundle;
 };
 
 const getTasksQuery = (
@@ -25,16 +24,11 @@ const getTasksQuery = (
         bundleId: string | undefined;
         page: number;
         itemsPerPage: number;
-    },
-    setBundleId: React.Dispatch<React.SetStateAction<string | undefined>>
-): TasksQuery => ({
+    }
+): QueryParams => ({
     queryKey: ['getTasks', paginationOptions.page],
     queryFn: async () =>
         getTasks(params, paginationOptions.bundleId, paginationOptions.page - 1, paginationOptions.itemsPerPage),
-    onSuccess: (data: Bundle) => {
-        setBundleId(data?.id);
-        return data;
-    },
     keepPreviousData: true
 });
 
