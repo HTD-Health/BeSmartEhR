@@ -13,8 +13,8 @@ const AppRouter = (): JSX.Element => (
     <HashRouter>
         <Routes>
             <Route path={routes.root} element={<Home />} />
-            <Route path={routes.assignedList} element={<FormsList status="ready" />} />
-            <Route path={routes.filledList} element={<FormsList status="completed" />} />
+            <Route path={routes.assignedList} element={<FormsList status="ready" sort="-authored-on" />} />
+            <Route path={routes.filledList} element={<FormsList status="completed" sort="authored-on" />} />
         </Routes>
     </HashRouter>
 );

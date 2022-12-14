@@ -4,6 +4,7 @@ import type { Task } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
+import { TaskParams } from '../../api/api';
 import SmartAppBar from '../../components/smart_app_bar/smart_app_bar';
 import TaskItem from '../../components/task_item/task_item';
 
@@ -12,7 +13,7 @@ import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 
 const TASKS_PER_PAGE = 3;
 
-const FormsList = ({ status }: { status: 'ready' | 'completed' }): JSX.Element => {
+const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
     const [page, setPage] = useState(1);
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
     const [errorSnackbar, setErrorSnackbar] = useState(false);
@@ -21,6 +22,9 @@ const FormsList = ({ status }: { status: 'ready' | 'completed' }): JSX.Element =
         getTasksQuery(
             {
                 status,
+                sort
+            },
+            {
                 bundleId,
                 page,
                 itemsPerPage: TASKS_PER_PAGE

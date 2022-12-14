@@ -24,8 +24,13 @@ const getUser = async (): Promise<Patient> => {
     return c.request(userUrl);
 };
 
+export type TaskParams = {
+    sort: string;
+    status: 'ready' | 'completed';
+};
+
 const getTasks = async (
-    status: 'ready' | 'completed',
+    params: TaskParams,
     bundleId: string | undefined,
     page: number,
     itemsPerPage: number
@@ -36,22 +41,22 @@ const getTasks = async (
         throw new Error('Incorrect client state - missing "serverUrl"');
     }
 
-    const params = [
-        `status=${status}`,
+    const allParams = [
+        `status=${params.status}`,
         `_count=${itemsPerPage}`,
         `patient=${c.user.fhirUser}`,
         `intent=order`,
-        `_sort=authored-on`
+        `_sort=${params.sort}`
     ];
 
     if (bundleId) {
-        params.push(...[`_getpages=${bundleId}`, `_getpagesoffset=${page * itemsPerPage}`]);
+        allParams.push(...[`_getpages=${bundleId}`, `_getpagesoffset=${page * itemsPerPage}`]);
 
-        const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
+        const relationSearch = `${c.state.serverUrl}?`.concat(allParams.join('&'));
         return c.request(relationSearch);
     }
 
-    return c.request(`Task?`.concat(params.join('&')));
+    return c.request(`Task?`.concat(allParams.join('&')));
 };
 
 export { getPatient, getUser, getTasks };
