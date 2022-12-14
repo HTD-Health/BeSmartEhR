@@ -13,7 +13,7 @@ const getClient = async (): Promise<Client> => {
 
 const getPatient = async (): Promise<Patient> => {
     const c = await getClient();
-    if (!c.patient?.id) throw new Error('No patient selected');
+    if (!c.patient?.id) throw new Error('Missing selected patient data');
     return c.request(`Patient/${c.patient.id}`);
 };
 
@@ -29,13 +29,16 @@ export type TaskParams = {
     status: 'ready' | 'completed';
 };
 
-const getTasks = async (
-    params: TaskParams,
-    bundleId: string | undefined,
-    page: number,
-    itemsPerPage: number
-): Promise<Bundle> => {
+export type PaginationParams = {
+    bundleId: string | undefined;
+    page: number;
+    itemsPerPage: number;
+};
+
+const getTasks = async (params: TaskParams, pagination: PaginationParams): Promise<Bundle> => {
     const c = await getClient();
+
+    const { bundleId, page, itemsPerPage } = pagination;
 
     if (!c.state.serverUrl) {
         throw new Error('Incorrect client state - missing "serverUrl"');
@@ -51,7 +54,7 @@ const getTasks = async (
     ];
 
     if (bundleId) {
-        allParams.push(...[`_getpages=${bundleId}`, `_getpagesoffset=${page * itemsPerPage}`]);
+        allParams.push(...[`_getpages=${bundleId}`, `_getpagesoffset=${(page - 1) * itemsPerPage}`]);
 
         const relationSearch = `${c.state.serverUrl}?`.concat(allParams.join('&'));
         return c.request(relationSearch);

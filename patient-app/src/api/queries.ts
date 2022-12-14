@@ -1,6 +1,6 @@
 import type { Bundle, FhirResource } from 'fhir/r4';
 
-import { getPatient, getTasks, getUser, TaskParams } from './api';
+import { getPatient, getTasks, getUser, PaginationParams, TaskParams } from './api';
 
 const getUserQuery = {
     queryKey: 'getUser',
@@ -18,17 +18,9 @@ type QueryParams = {
     keepPreviousData: boolean;
 };
 
-const getTasksQuery = (
-    params: TaskParams,
-    paginationOptions: {
-        bundleId: string | undefined;
-        page: number;
-        itemsPerPage: number;
-    }
-): QueryParams => ({
-    queryKey: ['getTasks', paginationOptions.page],
-    queryFn: async () =>
-        getTasks(params, paginationOptions.bundleId, paginationOptions.page - 1, paginationOptions.itemsPerPage),
+const getTasksQuery = (params: TaskParams, pagination: PaginationParams): QueryParams => ({
+    queryKey: ['getTasks', pagination.page],
+    queryFn: async () => getTasks(params, pagination),
     keepPreviousData: true
 });
 
