@@ -1,11 +1,13 @@
 import type { FhirResource, Bundle } from 'fhir/r4';
 import { useContext, createContext, Dispatch, SetStateAction } from 'react';
 
+import { FormMeta } from 'api/models';
+
 interface FormsContextInterface {
     data: Bundle<FhirResource> | undefined;
     isLoading: boolean;
-    formsToAssign: string[];
-    setFormsToAssign: Dispatch<SetStateAction<string[]>>;
+    formsToAssign: FormMeta[];
+    setFormsToAssign: Dispatch<SetStateAction<FormMeta[]>>;
 }
 
 const FormsContext = createContext<FormsContextInterface>({} as FormsContextInterface);

@@ -18,7 +18,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const [successSnackbar, setSuccessSnackbar] = useState(false);
 
-    const isCheckedToAssign = (): boolean => formsToAssign.some((id) => id === questionnaire.id);
+    const isCheckedToAssign = (): boolean => formsToAssign.some((form) => form.id === questionnaire.id);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         if (!questionnaire.id) {
@@ -26,9 +26,9 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
         }
 
         if (event.target.checked) {
-            setFormsToAssign([...formsToAssign, questionnaire.id]);
+            setFormsToAssign([...formsToAssign, {id: questionnaire.id, name: questionnaire.title ?? 'Unknown name'}]);
         } else {
-            setFormsToAssign(formsToAssign.filter((id) => id !== questionnaire.id));
+            setFormsToAssign(formsToAssign.filter((form) => form.id !== questionnaire.id));
         }
     };
 

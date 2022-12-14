@@ -10,6 +10,7 @@ import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 import { FormsContext } from 'hooks/useFormsData';
 import { useAssignForms } from 'api/mutations';
 import { useGetQuestionnaires } from 'api/queries';
+import { FormMeta } from 'api/models';
 
 const questionnairesPerPage = 5;
 
@@ -17,13 +18,13 @@ const FormsContainer = (): JSX.Element => {
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
     const [page, setPage] = useState(1);
     const [resultsInTotal, setResultsInTotal] = useState<number>(0);
-    const [formsToAssign, setFormsToAssign] = useState<string[]>([]);
+    const [formsToAssign, setFormsToAssign] = useState<FormMeta[]>([]);
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
-    const { data, isLoading: isQueryLoading,error: queryError, isSuccess:isQuerySuccess } = useGetQuestionnaires({
+    const { data, isLoading: isQueryLoading, error: queryError, isSuccess: isQuerySuccess } = useGetQuestionnaires({
         bundleId,
         page,
-        questionnairesPerPage: 5
+        questionnairesPerPage
     });
 
     const { mutate: assign, error: mutationError, isLoading: isMutationLoading, isSuccess: isMutationSuccess } = useAssignForms()
@@ -78,11 +79,7 @@ const FormsContainer = (): JSX.Element => {
                     <LoadingButton
                         variant="contained"
                         loading={isMutationLoading}
-                        onClick={() => {
-                            // TODO: forms to assign must be of type FormMeta
-                            // assign(formsToAssign as FormMeta[]);
-                            assign(formsToAssign as any); // TODO FIX THIS!
-                        }}
+                        onClick={()=>assign(formsToAssign)}
                     >
                         Assign multiple
                     </LoadingButton>
