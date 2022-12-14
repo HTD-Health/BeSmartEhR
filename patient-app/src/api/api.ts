@@ -25,20 +25,17 @@ const getUser = async (): Promise<Patient> => {
 };
 
 export type TaskParams = {
-    sort: string;
     status: 'ready' | 'completed';
+    sort?: string;
 };
 
 export type PaginationParams = {
-    bundleId: string | undefined;
+    bundleId: string;
     page: number;
-    itemsPerPage: number;
 };
 
-const getTasks = async (params: TaskParams, pagination: PaginationParams): Promise<Bundle> => {
+const getTasks = async (params: TaskParams, count: number, pagination?: PaginationParams): Promise<Bundle> => {
     const c = await getClient();
-
-    const { bundleId, page, itemsPerPage } = pagination;
 
     if (!c.state.serverUrl) {
         throw new Error('Incorrect client state - missing "serverUrl"');
@@ -46,15 +43,15 @@ const getTasks = async (params: TaskParams, pagination: PaginationParams): Promi
 
     const allParams = [
         `status=${params.status}`,
-        `_count=${itemsPerPage}`,
+        `_count=${count}`,
         `patient=${c.user.fhirUser}`,
         `intent=order`,
-        `_sort=${params.sort}`,
+        `_sort=${params.sort ?? ''}`,
         `_tag=be-smart-ehr-questionnaire`
     ];
 
-    if (bundleId) {
-        allParams.push(...[`_getpages=${bundleId}`, `_getpagesoffset=${(page - 1) * itemsPerPage}`]);
+    if (pagination?.bundleId) {
+        allParams.push(...[`_getpages=${pagination.bundleId}`, `_getpagesoffset=${(pagination.page - 1) * count}`]);
 
         const relationSearch = `${c.state.serverUrl}?`.concat(allParams.join('&'));
         return c.request(relationSearch);

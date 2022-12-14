@@ -4,7 +4,7 @@ import type { Task } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import { TaskParams } from '../../api/api';
+import { PaginationParams, TaskParams } from '../../api/api';
 import SmartAppBar from '../../components/smart_app_bar/smart_app_bar';
 import TaskItem from '../../components/task_item/task_item';
 
@@ -15,7 +15,7 @@ const TASKS_PER_PAGE = 3;
 
 const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
     const [page, setPage] = useState(1);
-    const [bundleId, setBundleId] = useState<string | undefined>(undefined);
+    const [paginationData, setPaginationData] = useState<PaginationParams | undefined>(undefined);
     const [errorSnackbar, setErrorSnackbar] = useState(false);
 
     const { data, isLoading, isSuccess, error } = useQuery(
@@ -24,11 +24,8 @@ const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
                 status,
                 sort
             },
-            {
-                bundleId,
-                page,
-                itemsPerPage: TASKS_PER_PAGE
-            }
+            TASKS_PER_PAGE,
+            paginationData
         )
     );
 
@@ -40,8 +37,8 @@ const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
     }, [error]);
 
     useEffect(() => {
-        if (isSuccess && data?.total && page === 1) {
-            setBundleId(data?.id);
+        if (isSuccess && data?.total && data?.id) {
+            setPaginationData({ bundleId: data?.id, page });
         }
     }, [isSuccess, data, page]);
 

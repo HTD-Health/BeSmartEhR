@@ -18,9 +18,9 @@ type QueryParams = {
     keepPreviousData: boolean;
 };
 
-const getTasksQuery = (params: TaskParams, pagination: PaginationParams): QueryParams => ({
-    queryKey: ['getTasks', pagination.page],
-    queryFn: async () => getTasks(params, pagination),
+const getTasksQuery = (params: TaskParams, count: number, pagination?: PaginationParams): QueryParams => ({
+    queryKey: ['getTasks', params.status, pagination?.page ?? ''],
+    queryFn: async () => getTasks(params, count, pagination),
     keepPreviousData: true
 });
 
