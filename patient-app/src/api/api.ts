@@ -46,7 +46,8 @@ const getTasks = async (
         `_count=${itemsPerPage}`,
         `patient=${c.user.fhirUser}`,
         `intent=order`,
-        `_sort=${params.sort}`
+        `_sort=${params.sort}`,
+        `_tag=be-smart-ehr-questionnaire`
     ];
 
     if (bundleId) {
