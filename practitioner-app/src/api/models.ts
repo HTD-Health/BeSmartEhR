@@ -21,7 +21,7 @@ const createAssignmentTask = (formMeta: FormMeta, patientId: string, userUrl: st
     description: formMeta.name,
     for: { reference: `Patient/${patientId}` },
     owner: { reference: userUrl },
-    focus: { reference: `Questionnaire/${formMeta.id}` },
+    reasonReference: { reference: `Questionnaire/${formMeta.id}` },
     authoredOn: new Date().toISOString(),
     meta: { tag: [{ code: taskQuestionnaireTag }] }
 });
