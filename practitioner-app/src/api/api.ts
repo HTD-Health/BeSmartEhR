@@ -1,4 +1,4 @@
-import type { Bundle, Patient, Practitioner } from 'fhir/r4';
+import type { Bundle, Patient, Practitioner, Questionnaire } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
@@ -28,7 +28,7 @@ const getQuestionnaires = async (
     bundleId: string | undefined,
     page: number,
     questionnairesPerPage: number
-): Promise<Bundle> => {
+): Promise<Bundle<Questionnaire>> => {
     const c = await getClient();
 
     if (!c.state.serverUrl) {

@@ -11,7 +11,6 @@ type QuestionnaireItemProps = {
 const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
     const { questionnaire } = props;
     const { formsToAssign, setFormsToAssign } = useContext(FormsContext);
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         if (!questionnaire.id) {
             return;
@@ -24,7 +23,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
         }
     };
 
-    const isCheckedToAssign = (): boolean => formsToAssign.some((id) => id === questionnaire.id);
+    const isCheckedToAssign = (): boolean => formsToAssign?.some((id) => id === questionnaire.id);
 
     return (
         <Card

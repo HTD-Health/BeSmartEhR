@@ -1,4 +1,4 @@
-import type { Bundle, FhirResource } from 'fhir/r4';
+import type { Bundle, Questionnaire } from 'fhir/r4';
 import { Dispatch, SetStateAction } from 'react';
 
 import { getPatient, getUser, getQuestionnaires } from './api';
@@ -15,7 +15,7 @@ const getPatientQuery = {
 
 type QuestionnairesQuery = {
     queryKey: (string | number)[];
-    queryFn: () => Promise<Bundle<FhirResource>>;
+    queryFn: () => Promise<Bundle<Questionnaire>>;
     keepPreviousData: boolean;
     onSuccess: (data: Bundle) => Bundle;
 };
