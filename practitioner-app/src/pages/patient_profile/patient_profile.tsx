@@ -2,16 +2,15 @@ import { Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
 
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
-import { getPatientQuery } from 'api/queries';
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
+import { useGetPatient } from 'api/queries';
 
 const PatientProfile = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
-    const { error, data, isLoading } = useQuery(getPatientQuery);
+    const { error, data, isLoading } = useGetPatient();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,7 +23,7 @@ const PatientProfile = (): JSX.Element => {
     return (
         <>
             <SmartAppBar />
-            <ErrorSnackbar
+            <CustomSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get patient data"

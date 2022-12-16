@@ -7,21 +7,22 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
 ));
 Alert.displayName = 'Alert';
 
-type ErrorSnackbarProps = {
+type CustomSnackbarProps = {
     onClose: () => void;
     open: boolean;
     message: string;
+    severity?: 'error' | 'success' | 'info' | 'warning';
 };
 
-const ErrorSnackbar = (props: ErrorSnackbarProps): JSX.Element => {
-    const { onClose, open, message } = props;
+const CustomSnackbar = (props: CustomSnackbarProps): JSX.Element => {
+    const { onClose, open, message, severity } = props;
     return (
         <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
-            <Alert onClose={onClose} severity="error" sx={{ width: '100%' }}>
+            <Alert onClose={onClose} severity={severity ?? 'error'} sx={{ width: '100%' }}>
                 {message}
             </Alert>
         </Snackbar>
     );
 };
 
-export default ErrorSnackbar;
+export default CustomSnackbar;

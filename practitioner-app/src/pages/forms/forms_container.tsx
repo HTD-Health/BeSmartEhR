@@ -1,49 +1,65 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Grid, Typography, Button, Box, Pagination } from '@mui/material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
-import { useQuery } from 'react-query';
+import { LoadingButton } from '@mui/lab';
 
 import FormsPage from './forms_page';
 
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import AlertSnackbar from 'components/error_snackbar/error_snackbar';
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 import { FormsContext } from 'hooks/useFormsData';
-import { getQuestionnairesQuery } from 'api/queries';
+import { useAssignForms } from 'api/mutations';
+import { useGetQuestionnaires } from 'api/queries';
+import { FormMeta } from 'api/models';
+
+const questionnairesPerPage = 5;
 
 const FormsContainer = (): JSX.Element => {
     const [bundleId, setBundleId] = useState<string | undefined>(undefined);
     const [page, setPage] = useState(1);
     const [resultsInTotal, setResultsInTotal] = useState<number>(0);
-    const [formsToAssign, setFormsToAssign] = useState<string[]>([]);
+    const [formsToAssign, setFormsToAssign] = useState<FormMeta[]>([]);
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
-    const { data, isLoading, error } = useQuery(
-        getQuestionnairesQuery(
-            {
-                bundleId,
-                page,
-                questionnairesPerPage: 5
-            },
-            setBundleId,
-            setResultsInTotal
-        )
-    );
+    const { data, isLoading: isQueryLoading, error: queryError, isSuccess: isQuerySuccess } = useGetQuestionnaires({
+        bundleId,
+        page,
+        questionnairesPerPage
+    });
+
+    const { mutate: assign, error: mutationError, isLoading: isMutationLoading, isSuccess: isMutationSuccess } = useAssignForms()
+    const [successSnackbar, setSuccessSnackbar] = useState(false);
+   
+    useEffect(() => {
+        if (queryError || mutationError) {
+            setErrorSnackbar(true);
+            console.error(queryError ?? mutationError);
+        }
+    }, [queryError, mutationError]);
 
     useEffect(() => {
-        if (error) {
-            setErrorSnackbar(true);
-            console.error(error);
+        if (isMutationSuccess) {
+            setSuccessSnackbar(true);
         }
-    }, [error]);
+    }, [isMutationSuccess]);
+
+    useEffect(() => {
+        if (isQuerySuccess && data?.total && page === 1) {
+            const pages = Math.floor(data.total / questionnairesPerPage);
+            const total = data.total % questionnairesPerPage ? pages + 1 : pages;
+            setResultsInTotal(total);
+            setBundleId(data?.id);
+        }
+    }, [isQuerySuccess, data, page]);
 
     const value = useMemo(
         () => ({
             data,
-            isLoading,
+            isLoading: isQueryLoading,
             formsToAssign,
             setFormsToAssign
         }),
-        [data, isLoading, formsToAssign, setFormsToAssign]
+        [data, isQueryLoading, formsToAssign, setFormsToAssign]
     );
 
     const renderMultipleAssignBar = (): JSX.Element => (
@@ -60,15 +76,13 @@ const FormsContainer = (): JSX.Element => {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                    <Button
+                    <LoadingButton
                         variant="contained"
-                        onClick={() => {
-                            // prepared for multiple assign feature
-                            console.log(JSON.stringify(formsToAssign));
-                        }}
+                        loading={isMutationLoading}
+                        onClick={()=>assign(formsToAssign)}
                     >
                         Assign multiple
-                    </Button>
+                    </LoadingButton>
                 </Box>
             </Grid>
         </Grid>
@@ -83,10 +97,18 @@ const FormsContainer = (): JSX.Element => {
     return (
         <>
             <SmartAppBar />
-            <AlertSnackbar
+            <CustomSnackbar
+                key='error'
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
-                message="Failed to get patient data"
+                message={queryError ? "Failed to get patient data" : "Failed to assign forms"}
+            />
+            <CustomSnackbar
+                key='success'
+                open={successSnackbar}
+                severity="success"
+                onClose={() => setSuccessSnackbar(false)}
+                message="Forms assigned successfully"
             />
             <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
                 Questionnaires
