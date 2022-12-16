@@ -22,7 +22,7 @@ const ResponsesContainer = (): JSX.Element => {
         page,
         questionnairesResponsePerPage
     });
-    console.log(data);
+
     const count = Math.ceil((data?.entry?.length || 0) / questionnairesResponsePerPage);
 
     useEffect(() => {
