@@ -58,24 +58,29 @@ const ResponsesContainer = (): JSX.Element => {
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get patient data"
             />
-            <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
-                Questionnaires
+            <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" textAlign="center" noWrap>
+                Patient Responses
             </Typography>
-
-            <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12}>
-                    {renderPage()}
+            {data?.entry?.length ? (
+                <Grid container spacing={2} justifyContent="center">
+                    <Grid item xs={12}>
+                        {renderPage()}
+                    </Grid>
+                    <Grid item>
+                        <Pagination
+                            size="large"
+                            color="primary"
+                            count={resultsInTotal}
+                            page={page}
+                            onChange={(_: React.ChangeEvent<unknown>, val: number) => setPage(val)}
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <Pagination
-                        size="large"
-                        color="primary"
-                        count={resultsInTotal}
-                        page={page}
-                        onChange={(_: React.ChangeEvent<unknown>, val: number) => setPage(val)}
-                    />
-                </Grid>
-            </Grid>
+            ) : (
+                <Typography variant="h6" color="inherit" textAlign="center" noWrap>
+                    There are no responses.
+                </Typography>
+            )}
         </>
     );
 };
