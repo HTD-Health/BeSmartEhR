@@ -1,14 +1,13 @@
 import { Card, Typography } from '@mui/material';
-import type { Questionnaire } from 'fhir/r4';
 import { format } from 'date-fns';
 
 type AssignedQuestionnaireItemProps = {
-    questionnaire: Questionnaire;
+    name: string;
     authoredOn: string | undefined;
 };
 
 const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.Element => {
-    const { questionnaire, authoredOn } = props;
+    const { name, authoredOn } = props;
 
     return (
         <Card
@@ -23,7 +22,7 @@ const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.E
             }}
         >
             <Typography variant="h6" color="inherit">
-                {questionnaire?.name || 'Questionnaire name not specified'}
+                {name}
             </Typography>
             {authoredOn && (
                 <Typography variant="body2" color="inherit">
