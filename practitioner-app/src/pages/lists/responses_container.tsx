@@ -1,48 +1,51 @@
 import { useState, useEffect } from 'react';
 import { Grid, Typography, Box, Pagination, CircularProgress } from '@mui/material';
-import { useQuery } from 'react-query';
 
+import { useGetQuestionnaireResponse } from 'api/queries';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import AlertSnackbar from 'components/error_snackbar/error_snackbar';
-import { getQuestionnairesQuery } from 'api/queries';
-import QuestionnaireResourceItem from 'components/questionnaire_item/questonnaire_resource_item';
+import QuestionnaireResponseResourceItem from 'components/questionnaire_item/questonnaire_response_item';
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
+
+const questionnairesResponsePerPage = 2;
 
 const ResponsesContainer = (): JSX.Element => {
-    const [bundleId, setBundleId] = useState<string | undefined>(undefined);
+    const [bundleId] = useState<string | undefined>(undefined);
     const [page, setPage] = useState(1);
-    const [resultsInTotal, setResultsInTotal] = useState<number>(0);
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
-    const { data, isLoading, error } = useQuery(
-        getQuestionnairesQuery(
-            {
-                bundleId,
-                page,
-                questionnairesPerPage: 5
-            },
-            setBundleId,
-            setResultsInTotal
-        )
-    );
+    const {
+        data,
+        isLoading: isQueryLoading,
+        error: queryError
+    } = useGetQuestionnaireResponse({
+        bundleId,
+        page,
+        questionnairesResponsePerPage
+    });
+    console.log(data);
+    const count = Math.ceil((data?.entry?.length || 0) / questionnairesResponsePerPage);
 
     useEffect(() => {
-        if (error) {
+        if (queryError) {
             setErrorSnackbar(true);
-            console.error(error);
+            console.error(queryError);
         }
-    }, [error]);
+    }, [queryError]);
 
     const renderPage = (): JSX.Element => (
-        <Box padding={2}>
+        <Box>
             {data?.entry
                 ?.filter((el) => el && el.resource)
                 .map((el) => (
-                    <QuestionnaireResourceItem key={el.resource?.id} questionnaire={el.resource as any} />
+                    <QuestionnaireResponseResourceItem
+                        key={el.resource?.id}
+                        questionnaireResponse={el.resource as any}
+                    />
                 ))}
         </Box>
     );
 
-    if (isLoading) {
+    if (isQueryLoading) {
         return (
             <>
                 <SmartAppBar />
@@ -53,7 +56,7 @@ const ResponsesContainer = (): JSX.Element => {
     return (
         <>
             <SmartAppBar />
-            <AlertSnackbar
+            <CustomSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get patient data"
@@ -62,7 +65,7 @@ const ResponsesContainer = (): JSX.Element => {
                 Patient Responses
             </Typography>
             {data?.entry?.length ? (
-                <Grid container spacing={2} justifyContent="center">
+                <Grid container spacing={2} justifyContent="center" padding={2}>
                     <Grid item xs={12}>
                         {renderPage()}
                     </Grid>
@@ -70,7 +73,7 @@ const ResponsesContainer = (): JSX.Element => {
                         <Pagination
                             size="large"
                             color="primary"
-                            count={resultsInTotal}
+                            count={count}
                             page={page}
                             onChange={(_: React.ChangeEvent<unknown>, val: number) => setPage(val)}
                         />

@@ -1,10 +1,17 @@
-import type { Patient, Practitioner, Bundle, BundleEntry, FhirResource } from 'fhir/r4';
+import type { Patient, Practitioner, Bundle, BundleEntry, FhirResource, Questionnaire } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
-import { createAssignmentTask, FormMeta, GetQuestionnairesParams } from './models';
+import {
+    createAssignmentTask,
+    FormMeta,
+    GetQuestionnairesParams,
+    GetQuestionnaireResponseParams,
+    GetQuestionnaireParams
+} from './models';
 
 let client: Client;
+const cache: { [k: string]: FhirResource } = {};
 
 const getClient = async (): Promise<Client> => {
     if (!client) {
@@ -24,6 +31,22 @@ const getUser = async (): Promise<Practitioner> => {
     const userUrl = c.user.fhirUser;
     if (!userUrl) throw new Error('Missing current user data');
     return c.request(userUrl);
+};
+
+const getQuestionnaire = async (params: GetQuestionnaireParams): Promise<Questionnaire> => {
+    let { id } = params;
+    if (!params.id.startsWith('Questionnaire/')) {
+        id = `Questionnaire/${id}`;
+    }
+    const c = await getClient();
+    const userUrl = c.user.fhirUser;
+    if (!userUrl) throw new Error('Missing current user data');
+    if (cache[id]) {
+        return cache[id] as Questionnaire;
+    }
+    const resource = (await c.request(id)) as Questionnaire;
+    cache[id] = resource;
+    return resource;
 };
 
 const getQuestionnaires = async (params: GetQuestionnairesParams): Promise<Bundle> => {
@@ -49,6 +72,31 @@ const getQuestionnaires = async (params: GetQuestionnairesParams): Promise<Bundl
     }
 
     return c.request(`Questionnaire?_count=${questionnairesPerPage}`);
+};
+
+const getQuestionnaireResponse = async (params: GetQuestionnaireResponseParams): Promise<Bundle> => {
+    const c = await getClient();
+
+    const { bundleId, page, questionnairesResponsePerPage } = params;
+    const realPage = page - 1;
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    if (bundleId) {
+        const p = [
+            `_getpages=${bundleId}`,
+            `_getpagesoffset=${realPage * questionnairesResponsePerPage}`,
+            `_count=${questionnairesResponsePerPage}`,
+            '_bundletype=searchset'
+        ];
+
+        const relationSearch = `${c.state.serverUrl}?`.concat(p.join('&'));
+        return c.request(relationSearch);
+    }
+
+    return c.request(`QuestionnaireResponse?_count=${questionnairesResponsePerPage}`);
 };
 
 // Assigning a new form to a patient is based on the Task FHIR resource
@@ -97,4 +145,4 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, assignForms };
+export { getPatient, getUser, getQuestionnaires, getQuestionnaireResponse, assignForms, getQuestionnaire };
