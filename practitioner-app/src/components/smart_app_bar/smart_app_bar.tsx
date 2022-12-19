@@ -5,15 +5,14 @@ import Typography from '@mui/material/Typography';
 import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
-import ErrorSnackbar from 'components/error_snackbar/error_snackbar';
-import { getUserQuery } from 'api/queries';
+import { useGetUser } from 'api/queries';
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 
 const SmartAppBar = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
-    const { error, data } = useQuery(getUserQuery);
+    const { error, data } = useGetUser();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -54,7 +53,7 @@ const SmartAppBar = (): JSX.Element => {
 
     return (
         <AppBar position="relative">
-            <ErrorSnackbar
+            <CustomSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get current user data"
