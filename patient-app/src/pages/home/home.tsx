@@ -1,32 +1,45 @@
-import { Box, Button } from '@mui/material';
+import { Badge, Box, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
-import { getPatientQuery } from 'api/queries';
+import { getPatientQuery, getTasksQuery } from 'api/queries';
 import AlertSnackbar from 'components/error_snackbar/error_snackbar';
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 
 const Home = (): JSX.Element => {
-    const [errorSnackbar, setErrorSnackbar] = useState(false);
+    const [errorSnackbar, setErrorSnackbar] = useState('');
     const { error, data, isLoading } = useQuery(getPatientQuery);
+    const { data: taskData, error: taskError } = useQuery(
+        getTasksQuery(
+            {
+                status: 'ready'
+            },
+            0
+        )
+    );
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (error) {
-            setErrorSnackbar(true);
+            setErrorSnackbar('Failed to get patient data');
             console.error(error);
         }
     }, [error]);
 
+    useEffect(() => {
+        if (taskError) {
+            setErrorSnackbar('Failed to get total tasks');
+            console.error(taskError);
+        }
+    }, [taskError]);
+
     return (
         <>
             <SmartAppBar />
-            <AlertSnackbar
-                open={errorSnackbar}
-                onClose={() => setErrorSnackbar(false)}
-                message="Failed to get patient data"
-            />
+            <AlertSnackbar open={!!errorSnackbar} onClose={() => setErrorSnackbar('')} message={errorSnackbar} />
             <Box
                 sx={{
                     p: '2rem'
@@ -51,13 +64,20 @@ const Home = (): JSX.Element => {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'center',
+                                alignItems: 'stretch',
                                 height: '100%'
                             }}
                         >
-                            <Button variant="contained" sx={{ my: '0.5rem' }}>
-                                Assigned Forms
-                            </Button>
-                            <Button variant="contained" sx={{ my: '0.5rem' }}>
+                            <Badge badgeContent={taskData?.total ?? 0} color="primary">
+                                <Button
+                                    variant="contained"
+                                    onClick={() => navigate('/assigned-list')}
+                                    sx={{ my: '0.5rem', width: '100%' }}
+                                >
+                                    Assigned Forms
+                                </Button>
+                            </Badge>
+                            <Button variant="contained" onClick={() => navigate('/filled-list')} sx={{ my: '0.5rem' }}>
                                 Filled Forms
                             </Button>
                         </Box>
