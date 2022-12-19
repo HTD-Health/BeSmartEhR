@@ -1,4 +1,4 @@
-import type { Patient, Practitioner, Bundle, BundleEntry, FhirResource } from 'fhir/r4';
+import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
@@ -44,7 +44,7 @@ const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bun
     return c.request(`Questionnaire?_count=${recordsPerPage}`);
 };
 
-const getFormAssignments = async (params :GetPaginetedRecordsParams): Promise<Bundle> => {
+const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
     const c = await getClient();
 
     const { bundleId, page, recordsPerPage } = params;
@@ -65,7 +65,15 @@ const getFormAssignments = async (params :GetPaginetedRecordsParams): Promise<Bu
         `_count=${recordsPerPage}`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`
     ];
-    return c.request(`Task?`.concat(p.join('&')));
+    return c.request({
+        url: `Task?`.concat(p.join('&')),
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    });
 };
 
 const performPaginateSearch = async (bundleId: string, pagesOffset: number, count: number): Promise<Bundle> => {
@@ -79,7 +87,15 @@ const performPaginateSearch = async (bundleId: string, pagesOffset: number, coun
     ];
 
     const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
-    return c.request(relationSearch);
+    return c.request({
+        url: relationSearch,
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    });
 };
 
 // Assigning a new form to a patient is based on the Task FHIR resource

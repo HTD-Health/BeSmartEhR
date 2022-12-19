@@ -18,7 +18,7 @@ const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
     if (!data || !Array.isArray(data.entry) || data.entry.length === 0) {
         return (
             <Typography sx={{ ml: '.5rem' }} variant="h6">
-                Patient has no forms assigned by by current user.
+                Patient has no forms assigned by current user.
             </Typography>
         );
     }
