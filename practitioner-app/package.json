@@ -8,6 +8,10 @@
     "@mui/icons-material": "^5.10.16",
     "@mui/lab": "^5.0.0-alpha.112",
     "@mui/material": "^5.10.16",
+    "@rjsf/core": "^5.0.0-beta.13",
+    "@rjsf/mui": "^5.0.0-beta.13",
+    "@rjsf/utils": "^5.0.0-beta.13",
+    "@rjsf/validator-ajv8": "^5.0.0-beta.13",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -17,7 +21,9 @@
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
     "date-fns": "^2.29.3",
+    "fhir-questionnaire-json-schema": "file:/../fhir-questionnaire-json-schema",
     "fhirclient": "^2.5.2",
+    "jsonschema": "^1.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.2",
@@ -53,6 +59,7 @@
   },
   "devDependencies": {
     "@kensho-technologies/eslint-config": "^24.1.0",
-    "eslint": "^8.29.0"
+    "eslint": "^8.29.0",
+    "ts-loader": "^9.4.2"
   }
 }

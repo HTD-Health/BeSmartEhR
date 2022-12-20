@@ -99,6 +99,16 @@ const performPaginateSearch = async (bundleId: string, pagesOffset: number, coun
     });
 };
 
+const getQuestionnaire = async (id: string): Promise<Bundle> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    return c.request(`Questionnaire/${id}`);
+};
+
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html
 // Task connects a patient to a practitioner and a form
@@ -145,4 +155,4 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, assignForms, getFormAssignments };
+export { getPatient, getUser, getQuestionnaires, assignForms, getQuestionnaire, getFormAssignments };

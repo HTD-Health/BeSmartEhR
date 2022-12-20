@@ -1,6 +1,8 @@
 import { CircularProgress, Typography } from '@mui/material';
 import type { Bundle, FhirResource, Task } from 'fhir/r4';
 
+import { getIdFromReference } from '../../utils/reference';
+
 import AssignedQuestionnaireItem from 'components/questionnaire_item/assigned_questionnaire_item';
 
 type AssignedFormsPageProps = {
@@ -31,6 +33,7 @@ const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
                     <AssignedQuestionnaireItem
                         key={task.id}
                         name={task.description || 'Form name not provided'}
+                        questionnaireId={getIdFromReference(task.reasonReference)}
                         authoredOn={task?.authoredOn}
                     />
                 );
