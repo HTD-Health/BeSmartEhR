@@ -46,7 +46,7 @@ const AssignedFormsContainer = (): JSX.Element => {
                 message="Failed to get form assignments"
             />
             <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
-                Assigned Questionnaires
+                Assigned Forms
             </Typography>
             <Grid container spacing={2} justifyContent="center">
                 <Grid item xs={12}>

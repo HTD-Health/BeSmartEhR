@@ -63,7 +63,8 @@ const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bu
         `owner=${c.user.fhirUser}`,
         `patient=Patient/${c.patient.id}`,
         `_count=${recordsPerPage}`,
-        `_tag=${TASK_QUESTIONNAIRE_TAG}`
+        `_tag=${TASK_QUESTIONNAIRE_TAG}`,
+        `_sort=-authored-on`
     ];
     return c.request({
         url: `Task?`.concat(p.join('&')),
