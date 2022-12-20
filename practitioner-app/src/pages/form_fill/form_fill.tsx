@@ -35,17 +35,16 @@ const FormFill = (): JSX.Element => {
     }, [data, isSuccess]);
 
     const renderContent = (): JSX.Element => {
-        if (isLoading || !rawSchema) {
-            return <CircularProgress sx={{ m: '2rem' }} />;
-        }
-
-        if (!data || error) {
-            console.log(JSON.stringify(error));
+        if (error || (!rawSchema && !isLoading)) {
             return (
                 <Typography sx={{ ml: '.5rem' }} variant="h6">
                     Could not load questionnaire
                 </Typography>
             );
+        }
+
+        if (isLoading) {
+            return <CircularProgress sx={{ m: '2rem' }} />;
         }
 
         return (
