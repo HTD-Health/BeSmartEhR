@@ -60,6 +60,7 @@ const getFormAssignments = async (params: GetPaginetedRecordsParams, completed: 
     const realPage = page - 1;
 
     const status = completed ? 'completed' : 'ready';
+    const sort = completed ? '-_lastUpdated' : '-authored-on';
 
     if (!c.state.serverUrl) {
         throw new Error('Incorrect client state - missing "serverUrl"');
@@ -76,7 +77,7 @@ const getFormAssignments = async (params: GetPaginetedRecordsParams, completed: 
         `_count=${recordsPerPage}`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`,
         `status=${status}`,
-        `_sort=-authored-on`
+        `_sort=${sort}`
     ];
     return c.request({
         url: `Task?`.concat(p.join('&')),
@@ -110,31 +111,6 @@ const performPaginateSearch = async (bundleId: string, pagesOffset: number, coun
         }
     });
 };
-
-// const getQuestionnaireResponse = async (params: GetQuestionnaireResponseParams): Promise<Bundle> => {
-//     const c = await getClient();
-
-//     const { bundleId, page, questionnairesResponsePerPage } = params;
-//     const realPage = page - 1;
-
-//     if (!c.state.serverUrl) {
-//         throw new Error('Incorrect client state - missing "serverUrl"');
-//     }
-
-//     if (bundleId) {
-//         const p = [
-//             `_getpages=${bundleId}`,
-//             `_getpagesoffset=${realPage * questionnairesResponsePerPage}`,
-//             `_count=${questionnairesResponsePerPage}`,
-//             '_bundletype=searchset'
-//         ];
-
-//         const relationSearch = `${c.state.serverUrl}?`.concat(p.join('&'));
-//         return c.request(relationSearch);
-//     }
-
-//     return c.request(`QuestionnaireResponse?_count=${questionnairesResponsePerPage}`);
-// };
 
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html

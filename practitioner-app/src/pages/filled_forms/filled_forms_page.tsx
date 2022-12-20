@@ -31,7 +31,7 @@ const FilledFormsPage = (props: FilledFormsPageProps): JSX.Element => {
                     <FilledFormItem
                         key={task.id}
                         name={task.description ?? 'Form name not provided'}
-                        date={task.lastModified}
+                        date={task.meta?.lastUpdated}
                     />
                 );
             })}

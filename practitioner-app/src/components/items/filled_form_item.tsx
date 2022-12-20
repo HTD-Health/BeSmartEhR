@@ -1,4 +1,4 @@
-import { Box, Card, Typography } from '@mui/material';
+import { Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
 
 type FiledFormItemProps = {
@@ -17,20 +17,19 @@ const FiledFormItem = (props: FiledFormItemProps): JSX.Element => {
                     p: '1rem',
                     display: 'flex',
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                     border: 0.5,
                     borderColor: 'grey.500'
                 }}
             >
-                <Box>
-                    <Typography variant="h6" color="inherit">
-                        {name}
+                <Typography variant="h6" color="inherit">
+                    {name}
+                </Typography>
+                {date && (
+                    <Typography variant="body2" color="inherit">
+                        Completed on: {format(new Date(date), 'iii, MM/dd/yyyy HH:mm:ss')}
                     </Typography>
-                    {date && (
-                        <Typography variant="body2" color="inherit">
-                            Assigned on: {format(new Date(date), 'iii, MM/dd/yyyy HH:mm:ss')}
-                        </Typography>
-                    )}
-                </Box>
+                )}
             </Card>
         </>
     );
