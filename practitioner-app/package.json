@@ -5,8 +5,8 @@
     "dependencies": {
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
-        "@mui/lab": "^5.0.0-alpha.112",
         "@mui/icons-material": "^5.10.16",
+        "@mui/lab": "^5.0.0-alpha.112",
         "@mui/material": "^5.10.16",
         "@rjsf/core": "^5.0.0-beta.13",
         "@rjsf/mui": "^5.0.0-beta.13",
@@ -22,6 +22,7 @@
         "@types/react-dom": "^18.0.9",
         "fhir-questionnaire-json-schema": "file:/../fhir-questionnaire-json-schema",
         "fhirclient": "^2.5.2",
+        "jsonschema": "^1.4.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-query": "^3.39.2",

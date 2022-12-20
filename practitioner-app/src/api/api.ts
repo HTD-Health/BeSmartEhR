@@ -1,4 +1,4 @@
-import type { Patient, Practitioner, Bundle, BundleEntry, FhirResource } from 'fhir/r4';
+import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
@@ -51,6 +51,16 @@ const getQuestionnaires = async (params: GetQuestionnairesParams): Promise<Bundl
     return c.request(`Questionnaire?_count=${questionnairesPerPage}`);
 };
 
+const getQuestionnaire = async (id: string): Promise<Bundle> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    return c.request(`Questionnaire/${id}`);
+};
+
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html
 // Task connects a patient to a practitioner and a form
@@ -97,4 +107,4 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, assignForms };
+export { getPatient, getUser, getQuestionnaires, assignForms, getQuestionnaire };
