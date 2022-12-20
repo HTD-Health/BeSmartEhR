@@ -26,7 +26,10 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
         }
 
         if (event.target.checked) {
-            setFormsToAssign([...formsToAssign, { id: questionnaire.id, name: questionnaire.title ?? 'Unknown name' }]);
+            setFormsToAssign([
+                ...formsToAssign,
+                { id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }
+            ]);
         } else {
             setFormsToAssign(formsToAssign.filter((form) => form.id !== questionnaire.id));
         }
@@ -46,7 +49,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
     }, [isSuccess]);
 
     const handleAssign = (): void =>
-        assign([{ id: questionnaire.id as string, name: questionnaire.title ?? 'Unknown name' }]);
+        assign([{ id: questionnaire.id as string, name: questionnaire.title ?? 'Form name not provided' }]);
 
     return (
         <Card
@@ -73,7 +76,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
                 message="Form assigned successfully"
             />
             <Typography variant="h6" color="inherit">
-                {questionnaire?.title || 'Questionnaire name not specified'}
+                {questionnaire?.title || 'Form name not provided'}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Checkbox checked={isCheckedToAssign()} onChange={handleChange} />

@@ -3,13 +3,15 @@ import { BrowserRouter as HashRouter, Navigate, Route, Routes } from 'react-rout
 import FormFill from './pages/form_fill/form_fill';
 import PatientProfile from './pages/patient_profile/patient_profile';
 
+import AssignedFormsContainer from 'pages/assigned_forms/assigned_forms_container';
 import FormsContainer from 'pages/forms/forms_container';
 
 export const routes = {
     root: '/',
     patientProfile: '/patient-profile',
     formsContainer: '/forms-list',
-    formFill: '/forms-list/:id/fill'
+    formFill: '/forms-list/:id/fill',
+    assignedFormsContainer: '/assigned-forms-list'
 };
 
 const AppRouter = (): JSX.Element => (
@@ -18,6 +20,7 @@ const AppRouter = (): JSX.Element => (
             <Route path={routes.root} element={<Navigate to={routes.patientProfile} />} />
             <Route path={routes.patientProfile} element={<PatientProfile />} />
             <Route path={routes.formsContainer} element={<FormsContainer />} />
+            <Route path={routes.assignedFormsContainer} element={<AssignedFormsContainer />} />
             <Route path={routes.formFill} element={<FormFill />} />
         </Routes>
     </HashRouter>

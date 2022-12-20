@@ -16,11 +16,7 @@ import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 
 const FormFill = (): JSX.Element => {
     const handleSubmit = (resData: IChangeEvent): void => {
-        console.log('data', data);
-        console.log('resData', resData);
         if (!data) return;
-        console.log('resData.formData', resData.formData);
-        console.log('rawSchema', rawSchema);
         console.log(toQuestionnaireResponse(data, resData.formData));
     };
 

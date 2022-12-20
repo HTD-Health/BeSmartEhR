@@ -1,13 +1,16 @@
-import { useMutation, UseMutationResult } from 'react-query';
+import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
 import { assignForms } from './api';
 import { FormMeta } from './models';
 
-const useAssignForms = (): UseMutationResult<string[], unknown, FormMeta[], unknown> =>
-    useMutation(assignForms, {
-        // TODO: invalidate assigned forms query
-        // onSuccess: (d) => {}
+const useAssignForms = (): UseMutationResult<string[], unknown, FormMeta[], unknown> => {
+    const queryClient = useQueryClient();
+    return useMutation(assignForms, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('getFormAssignments');
+        }
     });
+};
 
 // eslint-disable-next-line import/prefer-default-export
 export { useAssignForms };
