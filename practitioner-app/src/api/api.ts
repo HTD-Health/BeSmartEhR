@@ -53,11 +53,13 @@ const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bun
     return c.request(`Questionnaire?_count=${recordsPerPage}`);
 };
 
-const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
+const getFormAssignments = async (params: GetPaginetedRecordsParams, completed: boolean): Promise<Bundle> => {
     const c = await getClient();
 
     const { bundleId, page, recordsPerPage } = params;
     const realPage = page - 1;
+
+    const status = completed ? 'completed' : 'ready';
 
     if (!c.state.serverUrl) {
         throw new Error('Incorrect client state - missing "serverUrl"');
@@ -73,6 +75,7 @@ const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bu
         `patient=Patient/${c.patient.id}`,
         `_count=${recordsPerPage}`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`,
+        `status=${status}`,
         `_sort=-authored-on`
     ];
     return c.request({

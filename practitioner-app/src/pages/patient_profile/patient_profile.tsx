@@ -3,10 +3,11 @@ import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useGetPatient } from 'api/queries';
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
-import { useGetPatient } from 'api/queries';
+import routes from 'routes';
 
 const PatientProfile = (): JSX.Element => {
     const [errorSnackbar, setErrorSnackbar] = useState(false);
@@ -58,22 +59,23 @@ const PatientProfile = (): JSX.Element => {
                             <Button
                                 variant="contained"
                                 sx={{ my: '0.5rem' }}
-                                onClick={() => navigate('/assigned-forms-list')}
+                                onClick={() => navigate(routes.assignedForms)}
                             >
                                 Assigned Forms
-                            </Button>
-                            <Button variant="contained" sx={{ my: '0.5rem' }}>
-                                Filled Forms
-                            </Button>
-                            <Button variant="contained" sx={{ my: '0.5rem' }} onClick={() => navigate('/forms-list')}>
-                                Assign a new Form
                             </Button>
                             <Button
                                 variant="contained"
                                 sx={{ my: '0.5rem' }}
-                                onClick={() => navigate('/responses-list')}
+                                onClick={() => navigate(routes.filledForms)}
                             >
-                                List of Responses
+                                Filled Forms
+                            </Button>
+                            <Button
+                                variant="contained"
+                                sx={{ my: '0.5rem' }}
+                                onClick={() => navigate(routes.formsList)}
+                            >
+                                Assign a new Form
                             </Button>
                         </Box>
                     </Grid>

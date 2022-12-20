@@ -11,7 +11,12 @@ const useGetUser = (): UseQueryResult<Practitioner> => useQuery('getUser', getUs
 const useGetQuestionnaires = (params: GetPaginetedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
     useQuery(['getQuestionnaires', params.page], async () => getQuestionnaires(params), { keepPreviousData: true });
 
-const useGetFormAssignments = (params: GetPaginetedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getFormAssignments', params.page], async () => getFormAssignments(params), { keepPreviousData: true });
+const useGetAssignedForms = (params: GetPaginetedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
+    useQuery(['getAssignedForms', params.page], async () => getFormAssignments(params, false), {
+        keepPreviousData: true
+    });
 
-export { useGetPatient, useGetUser, useGetQuestionnaires, useGetFormAssignments };
+const useGetFilledForms = (params: GetPaginetedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
+    useQuery(['getFilledForms', params.page], async () => getFormAssignments(params, true), { keepPreviousData: true });
+
+export { useGetPatient, useGetUser, useGetQuestionnaires, useGetAssignedForms, useGetFilledForms };

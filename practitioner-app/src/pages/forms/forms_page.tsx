@@ -1,8 +1,8 @@
-import { Typography, CircularProgress } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import type { Questionnaire } from 'fhir/r4';
 import { useContext } from 'react';
 
-import QuestionnaireItem from 'components/questionnaire_item/questonnaire_item';
+import FormItem from 'components/items/form_item';
 import { FormsContext } from 'hooks/useFormsData';
 
 const FormsPage = (): JSX.Element => {
@@ -24,7 +24,7 @@ const FormsPage = (): JSX.Element => {
         return (
             <>
                 {data?.entry?.map((entryItem) => (
-                    <QuestionnaireItem
+                    <FormItem
                         key={(entryItem.resource as Questionnaire).id}
                         questionnaire={entryItem.resource as Questionnaire}
                     />

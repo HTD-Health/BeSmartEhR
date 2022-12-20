@@ -1,12 +1,12 @@
 import { Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
 
-type AssignedQuestionnaireItemProps = {
+type AssignedFormItemProps = {
     name: string;
     authoredOn: string | undefined;
 };
 
-const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.Element => {
+const AssignedFormItem = (props: AssignedFormItemProps): JSX.Element => {
     const { name, authoredOn } = props;
 
     return (
@@ -33,4 +33,4 @@ const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.E
     );
 };
 
-export default AssignedQuestionnaireItem;
+export default AssignedFormItem;
