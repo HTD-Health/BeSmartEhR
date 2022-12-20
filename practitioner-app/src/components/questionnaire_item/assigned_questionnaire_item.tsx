@@ -1,13 +1,16 @@
-import { Card, Typography } from '@mui/material';
+import { Button, Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 type AssignedQuestionnaireItemProps = {
     name: string;
-    authoredOn: string | undefined;
+    authoredOn?: string;
+    questionnaireId?: string;
 };
 
 const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.Element => {
-    const { name, authoredOn } = props;
+    const { name, authoredOn, questionnaireId } = props;
+    const navigate = useNavigate();
 
     return (
         <Card
@@ -29,6 +32,7 @@ const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.E
                     Assigned on: {format(new Date(authoredOn), 'iii, MM/dd/yyyy HH:mm:ss')}
                 </Typography>
             )}
+            {questionnaireId && <Button onClick={() => navigate(`${questionnaireId}/fill`)}>Fill</Button>}
         </Card>
     );
 };

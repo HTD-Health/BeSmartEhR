@@ -10,8 +10,8 @@ export const routes = {
     root: '/',
     patientProfile: '/patient-profile',
     formsContainer: '/forms-list',
-    formFill: '/forms-list/:id/fill',
-    assignedFormsContainer: '/assigned-forms-list'
+    assignedFormsContainer: '/assigned-forms-list',
+    formFill: '/assigned-forms-list/:id/fill'
 };
 
 const AppRouter = (): JSX.Element => (
