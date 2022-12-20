@@ -1,4 +1,4 @@
-import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner, Questionnaire } from 'fhir/r4';
+import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
@@ -24,15 +24,6 @@ const getUser = async (): Promise<Practitioner> => {
     const userUrl = c.user.fhirUser;
     if (!userUrl) throw new Error('Missing current user data');
     return c.request(userUrl);
-};
-
-const getQuestionnaire = async (id: string): Promise<Questionnaire> => {
-    const c = await getClient();
-    const userUrl = c.user.fhirUser;
-    if (!userUrl) throw new Error('Missing current user data');
-
-    const resource = (await c.request(id)) as Questionnaire;
-    return resource;
 };
 
 const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
@@ -158,4 +149,4 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, assignForms, getFormAssignments, getQuestionnaire };
+export { getPatient, getUser, getQuestionnaires, assignForms, getFormAssignments };
