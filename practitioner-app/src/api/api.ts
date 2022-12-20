@@ -1,17 +1,10 @@
-import type { Patient, Practitioner, Bundle, BundleEntry, FhirResource, Questionnaire } from 'fhir/r4';
+import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner, Questionnaire } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
-import {
-    createAssignmentTask,
-    FormMeta,
-    GetQuestionnairesParams,
-    GetQuestionnaireResponseParams,
-    GetQuestionnaireParams
-} from './models';
+import { createAssignmentTask, FormMeta, GetPaginetedRecordsParams, TASK_QUESTIONNAIRE_TAG } from './models';
 
 let client: Client;
-const cache: { [k: string]: FhirResource } = {};
 
 const getClient = async (): Promise<Client> => {
     if (!client) {
@@ -33,26 +26,19 @@ const getUser = async (): Promise<Practitioner> => {
     return c.request(userUrl);
 };
 
-const getQuestionnaire = async (params: GetQuestionnaireParams): Promise<Questionnaire> => {
-    let { id } = params;
-    if (!params.id.startsWith('Questionnaire/')) {
-        id = `Questionnaire/${id}`;
-    }
+const getQuestionnaire = async (id: string): Promise<Questionnaire> => {
     const c = await getClient();
     const userUrl = c.user.fhirUser;
     if (!userUrl) throw new Error('Missing current user data');
-    if (cache[id]) {
-        return cache[id] as Questionnaire;
-    }
+
     const resource = (await c.request(id)) as Questionnaire;
-    cache[id] = resource;
     return resource;
 };
 
-const getQuestionnaires = async (params: GetQuestionnairesParams): Promise<Bundle> => {
+const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
     const c = await getClient();
 
-    const { bundleId, page, questionnairesPerPage } = params;
+    const { bundleId, page, recordsPerPage } = params;
     const realPage = page - 1;
 
     if (!c.state.serverUrl) {
@@ -60,24 +46,17 @@ const getQuestionnaires = async (params: GetQuestionnairesParams): Promise<Bundl
     }
 
     if (bundleId) {
-        const p = [
-            `_getpages=${bundleId}`,
-            `_getpagesoffset=${realPage * questionnairesPerPage}`,
-            `_count=${questionnairesPerPage}`,
-            '_bundletype=searchset'
-        ];
-
-        const relationSearch = `${c.state.serverUrl}?`.concat(p.join('&'));
-        return c.request(relationSearch);
+        return performPaginateSearch(bundleId, realPage * recordsPerPage, recordsPerPage);
     }
 
-    return c.request(`Questionnaire?_count=${questionnairesPerPage}`);
+    // the initial call
+    return c.request(`Questionnaire?_count=${recordsPerPage}`);
 };
 
-const getQuestionnaireResponse = async (params: GetQuestionnaireResponseParams): Promise<Bundle> => {
+const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
     const c = await getClient();
 
-    const { bundleId, page, questionnairesResponsePerPage } = params;
+    const { bundleId, page, recordsPerPage } = params;
     const realPage = page - 1;
 
     if (!c.state.serverUrl) {
@@ -85,19 +64,74 @@ const getQuestionnaireResponse = async (params: GetQuestionnaireResponseParams):
     }
 
     if (bundleId) {
-        const p = [
-            `_getpages=${bundleId}`,
-            `_getpagesoffset=${realPage * questionnairesResponsePerPage}`,
-            `_count=${questionnairesResponsePerPage}`,
-            '_bundletype=searchset'
-        ];
-
-        const relationSearch = `${c.state.serverUrl}?`.concat(p.join('&'));
-        return c.request(relationSearch);
+        return performPaginateSearch(bundleId, realPage * recordsPerPage, recordsPerPage);
     }
 
-    return c.request(`QuestionnaireResponse?_count=${questionnairesResponsePerPage}`);
+    // the initial call
+    const p = [
+        `owner=${c.user.fhirUser}`,
+        `patient=Patient/${c.patient.id}`,
+        `_count=${recordsPerPage}`,
+        `_tag=${TASK_QUESTIONNAIRE_TAG}`,
+        `_sort=-authored-on`
+    ];
+    return c.request({
+        url: `Task?`.concat(p.join('&')),
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    });
 };
+
+const performPaginateSearch = async (bundleId: string, pagesOffset: number, count: number): Promise<Bundle> => {
+    const c = await getClient();
+
+    const params = [
+        `_getpages=${bundleId}`,
+        `_getpagesoffset=${pagesOffset}`,
+        `_count=${count}`,
+        '_bundletype=searchset'
+    ];
+
+    const relationSearch = `${c.state.serverUrl}?`.concat(params.join('&'));
+    return c.request({
+        url: relationSearch,
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    });
+};
+
+// const getQuestionnaireResponse = async (params: GetQuestionnaireResponseParams): Promise<Bundle> => {
+//     const c = await getClient();
+
+//     const { bundleId, page, questionnairesResponsePerPage } = params;
+//     const realPage = page - 1;
+
+//     if (!c.state.serverUrl) {
+//         throw new Error('Incorrect client state - missing "serverUrl"');
+//     }
+
+//     if (bundleId) {
+//         const p = [
+//             `_getpages=${bundleId}`,
+//             `_getpagesoffset=${realPage * questionnairesResponsePerPage}`,
+//             `_count=${questionnairesResponsePerPage}`,
+//             '_bundletype=searchset'
+//         ];
+
+//         const relationSearch = `${c.state.serverUrl}?`.concat(p.join('&'));
+//         return c.request(relationSearch);
+//     }
+
+//     return c.request(`QuestionnaireResponse?_count=${questionnairesResponsePerPage}`);
+// };
 
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html
@@ -145,4 +179,4 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, getQuestionnaireResponse, assignForms, getQuestionnaire };
+export { getPatient, getUser, getQuestionnaires, assignForms, getFormAssignments, getQuestionnaire };

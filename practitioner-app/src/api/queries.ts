@@ -1,22 +1,17 @@
-import type { Bundle, FhirResource, Patient, Practitioner, Questionnaire } from 'fhir/r4';
+import type { Bundle, FhirResource, Patient, Practitioner } from 'fhir/r4';
 import { useQuery, UseQueryResult } from 'react-query';
 
-import { getPatient, getUser, getQuestionnaires, getQuestionnaireResponse, getQuestionnaire } from './api';
-import { GetQuestionnairesParams, GetQuestionnaireResponseParams, GetQuestionnaireParams } from './models';
+import { getFormAssignments, getPatient, getQuestionnaires, getUser } from './api';
+import { GetPaginetedRecordsParams } from './models';
 
 const useGetPatient = (): UseQueryResult<Patient> => useQuery('getPatient', getPatient);
 
 const useGetUser = (): UseQueryResult<Practitioner> => useQuery('getUser', getUser);
 
-const useGetQuestionnaire = (params: GetQuestionnaireParams): UseQueryResult<Questionnaire> =>
-    useQuery(['getQuestionnaire', params.id], async () => getQuestionnaire(params));
-
-const useGetQuestionnaires = (params: GetQuestionnairesParams): UseQueryResult<Bundle<FhirResource>> =>
+const useGetQuestionnaires = (params: GetPaginetedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
     useQuery(['getQuestionnaires', params.page], async () => getQuestionnaires(params), { keepPreviousData: true });
 
-const useGetQuestionnaireResponse = (params: GetQuestionnaireResponseParams): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getQuestionnaireResponse', params.page], async () => getQuestionnaireResponse(params), {
-        keepPreviousData: true
-    });
+const useGetFormAssignments = (params: GetPaginetedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
+    useQuery(['getFormAssignments', params.page], async () => getFormAssignments(params), { keepPreviousData: true });
 
-export { useGetPatient, useGetUser, useGetQuestionnaires, useGetQuestionnaireResponse, useGetQuestionnaire };
+export { useGetPatient, useGetUser, useGetQuestionnaires, useGetFormAssignments };

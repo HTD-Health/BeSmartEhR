@@ -1,11 +1,11 @@
-import { Card, Typography, Checkbox, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { Box, Card, Checkbox, Typography } from '@mui/material';
 import type { Questionnaire } from 'fhir/r4';
 import { useContext, useEffect, useState } from 'react';
 
-import { FormsContext } from 'hooks/useFormsData';
 import { useAssignForms } from 'api/mutations';
 import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
+import { FormsContext } from 'hooks/useFormsData';
 
 type QuestionnaireItemProps = {
     questionnaire: Questionnaire;
@@ -26,7 +26,10 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
         }
 
         if (event.target.checked) {
-            setFormsToAssign([...formsToAssign, { id: questionnaire.id, name: questionnaire.title ?? 'Unknown name' }]);
+            setFormsToAssign([
+                ...formsToAssign,
+                { id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }
+            ]);
         } else {
             setFormsToAssign(formsToAssign.filter((form) => form.id !== questionnaire.id));
         }
@@ -46,7 +49,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
     }, [isSuccess]);
 
     const handleAssign = (): void =>
-        assign([{ id: questionnaire.id as string, name: questionnaire.title ?? 'Unknown name' }]);
+        assign([{ id: questionnaire.id as string, name: questionnaire.title ?? 'Form name not provided' }]);
 
     return (
         <Card
@@ -73,7 +76,7 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
                 message="Form assigned successfully"
             />
             <Typography variant="h6" color="inherit">
-                {questionnaire?.title || 'Questionnaire name not specified'}
+                {questionnaire?.title || 'Form name not provided'}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Checkbox checked={isCheckedToAssign()} onChange={handleChange} />
