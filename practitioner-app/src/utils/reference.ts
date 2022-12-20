@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
-import { Reference } from 'fhir/r4';
+import type { Reference } from 'fhir/r4';
 
 const getIdFromReference = (reference?: Reference): string | undefined => {
     if (reference && reference.reference) {

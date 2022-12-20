@@ -1,8 +1,14 @@
-import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner } from 'fhir/r4';
+import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
-import { createAssignmentTask, FormMeta, GetPaginetedRecordsParams, TASK_QUESTIONNAIRE_TAG } from './models';
+import {
+    createAssignmentTask,
+    FormMeta,
+    GetPaginetedRecordsParams,
+    SubmitResponseParams,
+    TASK_QUESTIONNAIRE_TAG
+} from './models';
 
 let client: Client;
 
@@ -44,6 +50,35 @@ const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bun
     return c.request(`Questionnaire?_count=${recordsPerPage}`);
 };
 
+const submitResponse = async ({ qr, questionnaireId }: SubmitResponseParams): Promise<string> => {
+    const c = await getClient();
+    const userUrl = c.user.fhirUser;
+    if (!userUrl) throw new Error('Missing current user data');
+    const patientId = c.patient.id;
+    if (!patientId) throw new Error('Missing selected patient data');
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+    const questionnaireUri = questionnaireId ? `${c.state.serverUrl}/Questionnaire/${questionnaireId}` : undefined;
+    const enrichedQr: QuestionnaireResponse = {
+        ...qr,
+        author: { reference: userUrl },
+        subject: { reference: `Patient/${c.patient.id}` },
+        source: { reference: `Patient/${c.patient.id}` },
+        questionnaire: questionnaireUri
+    };
+
+    const createdResource = await c.create(enrichedQr as any);
+    return `${createdResource.resourceType}/${createdResource.id}`;
+};
+
+const finishTask = async (taskId: string): Promise<string> => {
+    const c = await getClient();
+    const createdResource = await c.patch(`Task/${taskId}`, [{ op: 'replace', path: '/status', value: 'completed' }]);
+    console.log('createdResource', createdResource);
+    return `${createdResource.resourceType}/${createdResource.id}`;
+};
+
 const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
     const c = await getClient();
 
@@ -62,6 +97,7 @@ const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bu
     const p = [
         `owner=${c.user.fhirUser}`,
         `patient=Patient/${c.patient.id}`,
+        `status=ready`,
         `_count=${recordsPerPage}`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`,
         `_sort=-authored-on`
@@ -127,7 +163,7 @@ const assignSingleForm = async (formData: FormMeta): Promise<string> => {
 
     const task = createAssignmentTask(formData, patientId, userUrl);
 
-    const createdResource = await client.create(task as any);
+    const createdResource = await c.create(task as any);
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
@@ -151,8 +187,17 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
         body: JSON.stringify(bundle),
         headers: { 'content-type': 'application/json' }
     };
-    const createdBundle = await client.request(requestOptions);
+    const createdBundle = await c.request(requestOptions);
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, assignForms, getQuestionnaire, getFormAssignments };
+export {
+    getPatient,
+    getUser,
+    getQuestionnaires,
+    assignForms,
+    getQuestionnaire,
+    getFormAssignments,
+    submitResponse,
+    finishTask
+};

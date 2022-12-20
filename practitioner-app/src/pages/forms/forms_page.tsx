@@ -1,4 +1,4 @@
-import { Typography, CircularProgress } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import type { Questionnaire } from 'fhir/r4';
 import { useContext } from 'react';
 

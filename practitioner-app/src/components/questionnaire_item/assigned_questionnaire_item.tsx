@@ -1,16 +1,17 @@
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { Box, Button, Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
+import type { Task } from 'fhir/r4';
 import { useNavigate } from 'react-router-dom';
 
 type AssignedQuestionnaireItemProps = {
     name: string;
-    authoredOn?: string;
+    task?: Task;
     questionnaireId?: string;
 };
 
 const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.Element => {
-    const { name, authoredOn, questionnaireId } = props;
+    const { name, task, questionnaireId } = props;
     const navigate = useNavigate();
 
     return (
@@ -29,16 +30,22 @@ const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.E
                 {name}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                {authoredOn && (
+                {task?.authoredOn && (
                     <Typography variant="body2" color="inherit">
-                        Assigned on: {format(new Date(authoredOn), 'iii, MM/dd/yyyy HH:mm:ss')}
+                        Assigned on: {format(new Date(task.authoredOn), 'iii, MM/dd/yyyy HH:mm:ss')}
                     </Typography>
                 )}
                 {questionnaireId && (
                     <Button
                         sx={{ whiteSpace: 'nowrap' }}
                         variant="text"
-                        onClick={() => navigate(`${questionnaireId}/fill`)}
+                        onClick={() =>
+                            navigate(`${questionnaireId}/fill`, {
+                                state: {
+                                    taskId: task?.id
+                                }
+                            })
+                        }
                         endIcon={<ArrowRightAltIcon />}
                     >
                         Fill out

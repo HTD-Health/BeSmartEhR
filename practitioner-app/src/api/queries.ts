@@ -1,6 +1,4 @@
-import type { Bundle, FhirResource, Patient, Practitioner } from 'fhir/r4';
-// eslint-disable-next-line import/no-unresolved
-import { Questionnaire } from 'fhir/r4';
+import type { Bundle, FhirResource, Patient, Practitioner, Questionnaire } from 'fhir/r4';
 import { useQuery, UseQueryResult } from 'react-query';
 
 import { getFormAssignments, getPatient, getQuestionnaire, getQuestionnaires, getUser } from './api';

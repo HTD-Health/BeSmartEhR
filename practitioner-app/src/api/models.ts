@@ -1,4 +1,4 @@
-import type { Task } from 'fhir/r4';
+import type { QuestionnaireResponse, Task } from 'fhir/r4';
 
 // Tag used to identify Tasks that assign forms to patients
 const TASK_QUESTIONNAIRE_TAG = 'be-smart-ehr-questionnaire';
@@ -14,6 +14,11 @@ type FormMeta = {
     name: string;
 };
 
+type SubmitResponseParams = {
+    qr: QuestionnaireResponse;
+    questionnaireId?: string;
+};
+
 const createAssignmentTask = (formMeta: FormMeta, patientId: string, userUrl: string): Task => ({
     resourceType: 'Task',
     status: 'ready',
@@ -26,4 +31,4 @@ const createAssignmentTask = (formMeta: FormMeta, patientId: string, userUrl: st
     meta: { tag: [{ code: TASK_QUESTIONNAIRE_TAG }] }
 });
 
-export { createAssignmentTask, FormMeta, GetPaginetedRecordsParams, TASK_QUESTIONNAIRE_TAG };
+export { createAssignmentTask, FormMeta, SubmitResponseParams, GetPaginetedRecordsParams, TASK_QUESTIONNAIRE_TAG };
