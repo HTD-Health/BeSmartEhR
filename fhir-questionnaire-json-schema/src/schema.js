@@ -61,7 +61,6 @@ const generateUISchemaItems = (items) => {
 };
 const generateUISchemaItem = (item) => {
     var _a, _b, _c, _d, _e, _f;
-    console.log(item);
     const entry = {
         'ui:placeholder': ''
     };
