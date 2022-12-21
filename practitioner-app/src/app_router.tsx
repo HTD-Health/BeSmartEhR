@@ -3,6 +3,7 @@ import { BrowserRouter as HashRouter, Navigate, Route, Routes } from 'react-rout
 import AssignedFormsContainer from 'pages/assigned_forms/assigned_forms_container';
 import FilledFormsContainer from 'pages/filled_forms/filled_forms_container';
 import FormsContainer from 'pages/forms/forms_container';
+import FormFill from 'pages/form_fill/form_fill';
 import PatientProfile from 'pages/patient_profile/patient_profile';
 import routes from 'routes';
 
@@ -14,6 +15,7 @@ const AppRouter = (): JSX.Element => (
             <Route path={routes.formsList} element={<FormsContainer />} />
             <Route path={routes.filledForms} element={<FilledFormsContainer />} />
             <Route path={routes.assignedForms} element={<AssignedFormsContainer />} />
+            <Route path={routes.formFill} element={<FormFill />} />
         </Routes>
     </HashRouter>
 );

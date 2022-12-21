@@ -1,7 +1,9 @@
 import type { Bundle, FhirResource, Patient, Practitioner } from 'fhir/r4';
+// eslint-disable-next-line import/no-unresolved
+import { Questionnaire } from 'fhir/r4';
 import { useQuery, UseQueryResult } from 'react-query';
 
-import { getPatient, getQuestionnaires, getQuestionnaireTasks, getUser } from './api';
+import { getPatient, getQuestionnaire, getQuestionnaires, getQuestionnaireTasks, getUser } from './api';
 import { GetPaginetedRecordsParams } from './models';
 
 const useGetPatient = (): UseQueryResult<Patient> => useQuery('getPatient', getPatient);
@@ -21,4 +23,7 @@ const useGetFilledForms = (params: GetPaginetedRecordsParams): UseQueryResult<Bu
         keepPreviousData: true
     });
 
-export { useGetPatient, useGetUser, useGetQuestionnaires, useGetAssignedForms, useGetFilledForms };
+const useGetQuestionnaire = (id: string): UseQueryResult<Questionnaire> =>
+    useQuery(['getQuestionnaire', id], async () => getQuestionnaire(id), { keepPreviousData: true });
+
+export { useGetPatient, useGetUser, useGetQuestionnaires, useGetAssignedForms, useGetFilledForms, useGetQuestionnaire };
