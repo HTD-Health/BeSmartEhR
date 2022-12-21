@@ -1,12 +1,12 @@
 import { Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
 
-type FiledFormItemProps = {
+type FilledFormItemProps = {
     name: string;
     date: string | undefined;
 };
 
-const FiledFormItem = (props: FiledFormItemProps): JSX.Element => {
+const FilledFormItem = (props: FilledFormItemProps): JSX.Element => {
     const { name, date } = props;
 
     return (
@@ -34,4 +34,4 @@ const FiledFormItem = (props: FiledFormItemProps): JSX.Element => {
         </>
     );
 };
-export default FiledFormItem;
+export default FilledFormItem;
