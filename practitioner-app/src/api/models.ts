@@ -19,6 +19,11 @@ type SubmitResponseParams = {
     questionnaireId?: string;
 };
 
+type FinishTaskParams = {
+    taskId: string;
+    responseRef: string;
+};
+
 const createAssignmentTask = (formMeta: FormMeta, patientId: string, userUrl: string): Task => ({
     resourceType: 'Task',
     status: 'ready',
@@ -31,4 +36,11 @@ const createAssignmentTask = (formMeta: FormMeta, patientId: string, userUrl: st
     meta: { tag: [{ code: TASK_QUESTIONNAIRE_TAG }] }
 });
 
-export { createAssignmentTask, FormMeta, SubmitResponseParams, GetPaginetedRecordsParams, TASK_QUESTIONNAIRE_TAG };
+export {
+    createAssignmentTask,
+    FormMeta,
+    SubmitResponseParams,
+    FinishTaskParams,
+    GetPaginetedRecordsParams,
+    TASK_QUESTIONNAIRE_TAG
+};

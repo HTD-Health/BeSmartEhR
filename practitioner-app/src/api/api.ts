@@ -4,6 +4,7 @@ import Client from 'fhirclient/lib/Client';
 
 import {
     createAssignmentTask,
+    FinishTaskParams,
     FormMeta,
     GetPaginetedRecordsParams,
     SubmitResponseParams,
@@ -72,9 +73,12 @@ const submitResponse = async ({ qr, questionnaireId }: SubmitResponseParams): Pr
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
-const finishTask = async (taskId: string): Promise<string> => {
+const finishTask = async ({ taskId, responseRef }: FinishTaskParams): Promise<string> => {
     const c = await getClient();
-    const createdResource = await c.patch(`Task/${taskId}`, [{ op: 'replace', path: '/status', value: 'completed' }]);
+    const createdResource = await c.patch(`Task/${taskId}`, [
+        { op: 'replace', path: '/status', value: 'completed' },
+        { op: 'add', path: '/focus', value: { reference: responseRef } }
+    ]);
     console.log('createdResource', createdResource);
     return `${createdResource.resourceType}/${createdResource.id}`;
 };

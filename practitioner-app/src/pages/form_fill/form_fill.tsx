@@ -16,6 +16,7 @@ import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 
 const FormFill = (): JSX.Element => {
     const {
+        data: responseRef,
         mutate: submitResponse,
         isSuccess: submitSuccess,
         error: submitError,
@@ -44,7 +45,6 @@ const FormFill = (): JSX.Element => {
         if (!data) return;
         const qr = toQuestionnaireResponse(data, resData.formData);
         submitResponse({ qr, questionnaireId: id });
-        if (taskId) finishTask(taskId);
     };
 
     useEffect(() => {
@@ -54,6 +54,10 @@ const FormFill = (): JSX.Element => {
         setRawSchema(schema);
         setGeneratedSchema(uiSchema);
     }, [data, isSuccess]);
+
+    useEffect(() => {
+        if (taskId && responseRef) finishTask({ taskId, responseRef });
+    }, [finishTask, responseRef, submitSuccess, taskId]);
 
     const renderContent = (): JSX.Element => {
         if (submitError || finishTaskError) {
