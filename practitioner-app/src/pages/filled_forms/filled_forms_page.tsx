@@ -1,16 +1,14 @@
 import { CircularProgress, Typography } from '@mui/material';
 import type { Bundle, FhirResource, Task } from 'fhir/r4';
 
-import { getIdFromReference } from '../../utils/reference';
+import FilledFormItem from 'components/items/filled_form_item';
 
-import AssignedFormItem from 'components/items/assigned_form_item';
-
-type AssignedFormsPageProps = {
+type FilledFormsPageProps = {
     data: Bundle<FhirResource> | undefined;
     isLoading: boolean;
 };
 
-const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
+const FilledFormsPage = (props: FilledFormsPageProps): JSX.Element => {
     const { data, isLoading } = props;
 
     if (isLoading) {
@@ -20,7 +18,7 @@ const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
     if (!data || !Array.isArray(data.entry) || data.entry.length === 0) {
         return (
             <Typography sx={{ ml: '.5rem' }} variant="h6">
-                Patient has no forms assigned by current user.
+                Patient has no forms filled by current user.
             </Typography>
         );
     }
@@ -30,11 +28,10 @@ const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
             {data.entry.map((entry) => {
                 const task = entry.resource as Task;
                 return (
-                    <AssignedFormItem
+                    <FilledFormItem
                         key={task.id}
-                        name={task.description || 'Form name not provided'}
-                        questionnaireId={getIdFromReference(task.reasonReference)}
-                        authoredOn={task?.authoredOn}
+                        name={task.description ?? 'Form name not provided'}
+                        date={task.lastModified}
                     />
                 );
             })}
@@ -42,4 +39,4 @@ const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
     );
 };
 
-export default AssignedFormsPage;
+export default FilledFormsPage;

@@ -7,18 +7,18 @@ import { useAssignForms } from 'api/mutations';
 import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 import { FormsContext } from 'hooks/useFormsData';
 
-type QuestionnaireItemProps = {
+type FormItemProps = {
     questionnaire: Questionnaire;
 };
 
-const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
+const FormItem = (props: FormItemProps): JSX.Element => {
     const { questionnaire } = props;
     const { formsToAssign, setFormsToAssign } = useContext(FormsContext);
     const { mutate: assign, error, isLoading, isSuccess } = useAssignForms();
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const [successSnackbar, setSuccessSnackbar] = useState(false);
 
-    const isCheckedToAssign = (): boolean => formsToAssign.some((form) => form.id === questionnaire.id);
+    const isCheckedToAssign = (): boolean => formsToAssign?.some((form) => form.id === questionnaire.id);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         if (!questionnaire.id) {
@@ -88,4 +88,4 @@ const QuestionnaireItem = (props: QuestionnaireItemProps): JSX.Element => {
     );
 };
 
-export default QuestionnaireItem;
+export default FormItem;

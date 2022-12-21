@@ -3,13 +3,13 @@ import { Box, Button, Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
-type AssignedQuestionnaireItemProps = {
+type AssignedFormItemProps = {
     name: string;
     authoredOn?: string;
     questionnaireId?: string;
 };
 
-const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.Element => {
+const AssignedFormItem = (props: AssignedFormItemProps): JSX.Element => {
     const { name, authoredOn, questionnaireId } = props;
     const navigate = useNavigate();
 
@@ -49,4 +49,4 @@ const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.E
     );
 };
 
-export default AssignedQuestionnaireItem;
+export default AssignedFormItem;
