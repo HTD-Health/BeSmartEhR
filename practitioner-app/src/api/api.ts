@@ -159,4 +159,4 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, assignForms, getQuestionnaireTasks };
+export { getPatient, getUser, getQuestionnaires, assignForms, getQuestionnaireTasks, getQuestionnaire };
