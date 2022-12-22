@@ -4,13 +4,13 @@ import { format } from 'date-fns';
 import type { Task } from 'fhir/r4';
 import { useNavigate } from 'react-router-dom';
 
-type AssignedQuestionnaireItemProps = {
+type AssignedFormItemProps = {
     name: string;
     task?: Task;
     questionnaireId?: string;
 };
 
-const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.Element => {
+const AssignedFormItem = (props: AssignedFormItemProps): JSX.Element => {
     const { name, task, questionnaireId } = props;
     const navigate = useNavigate();
 
@@ -56,4 +56,4 @@ const AssignedQuestionnaireItem = (props: AssignedQuestionnaireItemProps): JSX.E
     );
 };
 
-export default AssignedQuestionnaireItem;
+export default AssignedFormItem;

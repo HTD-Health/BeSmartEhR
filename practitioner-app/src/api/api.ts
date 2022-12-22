@@ -82,7 +82,7 @@ const finishTask = async ({ taskId, responseRef }: FinishTaskParams): Promise<st
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
-const getFormAssignments = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
+const getQuestionnaireTasks = async (params: GetPaginetedRecordsParams, completed: boolean): Promise<Bundle> => {
     const c = await getClient();
 
     const { bundleId, page, recordsPerPage } = params;
@@ -148,6 +148,18 @@ const getQuestionnaire = async (id: string): Promise<Bundle> => {
     return c.request(`Questionnaire/${id}`);
 };
 
+const getResponse = async (responseId: string): Promise<Bundle> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    const url = `QuestionnaireResponse/${responseId}`;
+
+    return c.request(url);
+};
+
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html
 // Task connects a patient to a practitioner and a form
@@ -200,7 +212,8 @@ export {
     getQuestionnaires,
     assignForms,
     getQuestionnaire,
-    getFormAssignments,
+    getQuestionnaireTasks,
+    getResponse,
     submitResponse,
     finishTask
 };
