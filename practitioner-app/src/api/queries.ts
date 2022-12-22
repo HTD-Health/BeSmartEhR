@@ -26,8 +26,8 @@ const useGetResponse = (responseId: string): UseQueryResult<QuestionnaireRespons
         keepPreviousData: true
     });
 
-const useGetQuestionnaire = (id: string): UseQueryResult<Questionnaire> =>
-    useQuery(['getQuestionnaire', id], async () => getQuestionnaire(id), { keepPreviousData: true });
+const useGetQuestionnaire = (id?: string): UseQueryResult<Questionnaire> =>
+    useQuery(['getQuestionnaire', id], async () => getQuestionnaire(id), { keepPreviousData: true, enabled: !!id });
 
 export {
     useGetPatient,
