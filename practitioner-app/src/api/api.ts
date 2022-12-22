@@ -113,6 +113,7 @@ const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, complete
         `owner=${c.user.fhirUser}`,
         `patient=Patient/${c.patient.id}`,
         `_count=${recordsPerPage}`,
+        `intent=order`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`,
         `status=${status}`,
         `_sort=${sort}`
