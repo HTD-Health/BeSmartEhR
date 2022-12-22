@@ -57,7 +57,15 @@ const getTasks = async (params: TaskParams, count: number, pagination?: Paginati
         return c.request(relationSearch);
     }
 
-    return c.request(`Task?`.concat(allParams.join('&')));
+    return c.request({
+        url: `Task?`.concat(allParams.join('&')),
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    });
 };
 
 const getQuestionnaire = async (id?: string): Promise<Bundle> => {
