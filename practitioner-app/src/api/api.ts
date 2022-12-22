@@ -77,7 +77,8 @@ const finishTask = async ({ taskId, responseRef }: FinishTaskParams): Promise<st
     const c = await getClient();
     const createdResource = await c.patch(`Task/${taskId}`, [
         { op: 'replace', path: '/status', value: 'completed' },
-        { op: 'add', path: '/focus', value: { reference: responseRef } }
+        { op: 'add', path: '/focus', value: { reference: responseRef } },
+        { op: 'add', path: '/lastModified', value: new Date().toISOString() }
     ]);
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
