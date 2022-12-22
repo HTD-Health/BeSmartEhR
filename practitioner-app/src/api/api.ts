@@ -79,7 +79,6 @@ const finishTask = async ({ taskId, responseRef }: FinishTaskParams): Promise<st
         { op: 'replace', path: '/status', value: 'completed' },
         { op: 'add', path: '/focus', value: { reference: responseRef } }
     ]);
-    console.log('createdResource', createdResource);
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
