@@ -19,8 +19,7 @@ const useFinishTask = (): UseMutationResult<string, unknown, FinishTaskParams, u
     const queryClient = useQueryClient();
     return useMutation(finishTask, {
         onSuccess: () => {
-            // TODO: Invalidate filled forms
-            // queryClient.invalidateQueries('getFilledForms');
+            queryClient.invalidateQueries('getFilledForms');
             queryClient.invalidateQueries('getFormAssignments');
         }
     });
