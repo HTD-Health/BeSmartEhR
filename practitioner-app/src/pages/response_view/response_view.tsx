@@ -1,4 +1,4 @@
-import { CircularProgress, Container, Typography } from '@mui/material';
+import { CircularProgress, Container } from '@mui/material';
 import Form from '@rjsf/mui';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useGetQuestionnaire, useGetResponse } from '../../api/queries';
+import CustomSnackbar from '../../components/custom_snackbar/custom_snackbar';
 
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 
@@ -17,6 +18,7 @@ const ResponseView = (): JSX.Element => {
     const [rawSchema, setRawSchema] = useState<Schema>();
     const [generatedSchema, setGeneratedSchema] = useState();
     const [formData, setFormData] = useState();
+    const [errorSnackbar, setErrorSnackbar] = useState({ open: false, message: '' });
 
     const { data: response, isLoading, error, isSuccess } = useGetResponse(responseId ?? '');
 
@@ -43,16 +45,14 @@ const ResponseView = (): JSX.Element => {
         setFormData(responseData);
     }, [response, isSuccess, form, formIsSuccess]);
 
-    // TODO: change to snackbars
-    const renderContent = (): JSX.Element => {
-        if (error || formError || ((!rawSchema || !formData) && !isLoading)) {
-            return (
-                <Typography sx={{ ml: '.5rem' }} variant="h6">
-                    Could not load response
-                </Typography>
-            );
+    useEffect(() => {
+        if (error || formError) {
+            setErrorSnackbar({ open: true, message: 'Could not load response' });
+            console.error({ error, formError });
         }
+    }, [error, formError]);
 
+    const renderContent = (): JSX.Element => {
         if (isLoading || formIsLoading) {
             return <CircularProgress sx={{ m: '2rem' }} />;
         }
@@ -60,16 +60,18 @@ const ResponseView = (): JSX.Element => {
         return (
             <>
                 <Container maxWidth="md" sx={{ marginTop: '25px' }}>
-                    <Form
-                        validator={validator}
-                        schema={rawSchema as RJSFSchema}
-                        uiSchema={generatedSchema}
-                        formData={formData}
-                        readonly
-                    >
-                        {/* To hide the submit button */}
-                        <></>
-                    </Form>
+                    {rawSchema && (
+                        <Form
+                            validator={validator}
+                            schema={rawSchema as RJSFSchema}
+                            uiSchema={generatedSchema}
+                            formData={formData}
+                            readonly
+                        >
+                            {/* To hide the submit button */}
+                            <></>
+                        </Form>
+                    )}
                 </Container>
             </>
         );
@@ -78,6 +80,11 @@ const ResponseView = (): JSX.Element => {
     return (
         <>
             <SmartAppBar />
+            <CustomSnackbar
+                open={errorSnackbar.open}
+                onClose={() => setErrorSnackbar({ open: false, message: '' })}
+                message={errorSnackbar.message}
+            />
             {renderContent()}
         </>
     );

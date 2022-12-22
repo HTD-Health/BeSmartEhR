@@ -68,7 +68,7 @@ const FormFill = (): JSX.Element => {
             setErrorSnackbar({ open: true, message: 'Could not load questionnaire' });
             console.error(error);
         }
-    }, [error, isLoading, rawSchema]);
+    }, [error]);
 
     useEffect(() => {
         if (submitError || finishTaskError) {
