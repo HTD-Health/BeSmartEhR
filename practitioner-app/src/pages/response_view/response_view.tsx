@@ -31,7 +31,7 @@ const ResponseView = (): JSX.Element => {
     } = useGetQuestionnaire(questionnaireId);
 
     useEffect(() => {
-        if (!response || !form || !isSuccess || !formIsSuccess) return;
+        if (!isSuccess || !formIsSuccess) return;
         if (!response || !form) {
             setFormData(undefined);
             setRawSchema(undefined);
