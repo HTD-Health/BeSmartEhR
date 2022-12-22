@@ -38,8 +38,6 @@ const ResponseView = (): JSX.Element => {
         const [schema, uiSchema] = toJSONSchema(form as any);
         const responseData = responseToJSONSchema(response as any);
 
-        console.log({ responseData });
-
         setRawSchema(schema);
         setGeneratedSchema(uiSchema);
         setFormData(responseData);
