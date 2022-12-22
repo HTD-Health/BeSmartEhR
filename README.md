@@ -1,6 +1,6 @@
 # BeSmartEhR
 
-Repository used during research project on developing (SMART)[https://smarthealthit.org/] apps on (FHIR)[https://www.hl7.org/fhir/smart-app-launch/].
+Repository used during research project on developing [SMART](https://smarthealthit.org/) apps on [FHIR](https://www.hl7.org/fhir/smart-app-launch/).
 
 ## Structure
 
