@@ -89,6 +89,9 @@ const getQuestionnaireTasks = async (params: GetPaginetedRecordsParams, complete
     const { bundleId, page, recordsPerPage } = params;
     const realPage = page - 1;
 
+    const status = completed ? 'completed' : 'ready';
+    const sort = completed ? '-modified' : '-authored-on';
+
     if (!c.state.serverUrl) {
         throw new Error('Incorrect client state - missing "serverUrl"');
     }
@@ -101,10 +104,10 @@ const getQuestionnaireTasks = async (params: GetPaginetedRecordsParams, complete
     const p = [
         `owner=${c.user.fhirUser}`,
         `patient=Patient/${c.patient.id}`,
-        `status=ready`,
         `_count=${recordsPerPage}`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`,
-        `_sort=-authored-on`
+        `status=${status}`,
+        `_sort=${sort}`
     ];
     return c.request({
         url: `Task?`.concat(p.join('&')),
