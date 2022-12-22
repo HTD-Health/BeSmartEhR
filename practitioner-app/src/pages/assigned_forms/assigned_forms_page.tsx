@@ -34,7 +34,7 @@ const AssignedFormsPage = (props: AssignedFormsPageProps): JSX.Element => {
                         key={task.id}
                         name={task.description || 'Form name not provided'}
                         questionnaireId={getIdFromReference(task.reasonReference)}
-                        authoredOn={task?.authoredOn}
+                        task={task}
                     />
                 );
             })}

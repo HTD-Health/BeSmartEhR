@@ -1,8 +1,15 @@
-import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner } from 'fhir/r4';
+import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
-import { createAssignmentTask, FormMeta, GetPaginetedRecordsParams, TASK_QUESTIONNAIRE_TAG } from './models';
+import {
+    createAssignmentTask,
+    FinishTaskParams,
+    FormMeta,
+    GetPaginetedRecordsParams,
+    SubmitResponseParams,
+    TASK_QUESTIONNAIRE_TAG
+} from './models';
 
 let client: Client;
 
@@ -42,6 +49,38 @@ const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bun
 
     // the initial call
     return c.request(`Questionnaire?_count=${recordsPerPage}`);
+};
+
+const submitResponse = async ({ response, questionnaireId }: SubmitResponseParams): Promise<string> => {
+    const c = await getClient();
+    const userUrl = c.user.fhirUser;
+    if (!userUrl) throw new Error('Missing current user data');
+    const patientId = c.patient.id;
+    if (!patientId) throw new Error('Missing selected patient data');
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+    const questionnaireUri = questionnaireId ? `${c.state.serverUrl}/Questionnaire/${questionnaireId}` : undefined;
+    const enrichedQr: QuestionnaireResponse = {
+        ...response,
+        author: { reference: userUrl },
+        subject: { reference: `Patient/${c.patient.id}` },
+        source: { reference: `Patient/${c.patient.id}` },
+        questionnaire: questionnaireUri
+    };
+
+    const createdResource = await c.create(enrichedQr as any);
+    return `${createdResource.resourceType}/${createdResource.id}`;
+};
+
+const finishTask = async ({ taskId, responseRef }: FinishTaskParams): Promise<string> => {
+    const c = await getClient();
+    const createdResource = await c.patch(`Task/${taskId}`, [
+        { op: 'replace', path: '/status', value: 'completed' },
+        { op: 'add', path: '/focus', value: { reference: responseRef } },
+        { op: 'add', path: '/lastModified', value: new Date().toISOString() }
+    ]);
+    return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
 const getQuestionnaireTasks = async (params: GetPaginetedRecordsParams, completed: boolean): Promise<Bundle> => {
@@ -113,6 +152,18 @@ const getQuestionnaire = async (id: string): Promise<Bundle> => {
     return c.request(`Questionnaire/${id}`);
 };
 
+const getResponse = async (responseId: string): Promise<Bundle> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    const url = `QuestionnaireResponse/${responseId}`;
+
+    return c.request(url);
+};
+
 // Assigning a new form to a patient is based on the Task FHIR resource
 // https://www.hl7.org/fhir/task.html
 // Task connects a patient to a practitioner and a form
@@ -131,7 +182,7 @@ const assignSingleForm = async (formData: FormMeta): Promise<string> => {
 
     const task = createAssignmentTask(formData, patientId, userUrl);
 
-    const createdResource = await client.create(task as any);
+    const createdResource = await c.create(task as any);
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
@@ -155,8 +206,18 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
         body: JSON.stringify(bundle),
         headers: { 'content-type': 'application/json' }
     };
-    const createdBundle = await client.request(requestOptions);
+    const createdBundle = await c.request(requestOptions);
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-export { getPatient, getUser, getQuestionnaires, assignForms, getQuestionnaireTasks, getQuestionnaire };
+export {
+    getPatient,
+    getUser,
+    getQuestionnaires,
+    assignForms,
+    getQuestionnaire,
+    getQuestionnaireTasks,
+    getResponse,
+    submitResponse,
+    finishTask
+};

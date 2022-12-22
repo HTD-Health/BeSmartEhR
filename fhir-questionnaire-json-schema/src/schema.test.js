@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const schema_1 = require("./schema");
 const questionnaire = require("./testQuestionnaire.json");
 test("Test generating schema", () => {
-    const [schema, uiSchema] = (0, schema_1.toJSONSchema)(questionnaire);
-    // console.log(JSON.stringify(schema, null, 2))
-    console.log(JSON.stringify(uiSchema, null, 2));
+  const [, uiSchema] = (0, schema_1.toJSONSchema)(questionnaire);
+  console.log(JSON.stringify(uiSchema, null, 2));
 });
