@@ -3,7 +3,8 @@ import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useGetPatient } from 'api/queries';
+import { useGetPatient } from '../../api/queries';
+
 import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';

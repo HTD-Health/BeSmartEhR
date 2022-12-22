@@ -1,7 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toJSONSchema = void 0;
+exports.responseToJSONSchema = void 0;
 const fields_1 = require("./fields");
+const responseToJSONSchema = (questionnaireResponse) => {
+  if (!questionnaireResponse.item || questionnaireResponse.item.length < 1)
+    return;
+  const properties = {};
+  for (const item of questionnaireResponse.item) {
+    if (!item.answer || item.answer.length < 1) continue;
+    const answerObj = item.answer[0];
+    const fieldNames = Object.getOwnPropertyNames(answerObj);
+    // TODO: Add mapping
+    const valueField = fieldNames.find((fieldName) =>
+      fieldName.startsWith("value")
+    );
+    if (!valueField) continue;
+    properties[item.linkId] = answerObj[valueField];
+  }
+  return properties;
+};
+exports.responseToJSONSchema = responseToJSONSchema;
 const toJSONSchema = (questionnaire) => {
   const schema = {
     type: "object",

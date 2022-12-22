@@ -1,5 +1,7 @@
 import { BrowserRouter as HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
+import ResponseView from './pages/response_view/response_view';
+
 import AssignedFormsContainer from 'pages/assigned_forms/assigned_forms_container';
 import FilledFormsContainer from 'pages/filled_forms/filled_forms_container';
 import FormsContainer from 'pages/forms/forms_container';
@@ -16,6 +18,7 @@ const AppRouter = (): JSX.Element => (
             <Route path={routes.filledForms} element={<FilledFormsContainer />} />
             <Route path={routes.assignedForms} element={<AssignedFormsContainer />} />
             <Route path={routes.formFill} element={<FormFill />} />
+            <Route path={routes.responseView} element={<ResponseView />} />
         </Routes>
     </HashRouter>
 );
