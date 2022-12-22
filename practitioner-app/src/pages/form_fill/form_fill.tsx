@@ -43,8 +43,8 @@ const FormFill = (): JSX.Element => {
 
     const handleSubmit = (resData: IChangeEvent): void => {
         if (!data) return;
-        const qr = toQuestionnaireResponse(data, resData.formData);
-        submitResponse({ qr, questionnaireId: id });
+        const response = toQuestionnaireResponse(data, resData.formData);
+        submitResponse({ response, questionnaireId: id });
     };
 
     useEffect(() => {

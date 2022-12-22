@@ -51,7 +51,7 @@ const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bun
     return c.request(`Questionnaire?_count=${recordsPerPage}`);
 };
 
-const submitResponse = async ({ qr, questionnaireId }: SubmitResponseParams): Promise<string> => {
+const submitResponse = async ({ response, questionnaireId }: SubmitResponseParams): Promise<string> => {
     const c = await getClient();
     const userUrl = c.user.fhirUser;
     if (!userUrl) throw new Error('Missing current user data');
@@ -62,7 +62,7 @@ const submitResponse = async ({ qr, questionnaireId }: SubmitResponseParams): Pr
     }
     const questionnaireUri = questionnaireId ? `${c.state.serverUrl}/Questionnaire/${questionnaireId}` : undefined;
     const enrichedQr: QuestionnaireResponse = {
-        ...qr,
+        ...response,
         author: { reference: userUrl },
         subject: { reference: `Patient/${c.patient.id}` },
         source: { reference: `Patient/${c.patient.id}` },

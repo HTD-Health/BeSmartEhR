@@ -15,7 +15,7 @@ type FormMeta = {
 };
 
 type SubmitResponseParams = {
-    qr: QuestionnaireResponse;
+    response: QuestionnaireResponse;
     questionnaireId?: string;
 };
 
