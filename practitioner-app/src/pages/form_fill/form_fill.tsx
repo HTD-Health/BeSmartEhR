@@ -1,4 +1,5 @@
-import { CircularProgress, Container, Typography } from '@mui/material';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { Box, CircularProgress, Container, Typography } from '@mui/material';
 import { IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/mui';
 import { RJSFSchema } from '@rjsf/utils';
@@ -12,6 +13,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useFinishTask, useSubmitResponse } from '../../api/mutations';
 import { useGetQuestionnaire } from '../../api/queries';
 
+import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
 
 const FormFill = (): JSX.Element => {
@@ -34,6 +36,8 @@ const FormFill = (): JSX.Element => {
     const {
         state: { taskId }
     } = useLocation();
+
+    const [errorSnackbar, setErrorSnackbar] = useState({ open: false, message: '' });
 
     const [rawSchema, setRawSchema] = useState<Schema>();
     const [generatedSchema, setGeneratedSchema] = useState();
@@ -59,46 +63,49 @@ const FormFill = (): JSX.Element => {
         if (taskId && responseRef) finishTask({ taskId, responseRef });
     }, [finishTask, responseRef, submitSuccess, taskId]);
 
-    const renderContent = (): JSX.Element => {
+    useEffect(() => {
+        if (error) {
+            setErrorSnackbar({ open: true, message: 'Could not load questionnaire' });
+            console.error(error);
+        }
+    }, [error, isLoading, rawSchema]);
+
+    useEffect(() => {
         if (submitError || finishTaskError) {
-            return (
-                <Typography sx={{ ml: '.5rem' }} variant="h6">
-                    Could not submit the response
-                </Typography>
-            );
+            setErrorSnackbar({ open: true, message: 'Could not submit the response' });
+            console.error({ submitError, finishTaskError });
         }
+    }, [submitError, finishTaskError]);
 
-        if (error || (!rawSchema && !isLoading)) {
-            return (
-                <Typography sx={{ ml: '.5rem' }} variant="h6">
-                    Could not load questionnaire
-                </Typography>
-            );
-        }
-
+    const renderContent = (): JSX.Element => {
         if (isLoading || submitIsLoading || finishTaskIsLoading) {
             return <CircularProgress sx={{ m: '2rem' }} />;
         }
 
         if (submitSuccess && finishTaskSuccess) {
             return (
-                <Typography sx={{ ml: '.5rem' }} variant="h6">
-                    Response submitted
-                </Typography>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="70vh">
+                    <DoneAllIcon fontSize="large" />
+                    <Typography sx={{ ml: '1.5rem' }} variant="h6">
+                        Response submitted
+                    </Typography>
+                </Box>
             );
         }
 
         return (
             <>
                 <Container maxWidth="md" sx={{ marginTop: '25px' }}>
-                    <Form
-                        validator={validator}
-                        schema={rawSchema as RJSFSchema}
-                        uiSchema={generatedSchema}
-                        onSubmit={handleSubmit}
-                        formData={formData}
-                        onChange={(form: IChangeEvent) => setFormData(form.formData)}
-                    />
+                    {rawSchema && (
+                        <Form
+                            validator={validator}
+                            schema={rawSchema as RJSFSchema}
+                            uiSchema={generatedSchema}
+                            onSubmit={handleSubmit}
+                            formData={formData}
+                            onChange={(form: IChangeEvent) => setFormData(form.formData)}
+                        />
+                    )}
                 </Container>
             </>
         );
@@ -107,6 +114,11 @@ const FormFill = (): JSX.Element => {
     return (
         <>
             <SmartAppBar />
+            <CustomSnackbar
+                open={errorSnackbar.open}
+                onClose={() => setErrorSnackbar({ open: false, message: '' })}
+                message={errorSnackbar.message}
+            />
             {renderContent()}
         </>
     );

@@ -1,5 +1,5 @@
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import React from 'react';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
