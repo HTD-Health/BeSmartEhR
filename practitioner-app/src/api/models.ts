@@ -3,7 +3,7 @@ import type { QuestionnaireResponse, Task } from 'fhir/r4';
 // Tag used to identify Tasks that assign forms to patients
 const TASK_QUESTIONNAIRE_TAG = 'be-smart-ehr-questionnaire';
 
-type GetPaginetedRecordsParams = {
+type GetPaginatedRecordsParams = {
     bundleId: string | undefined;
     page: number;
     recordsPerPage: number;
@@ -41,6 +41,6 @@ export {
     FormMeta,
     SubmitResponseParams,
     FinishTaskParams,
-    GetPaginetedRecordsParams,
+    GetPaginatedRecordsParams,
     TASK_QUESTIONNAIRE_TAG
 };

@@ -6,7 +6,7 @@ import {
     createAssignmentTask,
     FinishTaskParams,
     FormMeta,
-    GetPaginetedRecordsParams,
+    GetPaginatedRecordsParams,
     SubmitResponseParams,
     TASK_QUESTIONNAIRE_TAG
 } from './models';
@@ -33,7 +33,7 @@ const getUser = async (): Promise<Practitioner> => {
     return c.request(userUrl);
 };
 
-const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bundle> => {
+const getQuestionnaires = async (params: GetPaginatedRecordsParams): Promise<Bundle> => {
     const c = await getClient();
 
     const { bundleId, page, recordsPerPage } = params;
@@ -48,7 +48,15 @@ const getQuestionnaires = async (params: GetPaginetedRecordsParams): Promise<Bun
     }
 
     // the initial call
-    return c.request(`Questionnaire?_count=${recordsPerPage}`);
+    return c.request({
+        url: `Questionnaire?_count=${recordsPerPage}`,
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    });
 };
 
 const submitResponse = async ({ response, questionnaireId }: SubmitResponseParams): Promise<string> => {
@@ -83,7 +91,7 @@ const finishTask = async ({ taskId, responseRef }: FinishTaskParams): Promise<st
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
-const getQuestionnaireTasks = async (params: GetPaginetedRecordsParams, completed: boolean): Promise<Bundle> => {
+const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, completed: boolean): Promise<Bundle> => {
     const c = await getClient();
 
     const { bundleId, page, recordsPerPage } = params;
@@ -105,6 +113,7 @@ const getQuestionnaireTasks = async (params: GetPaginetedRecordsParams, complete
         `owner=${c.user.fhirUser}`,
         `patient=Patient/${c.patient.id}`,
         `_count=${recordsPerPage}`,
+        `intent=order`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`,
         `status=${status}`,
         `_sort=${sort}`
@@ -142,7 +151,7 @@ const performPaginateSearch = async (bundleId: string, pagesOffset: number, coun
     });
 };
 
-const getQuestionnaire = async (id: string): Promise<Bundle> => {
+const getQuestionnaire = async (id?: string): Promise<Bundle> => {
     const c = await getClient();
 
     if (!c.state.serverUrl) {
@@ -152,16 +161,14 @@ const getQuestionnaire = async (id: string): Promise<Bundle> => {
     return c.request(`Questionnaire/${id}`);
 };
 
-const getResponse = async (responseId: string): Promise<Bundle> => {
+const getResponse = async (responseId: string): Promise<QuestionnaireResponse> => {
     const c = await getClient();
 
     if (!c.state.serverUrl) {
         throw new Error('Incorrect client state - missing "serverUrl"');
     }
 
-    const url = `QuestionnaireResponse/${responseId}`;
-
-    return c.request(url);
+    return c.request(`QuestionnaireResponse/${responseId}`);
 };
 
 // Assigning a new form to a patient is based on the Task FHIR resource

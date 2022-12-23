@@ -1,13 +1,17 @@
-import { Card, Typography } from '@mui/material';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import { Box, Button, Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 type FilledFormItemProps = {
     name: string;
-    date: string | undefined;
+    date?: string;
+    responseId?: string;
 };
 
 const FilledFormItem = (props: FilledFormItemProps): JSX.Element => {
-    const { name, date } = props;
+    const { name, date, responseId } = props;
+    const navigate = useNavigate();
 
     return (
         <>
@@ -25,11 +29,23 @@ const FilledFormItem = (props: FilledFormItemProps): JSX.Element => {
                 <Typography variant="h6" color="inherit">
                     {name}
                 </Typography>
-                {date && (
-                    <Typography variant="body2" color="inherit">
-                        Completed on: {format(new Date(date), 'iii, MM/dd/yyyy HH:mm:ss')}
-                    </Typography>
-                )}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    {date && (
+                        <Typography variant="body2" color="inherit">
+                            Completed on: {format(new Date(date), 'iii, MM/dd/yyyy HH:mm:ss')}
+                        </Typography>
+                    )}
+                    {responseId && (
+                        <Button
+                            sx={{ whiteSpace: 'nowrap' }}
+                            variant="text"
+                            onClick={() => navigate(`${responseId}/view`)}
+                            endIcon={<ArrowRightAltIcon />}
+                        >
+                            Show
+                        </Button>
+                    )}
+                </Box>
             </Card>
         </>
     );

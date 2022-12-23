@@ -1,4 +1,4 @@
-import type { Bundle, Patient } from 'fhir/r4';
+import type { Bundle, Patient, QuestionnaireResponse } from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 
@@ -57,7 +57,35 @@ const getTasks = async (params: TaskParams, count: number, pagination?: Paginati
         return c.request(relationSearch);
     }
 
-    return c.request(`Task?`.concat(allParams.join('&')));
+    return c.request({
+        url: `Task?`.concat(allParams.join('&')),
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    });
 };
 
-export { getPatient, getUser, getTasks };
+const getQuestionnaire = async (id?: string): Promise<Bundle> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    return c.request(`Questionnaire/${id}`);
+};
+
+const getResponse = async (responseId: string): Promise<QuestionnaireResponse> => {
+    const c = await getClient();
+
+    if (!c.state.serverUrl) {
+        throw new Error('Incorrect client state - missing "serverUrl"');
+    }
+
+    return c.request(`QuestionnaireResponse/${responseId}`);
+};
+
+export { getPatient, getUser, getTasks, getQuestionnaire, getResponse };

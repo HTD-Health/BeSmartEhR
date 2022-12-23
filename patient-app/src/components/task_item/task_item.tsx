@@ -1,13 +1,18 @@
-import { Box, Card, Typography } from '@mui/material';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import { Box, Card, IconButton, Typography } from '@mui/material';
+import { format } from 'date-fns';
 import type { Task } from 'fhir/r4';
 
 type TaskItemProps = {
     task: Task;
-    actionButton: JSX.Element;
+    actionButton?: JSX.Element;
 };
 
 const TaskItem = (props: TaskItemProps): JSX.Element => {
     const { task, actionButton } = props;
+    const completedTask = task.status === 'completed';
+
+    const actionName = completedTask ? 'Completed' : 'Assigned';
 
     return (
         <Card
@@ -16,30 +21,42 @@ const TaskItem = (props: TaskItemProps): JSX.Element => {
                 p: '1rem',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'end',
+                alignItems: 'center',
                 border: 0.5,
-                borderColor: 'grey.500'
+                borderColor: 'grey.500',
+                gap: '1rem'
             }}
         >
+            <Typography variant="h6" color="inherit">
+                {task?.description || 'Form name not specified'}
+            </Typography>
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    m: '.5rem',
-                    p: '1rem'
+                    marginLeft: 'auto',
+                    alignItems: 'flex-end',
+                    gap: '0.5rem'
                 }}
             >
-                <Typography variant="h6" color="inherit" noWrap>
-                    {task?.description || 'Form name not specified'}
-                </Typography>
-                <Typography variant="subtitle1" color="inherit" noWrap>
-                    {task?.authoredOn || 'Date not specified'}
-                </Typography>
-                <Typography variant="subtitle1" color="inherit" noWrap>
-                    {task?.owner?.reference || 'Issuer not specified'}
+                {task?.authoredOn && (
+                    <Typography variant="body2" color="inherit">
+                        {actionName} on: {format(new Date(task.authoredOn), 'iii, MM/dd/yyyy HH:mm:ss')}
+                    </Typography>
+                )}
+                <Typography variant="body2" color="inherit" noWrap>
+                    {actionName} by: {task?.owner?.reference || 'Issuer not specified'}
                 </Typography>
             </Box>
-            {actionButton}
+            {completedTask ? (
+                <Box minWidth="80px" display="flex" justifyContent="center">
+                    {actionButton ?? (
+                        <IconButton disabled>
+                            <NotInterestedIcon />
+                        </IconButton>
+                    )}
+                </Box>
+            ) : undefined}
         </Card>
     );
 };

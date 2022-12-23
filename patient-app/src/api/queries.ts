@@ -1,6 +1,7 @@
-import type { Bundle, FhirResource } from 'fhir/r4';
+import type { Bundle, FhirResource, Questionnaire, QuestionnaireResponse } from 'fhir/r4';
+import { useQuery, UseQueryResult } from 'react-query';
 
-import { getPatient, getTasks, getUser, PaginationParams, TaskParams } from './api';
+import { getPatient, getQuestionnaire, getResponse, getTasks, getUser, PaginationParams, TaskParams } from './api';
 
 const getUserQuery = {
     queryKey: 'getUser',
@@ -24,4 +25,12 @@ const getTasksQuery = (params: TaskParams, count: number, pagination?: Paginatio
     keepPreviousData: true
 });
 
-export { getUserQuery, getPatientQuery, getTasksQuery };
+const useGetResponse = (responseId: string): UseQueryResult<QuestionnaireResponse> =>
+    useQuery(['getResponse', responseId], async () => getResponse(responseId), {
+        keepPreviousData: true
+    });
+
+const useGetQuestionnaire = (id?: string): UseQueryResult<Questionnaire> =>
+    useQuery(['getQuestionnaire', id], async () => getQuestionnaire(id), { keepPreviousData: true, enabled: !!id });
+
+export { getUserQuery, getPatientQuery, getTasksQuery, useGetResponse, useGetQuestionnaire };

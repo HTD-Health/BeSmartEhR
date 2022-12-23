@@ -1,7 +1,50 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toJSONSchema = void 0;
+exports.responseToJSONSchema = void 0;
 const fields_1 = require("./fields");
+const responseToJSONSchema = (questionnaireResponse) => {
+  if (!questionnaireResponse.item || questionnaireResponse.item.length < 1)
+    return;
+  const properties = {};
+  for (const item of questionnaireResponse.item) {
+    if (!item.answer || item.answer.length < 1) continue;
+    const answerObj = item.answer[0];
+
+    let answer;
+    if (answerObj.valueCoding) {
+      answer = answerObj.valueCoding.code;
+    } else if (answerObj.valueDate) {
+      answer = answerObj.valueDate;
+    } else if (answerObj.valueDateTime) {
+      answer = answerObj.valueDateTime;
+    } else if (answerObj.valueDecimal) {
+      answer = answerObj.valueDecimal;
+    } else if (answerObj.valueInteger) {
+      answer = answerObj.valueInteger;
+    } else if (answerObj.valueString) {
+      answer = answerObj.valueString;
+    } else if (answerObj.valueTime) {
+      answer = answerObj.valueTime;
+    } else if (answerObj.valueUri) {
+      answer = answerObj.valueUri;
+    } else if (answerObj.valueBoolean) {
+      answer = answerObj.valueBoolean;
+    } else if (answerObj.valueAttachment) {
+      answer = answerObj.valueAttachment;
+    } else if (answerObj.valueQuantity) {
+      answer = answerObj.valueQuantity;
+    } else if (answerObj.valueReference) {
+      answer = answerObj.valueReference;
+    } else {
+      continue;
+    }
+
+    properties[item.linkId] = answer;
+  }
+  return properties;
+};
+exports.responseToJSONSchema = responseToJSONSchema;
 const toJSONSchema = (questionnaire) => {
   const schema = {
     type: "object",

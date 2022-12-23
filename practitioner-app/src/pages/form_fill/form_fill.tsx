@@ -1,5 +1,5 @@
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import { Box, CircularProgress, Container, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Container, Typography } from '@mui/material';
 import { IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/mui';
 import { RJSFSchema } from '@rjsf/utils';
@@ -8,7 +8,7 @@ import { toQuestionnaireResponse } from 'fhir-questionnaire-json-schema/src/resp
 import { toJSONSchema } from 'fhir-questionnaire-json-schema/src/schema';
 import { Schema } from 'jsonschema';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { useFinishTask, useSubmitResponse } from '../../api/mutations';
 import { useGetQuestionnaire } from '../../api/queries';
@@ -36,6 +36,7 @@ const FormFill = (): JSX.Element => {
     const {
         state: { taskId }
     } = useLocation();
+    const navigate = useNavigate();
 
     const [errorSnackbar, setErrorSnackbar] = useState({ open: false, message: '' });
 
@@ -68,7 +69,7 @@ const FormFill = (): JSX.Element => {
             setErrorSnackbar({ open: true, message: 'Could not load questionnaire' });
             console.error(error);
         }
-    }, [error, isLoading, rawSchema]);
+    }, [error]);
 
     useEffect(() => {
         if (submitError || finishTaskError) {
@@ -104,7 +105,24 @@ const FormFill = (): JSX.Element => {
                             onSubmit={handleSubmit}
                             formData={formData}
                             onChange={(form: IChangeEvent) => setFormData(form.formData)}
-                        />
+                        >
+                            <Box display="flex" gap="1rem" justifyContent="center">
+                                <Button
+                                    variant="outlined"
+                                    color="error"
+                                    onClick={() => {
+                                        if (window.confirm('If you cancel, your progress will not be saved.'))
+                                            navigate(-1);
+                                    }}
+                                    sx={{ my: '0.5rem' }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button type="submit" variant="contained" sx={{ my: '0.5rem' }}>
+                                    Submit
+                                </Button>
+                            </Box>
+                        </Form>
                     )}
                 </Container>
             </>

@@ -1,6 +1,8 @@
 import { CircularProgress, Typography } from '@mui/material';
 import type { Bundle, FhirResource, Task } from 'fhir/r4';
 
+import { getIdFromReference } from '../../utils/reference';
+
 import FilledFormItem from 'components/items/filled_form_item';
 
 type FilledFormsPageProps = {
@@ -32,6 +34,7 @@ const FilledFormsPage = (props: FilledFormsPageProps): JSX.Element => {
                         key={task.id}
                         name={task.description ?? 'Form name not provided'}
                         date={task.lastModified}
+                        responseId={getIdFromReference(task.focus)}
                     />
                 );
             })}
