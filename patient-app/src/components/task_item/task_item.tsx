@@ -1,5 +1,4 @@
-import NotInterestedIcon from '@mui/icons-material/NotInterested';
-import { Box, Card, IconButton, Typography } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import type { Task } from 'fhir/r4';
 
@@ -10,9 +9,13 @@ type TaskItemProps = {
 
 const TaskItem = (props: TaskItemProps): JSX.Element => {
     const { task, actionButton } = props;
-    const completedTask = task.status === 'completed';
+    const assignedMode = task.status === 'ready';
 
-    const actionName = completedTask ? 'Completed' : 'Assigned';
+    const actionTaken = {
+        actionName: assignedMode ? 'Assigned' : 'Completed',
+        date: assignedMode ? task.authoredOn : task.lastModified,
+        by: task.owner?.reference
+    };
 
     return (
         <Card
@@ -28,7 +31,7 @@ const TaskItem = (props: TaskItemProps): JSX.Element => {
             }}
         >
             <Typography variant="h6" color="inherit">
-                {task?.description || 'Form name not specified'}
+                {task.description || 'Form name not specified'}
             </Typography>
             <Box
                 sx={{
@@ -39,24 +42,20 @@ const TaskItem = (props: TaskItemProps): JSX.Element => {
                     gap: '0.5rem'
                 }}
             >
-                {task?.authoredOn && (
+                {actionTaken?.date && (
                     <Typography variant="body2" color="inherit">
-                        {actionName} on: {format(new Date(task.authoredOn), 'iii, MM/dd/yyyy HH:mm:ss')}
+                        {actionTaken.actionName} on: {format(new Date(actionTaken.date), 'iii, MM/dd/yyyy HH:mm:ss')}
                     </Typography>
                 )}
                 <Typography variant="body2" color="inherit" noWrap>
-                    {actionName} by: {task?.owner?.reference || 'Issuer not specified'}
+                    {actionTaken.actionName} by: {actionTaken.by || 'Issuer not specified'}
                 </Typography>
             </Box>
-            {completedTask ? (
+            {actionButton && (
                 <Box minWidth="80px" display="flex" justifyContent="center">
-                    {actionButton ?? (
-                        <IconButton disabled>
-                            <NotInterestedIcon />
-                        </IconButton>
-                    )}
+                    {actionButton}
                 </Box>
-            ) : undefined}
+            )}
         </Card>
     );
 };

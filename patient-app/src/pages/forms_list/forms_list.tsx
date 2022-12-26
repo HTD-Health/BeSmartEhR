@@ -1,5 +1,6 @@
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import { Button, CircularProgress, Grid, Pagination, Typography } from '@mui/material';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import { Button, CircularProgress, Grid, IconButton, Pagination, Typography } from '@mui/material';
 import type { Task } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -78,23 +79,22 @@ const FormsList = ({ status, sort }: TaskParams): JSX.Element => {
                 {data?.entry?.map((entryItem) => {
                     const task = entryItem.resource as Task;
                     const responseId = getIdFromReference(task.focus);
+                    const actionButton = responseId ? (
+                        <Button
+                            sx={{ whiteSpace: 'nowrap' }}
+                            variant="text"
+                            onClick={() => navigate(`${responseId}/view`)}
+                            endIcon={<ArrowRightAltIcon />}
+                        >
+                            Show
+                        </Button>
+                    ) : (
+                        <IconButton disabled>
+                            <NotInterestedIcon />
+                        </IconButton>
+                    );
                     return (
-                        <TaskItem
-                            key={task.id}
-                            task={task}
-                            actionButton={
-                                !assignedMode && responseId ? (
-                                    <Button
-                                        sx={{ whiteSpace: 'nowrap' }}
-                                        variant="text"
-                                        onClick={() => navigate(`${responseId}/view`)}
-                                        endIcon={<ArrowRightAltIcon />}
-                                    >
-                                        Show
-                                    </Button>
-                                ) : undefined
-                            }
-                        />
+                        <TaskItem key={task.id} task={task} actionButton={assignedMode ? undefined : actionButton} />
                     );
                 })}
             </>
