@@ -78,6 +78,13 @@ const PatientProfile = (): JSX.Element => {
                             >
                                 Assign a new Form
                             </Button>
+                            <Button
+                                variant='contained'
+                                sx={{ my: '0.5rem' }}
+                                onClick={() => navigate(routes.goals)}
+                            >
+                                Goals
+                            </Button>
                         </Box>
                     </Grid>
                 </Grid>

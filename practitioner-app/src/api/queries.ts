@@ -1,7 +1,7 @@
 import type { Bundle, FhirResource, Patient, Practitioner, Questionnaire, QuestionnaireResponse } from 'fhir/r4';
 import { useQuery, UseQueryResult } from 'react-query';
 
-import { getPatient, getQuestionnaire, getQuestionnaires, getQuestionnaireTasks, getResponse, getUser } from './api';
+import { addGoal, getGoals, getPatient, getQuestionnaire, getQuestionnaires, getQuestionnaireTasks, getResponse, getUser } from './api';
 import { GetPaginatedRecordsParams } from './models';
 
 const useGetPatient = (): UseQueryResult<Patient> => useQuery('getPatient', getPatient);
@@ -29,6 +29,12 @@ const useGetResponse = (responseId: string): UseQueryResult<QuestionnaireRespons
 const useGetQuestionnaire = (id?: string): UseQueryResult<Questionnaire> =>
     useQuery(['getQuestionnaire', id], async () => getQuestionnaire(id), { keepPreviousData: true, enabled: !!id });
 
+const useGetGoals = (): UseQueryResult<Bundle<FhirResource>> =>
+    useQuery(['getGoals'], async () => getGoals(), { keepPreviousData: true });
+
+const useAddGoal = (description: string): UseQueryResult<Bundle<FhirResource>> =>
+    useQuery(['addGoal'], async () => addGoal(description), { keepPreviousData: true });
+
 export {
     useGetPatient,
     useGetUser,
@@ -36,5 +42,7 @@ export {
     useGetQuestionnaire,
     useGetAssignedForms,
     useGetFilledForms,
-    useGetResponse
+    useGetResponse,
+    useGetGoals,
+    useAddGoal
 };

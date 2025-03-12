@@ -53,8 +53,7 @@ const getQuestionnaires = async (params: GetPaginatedRecordsParams): Promise<Bun
         method: 'GET',
         headers: {
             'content-type': 'application/json',
-            Accept: 'application/json',
-            'Cache-Control': 'no-cache'
+            Accept: 'application/json'
         }
     });
 };
@@ -97,7 +96,7 @@ const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, complete
     const { bundleId, page, recordsPerPage } = params;
     const realPage = page - 1;
 
-    const status = completed ? 'completed' : 'ready';
+    // const status = completed ? 'completed' : 'ready';
     const sort = completed ? '-modified' : '-authored-on';
 
     if (!c.state.serverUrl) {
@@ -115,7 +114,7 @@ const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, complete
         `_count=${recordsPerPage}`,
         `intent=order`,
         `_tag=${TASK_QUESTIONNAIRE_TAG}`,
-        `status=${status}`,
+        // `status=${status}`,
         `_sort=${sort}`
     ];
     return c.request({
@@ -124,7 +123,6 @@ const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, complete
         headers: {
             'content-type': 'application/json',
             Accept: 'application/json',
-            'Cache-Control': 'no-cache'
         }
     });
 };
@@ -145,8 +143,7 @@ const performPaginateSearch = async (bundleId: string, pagesOffset: number, coun
         method: 'GET',
         headers: {
             'content-type': 'application/json',
-            Accept: 'application/json',
-            'Cache-Control': 'no-cache'
+            Accept: 'application/json'
         }
     });
 };
@@ -217,6 +214,114 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
+// TODO: Figure out why this shows no results
+// const getGoals = async (): Promise<any> => {
+//     const c = await getClient();
+    
+//     try {
+//         const response = await c.request({
+//             url: `Goal?patient=${c.patient.id}`,
+//             method: 'GET'
+//         });
+//         return response;
+//     } catch (e) {
+//         console.error(`Error Retrieving Goals: ${e}`);
+//         throw e;
+//     }
+// }
+
+const getGoal = async (goalId: string): Promise<any> => {
+    const c = await getClient();
+    const url = c.state.serverUrl.replace('R4', 'STU3');
+
+    try {
+        const response = await c.request({
+            url: `${url}/Goal/${goalId}`,
+            method: 'GET',
+            headers: {
+                Accept: 'application/json'
+            }
+        });
+        console.log(`Get Goal: ${JSON.stringify(response)}`);
+        return response;
+    } catch (e) {
+        console.error(`Error Retrieving Goal: ${e}`);
+        throw e;
+    }
+}
+
+const getGoalIds = async (): Promise<string[]> => {
+    const c = await getClient();
+    let goalIds = [];
+    try {
+        goalIds = JSON.parse(localStorage.getItem(`goalIds-${c.patient.id}`) || '[]');
+    } catch (e) {
+        console.error(`Error Parsing Goal IDs: ${e}`);
+    }
+    return goalIds;
+}
+
+const addGoalId = async (goalId: string): Promise<void> => {
+    const c = await getClient();
+    const goalIds = await getGoalIds();
+    goalIds.push(goalId);
+    localStorage.setItem(`goalIds-${c.patient.id}`, JSON.stringify(goalIds));
+}
+
+const getGoals = async (): Promise<any> => {
+    const goalIds = await getGoalIds();
+    const results = await Promise.all(goalIds.map(async (goalId) => getGoal(goalId)))
+
+    return results;
+}
+
+
+const addGoal = async (description: string): Promise<any> => {
+    const c = await getClient();
+    const url = c.state.serverUrl.replace('R4', 'STU3');
+
+    const goal = {
+        resourceType: "Goal",
+        description: {
+            text: description
+        },
+        note: [
+            {
+                text: description
+            }
+        ],
+        expressedBy: {
+            reference: `Practitioner/${c.user.fhirUser}`
+        },
+        subject: {
+            reference: `Patient/${c.patient.id}`
+        }
+    };
+
+    try {
+        const result = await c.request({
+            url: `${url}/Goal`,
+            method: 'POST',
+            body: JSON.stringify(goal),
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                Prefer: 'return=representation'
+            }
+        })
+
+        // Example showing goal retrieval after creation
+        if (result.id) {
+            getGoal(result.id);
+            addGoalId(result.id);
+        }
+        return result;
+    } catch (e) {
+        console.error(`Error Creating Goal: ${e}`);
+        throw e;
+    }
+}
+
 export {
     getPatient,
     getUser,
@@ -226,5 +331,8 @@ export {
     getQuestionnaireTasks,
     getResponse,
     submitResponse,
-    finishTask
+    finishTask,
+    getGoals,
+    addGoal,
+    getGoal
 };
