@@ -1,11 +1,12 @@
 import PersonIcon from '@mui/icons-material/Person';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import AppBar from '@mui/material/AppBar';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import type { Practitioner } from 'fhir/r4';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+
 
 import { useGetUser } from 'api/queries';
 import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
@@ -42,9 +43,21 @@ const SmartAppBar = (): JSX.Element => {
             return <Box />;
         }
         return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <PersonIcon sx={{ mr: '0.5rem' }} />
-                <Typography variant="body1" color="inherit" noWrap>
+            <Box 
+                sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '8px',
+                    padding: '8px 16px',
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    }
+                }}
+            >
+                <PersonIcon sx={{ mr: '0.75rem', color: 'white' }} />
+                <Typography variant="body1" color="white" noWrap>
                     {getUserName(data)}
                 </Typography>
             </Box>
@@ -52,35 +65,81 @@ const SmartAppBar = (): JSX.Element => {
     };
 
     return (
-        <AppBar position="relative">
+        <AppBar 
+            position="relative"
+            elevation={0}
+            sx={{
+                borderBottom: '1px solid',
+                borderColor: 'grey.200',
+                bgcolor: 'primary.main',
+                color: 'white',
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    py: '0.75rem',
+                    px: 0,
+                    maxWidth: '1400px',
+                    margin: '0 auto',
+                    width: '100%',
+                    position: 'relative',
+                }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center', pl: '2rem' }}>
+                    {!location.pathname.includes('/patient-profile') && (
+                        <Tooltip title="Go back">
+                            <IconButton
+                                onClick={() => navigate(-1)}
+                                sx={{ 
+                                    color: 'white',
+                                    transition: 'all 0.2s ease-in-out',
+                                    mr: '1rem',
+                                    '&:hover': {
+                                        transform: 'translateX(-2px)',
+                                        color: 'grey.100',
+                                    }
+                                }}
+                            >
+                                <ArrowCircleLeftIcon fontSize="large" />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography 
+                            variant="h5" 
+                            sx={{ 
+                                fontWeight: 700,
+                                letterSpacing: '0.02em',
+                                color: 'white',
+                                lineHeight: 1,
+                            }}
+                        >
+                            HTD
+                        </Typography>
+                        <Box 
+                            sx={{ 
+                                width: '6px',
+                                height: '6px',
+                                borderRadius: '50%',
+                                bgcolor: '#00F0FF',
+                                ml: '2px',
+                                mt: '-12px'
+                            }}
+                        />
+                    </Box>
+                </Box>
+                <Box sx={{ pr: '2rem' }}>
+                    {renderUserData()}
+                </Box>
+            </Box>
             <CustomSnackbar
                 open={errorSnackbar}
                 onClose={() => setErrorSnackbar(false)}
                 message="Failed to get current user data"
             />
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    py: '3rem',
-                    px: '2rem'
-                }}
-            >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {!location.pathname.includes('/patient-profile') && (
-                        <IconButton
-                            onClick={() => navigate(-1)}
-                            sx={{ minHeight: 0, minWidth: 0, padding: 0, mr: '.5rem' }}
-                        >
-                            <ArrowCircleLeftIcon fontSize="large" />
-                        </IconButton>
-                    )}
-                    <Typography variant="h5" color="inherit" noWrap>
-                        BeSmartEhR - Practitioner App
-                    </Typography>
-                </Box>
-                {renderUserData()}
-            </Box>
         </AppBar>
     );
 };

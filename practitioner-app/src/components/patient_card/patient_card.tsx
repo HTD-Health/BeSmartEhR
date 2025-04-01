@@ -1,6 +1,6 @@
-import { Box, Card, Typography } from '@mui/material';
+import { Box, Card, Typography, Skeleton } from '@mui/material';
 import type { Patient } from 'fhir/r4';
-import CircularProgress from '@mui/material/CircularProgress';
+import PersonIcon from '@mui/icons-material/Person';
 
 type PatientCardProps = {
     patient: Patient | undefined;
@@ -8,73 +8,48 @@ type PatientCardProps = {
 };
 
 type PatientDisplayData = {
-    [key in keyof (Partial<Patient> & { addressCity?: string; addressState?: string; addressStreet?: string })]: {
-        label: string;
-        value?: string;
-    };
+    id: { label: string; value: string | undefined };
+    gender: { label: string; value: string | undefined };
+    birthDate: { label: string; value: string | undefined };
+    address: { label: string; value: string | undefined };
+    phone: { label: string; value: string | undefined };
+    email: { label: string; value: string | undefined };
 };
 
 const PatientCard = (props: PatientCardProps): JSX.Element => {
     const { patient, isLoading } = props;
 
-    const getPatientName = (): string | undefined => {
-        if (!patient || !patient.name || patient.name.length === 0) {
-            return '';
+    const getPatientName = (): string => {
+        if (!patient?.name || patient.name.length === 0) {
+            return 'Patient name not provided';
         }
         const name = patient.name[0];
-        if (!name.given || name.given.length === 0) {
-            return name.family;
+        if (name && name.given && name.family) {
+            if (name.prefix) {
+                return `${name.prefix[0]} ${name.given[0]} ${name.family}`;
+            }
+            return `${name.given[0]} ${name.family}`;
         }
-        return `${name.given[0]} ${name.family}`;
+        return 'Patient name not provided';
     };
 
-    const getPatientDataMap = (): PatientDisplayData => {
-        const data: PatientDisplayData = {};
-        if (!patient) {
-            return data;
-        }
-        if (patient.birthDate) {
-            data.birthDate = {
-                label: 'Birth Date',
-                value: patient.birthDate
-            };
-        }
-        if (patient.gender) {
-            data.gender = {
-                label: 'Gender',
-                value: patient.gender
-            };
-        }
-        if (patient.maritalStatus) {
-            data.maritalStatus = {
-                label: 'Marital Status',
-                value: patient.maritalStatus.text
-            };
-        }
-        if (patient.telecom) {
-            data.telecom = {
-                label: 'Contact',
-                value: patient.telecom[0].value
-            };
-        }
-        if (patient.address) {
-            data.addressCity = {
-                label: 'City',
-                value: patient.address[0].city
-            };
-            data.addressState = {
-                label: 'State',
-                value: patient.address[0].state
-            };
-            if (patient.address[0].line) {
-                data.addressStreet = {
-                    label: 'Street',
-                    value: patient.address[0].line[0]
-                };
-            }
-        }
-        return data;
-    };
+    const getPatientDataMap = (): PatientDisplayData => ({
+        id: { label: 'ID', value: patient?.id },
+        gender: { label: 'Gender', value: patient?.gender },
+        birthDate: { label: 'Birth Date', value: patient?.birthDate },
+        address: { 
+            label: 'Address', 
+            value: patient?.address?.[0]?.line?.join(', ') 
+        },
+        phone: { 
+            label: 'Phone', 
+            value: patient?.telecom?.find(t => t.system === 'phone')?.value 
+        },
+        email: { 
+            label: 'Email', 
+            value: patient?.telecom?.find(t => t.system === 'email')?.value 
+        },
+    });
 
     const renderPatientData = (): JSX.Element[] => {
         const data: PatientDisplayData = getPatientDataMap();
@@ -82,11 +57,37 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
         return Object.keys(data).map((key: string) => {
             const el = data[key as keyof PatientDisplayData];
             return (
-                <Box key={key}>
-                    <Box component="span" sx={{ fontWeight: 'bold' }}>
+                <Box 
+                    key={key}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        mb: '0.75rem',
+                        '&:last-child': {
+                            mb: 0,
+                        }
+                    }}
+                >
+                    <Typography 
+                        component="span" 
+                        sx={{ 
+                            fontWeight: 600,
+                            color: 'text.secondary',
+                            minWidth: '100px',
+                            mr: '0.5rem'
+                        }}
+                    >
                         {el?.label}
-                    </Box>
-                    : {el?.value}
+                    </Typography>
+                    <Typography 
+                        component="span"
+                        sx={{
+                            color: 'text.primary',
+                            fontWeight: 500
+                        }}
+                    >
+                        {el?.value || 'Not provided'}
+                    </Typography>
                 </Box>
             );
         });
@@ -95,22 +96,53 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
     const renderContent = (): JSX.Element => {
         if (isLoading) {
             return (
-                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                    <CircularProgress color="inherit" />;
+                <Box sx={{ width: '100%', p: '1.5rem' }}>
+                    <Skeleton variant="text" width="60%" height={32} sx={{ mb: 2 }} />
+                    <Skeleton variant="text" width="40%" height={24} sx={{ mb: 1 }} />
+                    <Skeleton variant="text" width="40%" height={24} sx={{ mb: 1 }} />
+                    <Skeleton variant="text" width="40%" height={24} sx={{ mb: 1 }} />
+                    <Skeleton variant="text" width="40%" height={24} sx={{ mb: 1 }} />
+                    <Skeleton variant="text" width="40%" height={24} sx={{ mb: 1 }} />
+                    <Skeleton variant="text" width="40%" height={24} />
                 </Box>
             );
         }
         return (
-            <>
-                <Typography sx={{ mb: '0.5rem' }} variant="h5" color="inherit" noWrap>
-                    {getPatientName()}
-                </Typography>
+            <Box sx={{ p: '1.5rem' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: '1.5rem' }}>
+                    <PersonIcon sx={{ mr: '0.75rem', color: 'primary.main', fontSize: '2rem' }} />
+                    <Typography 
+                        variant="h5" 
+                        color="text.primary" 
+                        noWrap
+                        sx={{
+                            fontWeight: 600,
+                            letterSpacing: '-0.02em',
+                        }}
+                    >
+                        {getPatientName()}
+                    </Typography>
+                </Box>
                 {renderPatientData()}
-            </>
+            </Box>
         );
     };
 
-    return <Card sx={{ p: '1rem' }}>{renderContent()}</Card>;
+    return (
+        <Card 
+            sx={{ 
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                    transform: 'translateY(-2px)',
+                }
+            }}
+        >
+            {renderContent()}
+        </Card>
+    );
 };
 
 export default PatientCard;
