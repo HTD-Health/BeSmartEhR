@@ -1,7 +1,8 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Checkbox, Typography } from '@mui/material';
+import { Box, Card, Checkbox, Typography, Tooltip } from '@mui/material';
 import type { Questionnaire } from 'fhir/r4';
 import { useContext, useEffect, useState } from 'react';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 import { useAssignForms } from 'api/mutations';
 import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
@@ -14,52 +15,72 @@ type FormItemProps = {
 const FormItem = (props: FormItemProps): JSX.Element => {
     const { questionnaire } = props;
     const { formsToAssign, setFormsToAssign } = useContext(FormsContext);
-    const { mutate: assign, error, isLoading, isSuccess } = useAssignForms();
     const [errorSnackbar, setErrorSnackbar] = useState(false);
     const [successSnackbar, setSuccessSnackbar] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const isCheckedToAssign = (): boolean => formsToAssign?.some((form) => form.id === questionnaire.id);
+    const { mutate: assign } = useAssignForms();
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        if (!questionnaire.id) {
-            return;
+    useEffect(() => {
+        if (errorSnackbar) {
+            const timer = setTimeout(() => {
+                setErrorSnackbar(false);
+            }, 3000);
+            return () => clearTimeout(timer);
         }
+        return undefined;
+    }, [errorSnackbar]);
 
-        if (event.target.checked) {
-            setFormsToAssign([
-                ...formsToAssign,
-                { id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }
-            ]);
-        } else {
+    useEffect(() => {
+        if (successSnackbar) {
+            const timer = setTimeout(() => {
+                setSuccessSnackbar(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+        return undefined;
+    }, [successSnackbar]);
+
+    const isCheckedToAssign = (): boolean => formsToAssign.some((form) => form.id === questionnaire.id);
+
+    const handleChange = (): void => {
+        if (!questionnaire.id) return;
+        
+        if (isCheckedToAssign()) {
             setFormsToAssign(formsToAssign.filter((form) => form.id !== questionnaire.id));
+        } else {
+            setFormsToAssign([...formsToAssign, { id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }]);
         }
     };
 
-    useEffect(() => {
-        if (error) {
+    const handleAssign = async (): Promise<void> => {
+        if (!questionnaire.id) return;
+        
+        setIsLoading(true);
+        try {
+            await assign([{ id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }]);
+            setSuccessSnackbar(true);
+        } catch (error) {
             setErrorSnackbar(true);
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
-    }, [error]);
-
-    useEffect(() => {
-        if (isSuccess) {
-            setSuccessSnackbar(true);
-        }
-    }, [isSuccess]);
-
-    const handleAssign = (): void =>
-        assign([{ id: questionnaire.id as string, name: questionnaire.title ?? 'Form name not provided' }]);
+    };
 
     return (
         <Card
             sx={{
                 m: '.5rem',
-                p: '1rem',
+                p: '1.5rem',
                 display: 'flex',
                 justifyContent: 'space-between',
-                border: 0.5,
-                borderColor: 'grey.500'
+                alignItems: 'center',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)',
+                }
             }}
         >
             <CustomSnackbar
@@ -75,12 +96,42 @@ const FormItem = (props: FormItemProps): JSX.Element => {
                 onClose={() => setSuccessSnackbar(false)}
                 message="Form assigned successfully"
             />
-            <Typography variant="h6" color="inherit">
-                {questionnaire?.title || 'Form name not provided'}
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Checkbox checked={isCheckedToAssign()} onChange={handleChange} />
-                <LoadingButton loading={isLoading} variant="contained" onClick={handleAssign}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <AssignmentIcon sx={{ color: 'primary.main' }} />
+                <Typography 
+                    variant="h6" 
+                    color="text.primary"
+                    sx={{
+                        fontWeight: 500,
+                        letterSpacing: '-0.01em',
+                    }}
+                >
+                    {questionnaire?.title || 'Form name not provided'}
+                </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <Tooltip title={isCheckedToAssign() ? "Remove from batch" : "Add to batch"}>
+                    <Checkbox 
+                        checked={isCheckedToAssign()} 
+                        onChange={handleChange}
+                        sx={{
+                            color: 'primary.main',
+                            '&.Mui-checked': {
+                                color: 'primary.main',
+                            },
+                        }}
+                    />
+                </Tooltip>
+                <LoadingButton 
+                    loading={isLoading} 
+                    variant="contained" 
+                    onClick={handleAssign}
+                    startIcon={<AssignmentIcon />}
+                    sx={{
+                        textTransform: 'none',
+                        fontWeight: 500,
+                    }}
+                >
                     Assign
                 </LoadingButton>
             </Box>

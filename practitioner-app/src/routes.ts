@@ -5,7 +5,8 @@ const routes = {
     filledForms: '/filled-forms',
     assignedForms: '/assigned-forms',
     formFill: '/assigned-forms/:id/fill',
-    responseView: '/filled-forms/:responseId/view'
+    responseView: '/filled-forms/:responseId/view',
+    goals: '/goals'
 };
 
 export default routes;

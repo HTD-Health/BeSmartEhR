@@ -7,6 +7,7 @@ import FormFill from 'pages/form_fill/form_fill';
 import PatientProfile from 'pages/patient_profile/patient_profile';
 import ResponseView from 'pages/response_view/response_view';
 import routes from 'routes';
+import GoalsListPage from 'pages/goals/goals_list_page';
 
 const AppRouter = (): JSX.Element => (
     <HashRouter>
@@ -18,6 +19,7 @@ const AppRouter = (): JSX.Element => (
             <Route path={routes.assignedForms} element={<AssignedFormsContainer />} />
             <Route path={routes.formFill} element={<FormFill />} />
             <Route path={routes.responseView} element={<ResponseView />} />
+            <Route path={routes.goals} element={<GoalsListPage />} />
         </Routes>
     </HashRouter>
 );
