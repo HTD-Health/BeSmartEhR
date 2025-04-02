@@ -17,17 +17,17 @@ let client: Client;
 const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> => {
     const timestamp = new Date().toISOString();
     const requestInfo = typeof requestConfig === 'string' ? requestConfig : requestConfig.url;
-    
+
     // Log to both console and terminal
     console.log(`[${timestamp}] 🚀 API Request:`, requestInfo);
-    
+
     // Use window.fetch to send logs to a local endpoint
     if (process.env.NODE_ENV === 'development') {
         try {
             await fetch('/api/log', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     timestamp,
@@ -50,13 +50,13 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
         };
 
         console.log(`[${timestamp}] ✅ API Response:`, responseLog);
-        
+
         if (process.env.NODE_ENV === 'development') {
             try {
                 await fetch('/api/log', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         timestamp,
@@ -72,13 +72,13 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
         return response;
     } catch (error) {
         console.error(`[${timestamp}] ❌ API Error:`, error);
-        
+
         if (process.env.NODE_ENV === 'development') {
             try {
                 await fetch('/api/log', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         timestamp,
@@ -216,7 +216,7 @@ const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, complete
         method: 'GET',
         headers: {
             'content-type': 'application/json',
-            Accept: 'application/json',
+            Accept: 'application/json'
         }
     });
 };
@@ -315,22 +315,6 @@ const assignBundleForms = async (formDataList: FormMeta[]): Promise<string[]> =>
     return createdBundle.entry.map((entry: BundleEntry<FhirResource>) => entry.response?.location);
 };
 
-// TODO: Figure out why this shows no results
-// const getGoals = async (): Promise<any> => {
-//     const c = await getClient();
-    
-//     try {
-//         const response = await c.request({
-//             url: `Goal?patient=${c.patient.id}`,
-//             method: 'GET'
-//         });
-//         return response;
-//     } catch (e) {
-//         console.error(`Error Retrieving Goals: ${e}`);
-//         throw e;
-//     }
-// }
-
 const getGoal = async (goalId: string): Promise<any> => {
     const c = await getClient();
     const url = c.state.serverUrl.replace('R4', 'STU3');
@@ -349,7 +333,7 @@ const getGoal = async (goalId: string): Promise<any> => {
         console.error(`Error Retrieving Goal: ${e}`);
         throw e;
     }
-}
+};
 
 const getGoalIds = async (): Promise<string[]> => {
     const c = await getClient();
@@ -360,29 +344,28 @@ const getGoalIds = async (): Promise<string[]> => {
         console.error(`Error Parsing Goal IDs: ${e}`);
     }
     return goalIds;
-}
+};
 
 const addGoalId = async (goalId: string): Promise<void> => {
     const c = await getClient();
     const goalIds = await getGoalIds();
     goalIds.push(goalId);
     localStorage.setItem(`goalIds-${c.patient.id}`, JSON.stringify(goalIds));
-}
+};
 
 const getGoals = async (): Promise<any> => {
     const goalIds = await getGoalIds();
-    const results = await Promise.all(goalIds.map(async (goalId) => getGoal(goalId)))
+    const results = await Promise.all(goalIds.map(async (goalId) => getGoal(goalId)));
 
     return results;
-}
-
+};
 
 const addGoal = async (description: string): Promise<any> => {
     const c = await getClient();
     const url = c.state.serverUrl.replace('R4', 'STU3');
 
     const goal = {
-        resourceType: "Goal",
+        resourceType: 'Goal',
         description: {
             text: description
         },
@@ -420,7 +403,7 @@ const addGoal = async (description: string): Promise<any> => {
         console.error(`Error Creating Goal: ${e}`);
         throw e;
     }
-}
+};
 
 const getConditions = async (): Promise<Bundle> => {
     const c = await getClient();
