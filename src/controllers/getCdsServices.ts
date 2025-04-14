@@ -17,6 +17,12 @@ export const getCdsServices = (_req: Request, res: Response) => {
           patient: 'Patient/{{context.patientId}}',
         },
       },
+      {
+        hook: CdsHooksEvent.ORDER_SELECT,
+        name: 'HTD Health Order Assistant',
+        description: 'Reviews medication when selecting orders',
+        id: Services.ORDER_ASSISTANT,
+      },
     ],
   });
 };

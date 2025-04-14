@@ -5,4 +5,5 @@ export enum CdsHooksEvent {
 
 export enum Services {
   PATIENT_ASSESSMENT = 'patient-assessment',
+  ORDER_ASSISTANT = 'order-assistant',
 }
