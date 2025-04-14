@@ -32,9 +32,6 @@ export const processOrderSelectHook = async (
 
     const medication = medicationOrder.medicationCodeableConcept;
 
-    logger.info('Medication order found:', medicationOrder);
-    logger.info('Medication found:', medication);
-
     if (!medication) {
       logger.warn('Missing medication data');
       res.status(400).json({
