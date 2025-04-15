@@ -20,7 +20,6 @@
     "express": "^5.1.0",
     "fhir": "^4.12.0",
     "helmet": "^8.1.0",
-    "morgan": "^1.10.0",
     "winston": "^3.17.0"
   },
   "devDependencies": {

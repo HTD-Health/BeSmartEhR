@@ -1,7 +1,6 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import morgan from 'morgan';
 import config from './config';
 import { errorHandler } from './middleware/error-handler';
 import { requestLogger } from './middleware/logger';
@@ -19,11 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Logging
-app.use(morgan('combined'));
 app.use(requestLogger);
-
-// Error handling
-app.use(errorHandler);
 
 // CDS Hooks routes
 app.use('/', cdsRouter);
@@ -32,6 +27,9 @@ app.use('/', cdsRouter);
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'UP', service: 'HTD Health CDS Service' });
 });
+
+// Error handling
+app.use(errorHandler);
 
 // Start server
 app.listen(port, () => {
