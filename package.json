@@ -2,13 +2,11 @@
   "name": "htd-health-cds-service",
   "version": "1.0.0",
   "description": "HTD Health Clinical Decision Support Service",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "test": "jest",
     "lint": "eslint 'src/**/*.{js,ts}'",
     "format": "prettier --write 'src/**/*.{js,ts}'"
   },
@@ -28,7 +26,11 @@
     "@types/fhir": "^0.0.41",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.14.0",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.30.1"
   }
 }

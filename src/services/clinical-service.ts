@@ -8,7 +8,6 @@ export interface AssessmentResult {
   suggestions: Array<{
     label: string;
     uuid?: string;
-    actions?: Array<any>;
   }>;
 }
 
@@ -17,7 +16,6 @@ export async function generatePatientAssessment(
 ): Promise<AssessmentResult> {
   logger.info(`Generating assessment for patient ${patient.id}`);
 
-  // Get patient name
   const patientName = patient.name?.[0];
   const fullName = patientName
     ? `${patientName.given?.[0] || ''} ${patientName.family || ''}`.trim()
@@ -30,7 +28,6 @@ export async function generatePatientAssessment(
     suggestions: [
       {
         label: 'Schedule Routine Follow-up',
-        actions: [],
       },
     ],
   };

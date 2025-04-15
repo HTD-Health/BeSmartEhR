@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { getCdsServices } from '../controllers/getCdsServices';
-import { processOrderSelectHook } from '../controllers/processOrderSelectHook';
-import { processOrderSignHook } from '../controllers/processOrderSignHook';
-import { processPatientViewHook } from '../controllers/processPatientViewHook';
-import { Services } from '../types';
+import { getCdsServices } from './controllers/getCdsServices';
+import { processOrderSelectHook } from './controllers/processOrderSelectHook';
+import { processOrderSignHook } from './controllers/processOrderSignHook';
+import { processPatientViewHook } from './controllers/processPatientViewHook';
+import { Services } from './types';
 
 const router = Router();
 

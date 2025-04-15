@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import config from './config';
 import { errorHandler } from './middleware/error-handler';
 import { requestLogger } from './middleware/logger';
-import { router as cdsRouter } from './routes/cds-services';
+import { router } from './routes';
 
 const app = express();
 const port = config.port;
@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 // CDS Hooks routes
-app.use('/', cdsRouter);
+app.use('/', router);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
