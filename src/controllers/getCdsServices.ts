@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { logger } from '../middleware/request-logger';
+import { logger } from '../middleware/logger';
 import { CdsHooksEvent, Services } from '../types';
 
 export const getCdsServices = (_req: Request, res: Response) => {

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { MedicationOrder } from 'fhir/r2';
 import { Bundle } from 'fhir/r4';
 import config from '../config';
-import { logger } from '../middleware/request-logger';
+import { logger } from '../middleware/logger';
 import { CdsHooksEvent } from '../types';
 
 export const processOrderSignHook = async (

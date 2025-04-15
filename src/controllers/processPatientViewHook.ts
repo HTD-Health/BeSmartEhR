@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import type { Patient } from 'fhir/r4';
 import config from '../config';
-import { logger } from '../middleware/request-logger';
+import { logger } from '../middleware/logger';
 import { generatePatientAssessment } from '../services/clinical-service';
 import { CdsHooksEvent } from '../types';
 

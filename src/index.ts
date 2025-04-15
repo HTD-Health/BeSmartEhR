@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import config from './config';
 import { errorHandler } from './middleware/error-handler';
-import { requestLogger } from './middleware/request-logger';
+import { requestLogger } from './middleware/logger';
 import { router as cdsRouter } from './routes/cds-services';
 
 const app = express();

@@ -1,5 +1,5 @@
 import type { Patient } from 'fhir/r4';
-import { logger } from '../middleware/request-logger';
+import { logger } from '../middleware/logger';
 
 export interface AssessmentResult {
   summary: string;
