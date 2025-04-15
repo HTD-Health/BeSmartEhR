@@ -28,7 +28,6 @@ export const requestLogger = (
     method: req.method,
     path: req.path,
     query: req.query,
-    ip: req.ip,
   });
 
   next();

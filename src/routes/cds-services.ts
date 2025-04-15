@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { getCdsServices } from '../controllers/getCdsServices';
 import { processOrderSelectHook } from '../controllers/processOrderSelectHook';
+import { processOrderSignHook } from '../controllers/processOrderSignHook';
 import { processPatientViewHook } from '../controllers/processPatientViewHook';
 import { Services } from '../types';
 
@@ -15,5 +16,6 @@ router.post(
   `/cds-services/${Services.ORDER_ASSISTANT}`,
   processOrderSelectHook
 );
+router.post(`/cds-services/${Services.ORDER_REVIEW}`, processOrderSignHook);
 
 export { router };

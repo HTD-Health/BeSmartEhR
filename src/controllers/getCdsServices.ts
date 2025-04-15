@@ -20,8 +20,14 @@ export const getCdsServices = (_req: Request, res: Response) => {
       {
         hook: CdsHooksEvent.ORDER_SELECT,
         name: 'HTD Health Order Assistant',
-        description: 'Reviews medication when selecting orders',
+        description: 'Informs about medication when selecting orders',
         id: Services.ORDER_ASSISTANT,
+      },
+      {
+        hook: CdsHooksEvent.ORDER_SIGN,
+        name: 'HTD Health Order Review',
+        description: 'Reviews medication when selecting orders',
+        id: Services.ORDER_REVIEW,
       },
     ],
   });
