@@ -21,7 +21,7 @@ HTD Health CDS Service is a Node.js application that implements [Clinical Decisi
 
 ```bash
 git clone <repository-url>
-cd CDSService
+cd cds-service
 ```
 
 2. Install dependencies:
@@ -103,7 +103,7 @@ npm start
 ## Project Structure
 
 ```
-CDSService/
+cds-service/
 ├── dist/                  # Compiled JavaScript files
 ├── src/
 │   ├── controllers/       # Business logic for handling hooks
