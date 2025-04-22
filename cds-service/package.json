@@ -10,6 +10,9 @@
     "lint": "eslint 'src/**/*.{js,ts}'",
     "format": "prettier --write 'src/**/*.{js,ts}'"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "keywords": [],
   "author": "HTD Health",
   "license": "ISC",
