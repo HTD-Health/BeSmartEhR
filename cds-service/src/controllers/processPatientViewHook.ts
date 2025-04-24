@@ -39,7 +39,7 @@ export const processPatientViewHook = async (
         }
       : {
           label: 'HTD Health SMART app',
-          url: `https://localhost:3010?context=${JSON.stringify(hookData)}`,
+          url: `https://localhost:3010?context=${encodeURIComponent(JSON.stringify(hookData))}`,
           type: 'absolute',
         };
 
