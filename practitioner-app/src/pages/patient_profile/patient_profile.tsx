@@ -1,20 +1,20 @@
+import MicIcon from '@mui/icons-material/Mic';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 import { Box, Button, Card, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MicIcon from '@mui/icons-material/Mic';
-import StopIcon from '@mui/icons-material/Stop';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
 
 import { useGetPatient } from '../../api/queries';
 
+import AllergiesSummary from 'components/allergies_summary/allergies_summary';
+import ConditionsSummary from 'components/conditions_summary/conditions_summary';
 import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
+import MedicationsSummary from 'components/medications_summary/medications_summary';
 import PatientCard from 'components/patient_card/patient_card';
 import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import ConditionsSummary from 'components/conditions_summary/conditions_summary';
-import MedicationsSummary from 'components/medications_summary/medications_summary';
-import AllergiesSummary from 'components/allergies_summary/allergies_summary';
 import routes from 'routes';
 
 const PatientProfile = (): JSX.Element => {
@@ -61,17 +61,17 @@ const PatientProfile = (): JSX.Element => {
     const requestPermission = async (): Promise<void> => {
         try {
             // First try to get a temporary stream just to trigger the permission prompt
-            const stream = await navigator.mediaDevices.getUserMedia({ 
+            const stream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
                 video: false
             });
             // Immediately stop the stream since we just wanted the permission
-            stream.getTracks().forEach(track => track.stop());
+            stream.getTracks().forEach((track) => track.stop());
             // Check the new permission state
             const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
             setPermissionStatus(permissions.state);
             setShowPermissionPrompt(permissions.state === 'prompt');
-            
+
             if (permissions.state === 'granted') {
                 setErrorMessage('Microphone access granted. You can now start recording.');
             }
@@ -93,7 +93,7 @@ const PatientProfile = (): JSX.Element => {
             }
             troubleshooting += `- Current permission status: ${permissionStatus}`;
         }
-        
+
         setErrorMessage(`${context}: ${err.name} - ${err.message}${troubleshooting}`);
     };
 
@@ -107,7 +107,7 @@ const PatientProfile = (): JSX.Element => {
             console.log('Checking permissions and environment...');
             console.log('User Agent:', navigator.userAgent);
             console.log('MediaDevices available:', !!navigator.mediaDevices);
-            
+
             try {
                 const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
                 console.log('Microphone permission state:', permissions.state);
@@ -120,11 +120,14 @@ const PatientProfile = (): JSX.Element => {
 
             // Log iframe context
             console.log('Is in iframe:', window !== window.parent);
-            console.log('Iframe permissions policy:', 'featurePolicy' in document ? 
-                (document as any).featurePolicy?.allowsFeature('microphone') : 
-                'Feature Policy API not available');
+            console.log(
+                'Iframe permissions policy:',
+                'featurePolicy' in document
+                    ? (document as any).featurePolicy?.allowsFeature('microphone')
+                    : 'Feature Policy API not available'
+            );
 
-            const stream = await navigator.mediaDevices.getUserMedia({ 
+            const stream = await navigator.mediaDevices.getUserMedia({
                 audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
@@ -132,15 +135,18 @@ const PatientProfile = (): JSX.Element => {
                 },
                 video: false
             });
-            
+
             console.log('Stream obtained successfully');
-            console.log('Audio tracks:', stream.getAudioTracks().map(track => ({
-                label: track.label,
-                enabled: track.enabled,
-                muted: track.muted,
-                readyState: track.readyState
-            })));
-            
+            console.log(
+                'Audio tracks:',
+                stream.getAudioTracks().map((track) => ({
+                    label: track.label,
+                    enabled: track.enabled,
+                    muted: track.muted,
+                    readyState: track.readyState
+                }))
+            );
+
             const recorder = new MediaRecorder(stream, {
                 mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/ogg'
             });
@@ -192,7 +198,7 @@ const PatientProfile = (): JSX.Element => {
         try {
             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
-                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                mediaRecorder.stream.getTracks().forEach((track) => track.stop());
                 setIsRecording(false);
                 setMediaRecorder(null);
             }
@@ -212,7 +218,7 @@ const PatientProfile = (): JSX.Element => {
             if (isPlaying) {
                 audioRef.current.pause();
             } else {
-                audioRef.current.play().catch(err => {
+                audioRef.current.play().catch((err) => {
                     handleError(err, 'Failed to play audio');
                 });
             }
@@ -223,11 +229,14 @@ const PatientProfile = (): JSX.Element => {
         }
     };
 
-    useEffect(() => () => {
-        if (audioUrl) {
-            URL.revokeObjectURL(audioUrl);
-        }
-    }, [audioUrl]);
+    useEffect(
+        () => () => {
+            if (audioUrl) {
+                URL.revokeObjectURL(audioUrl);
+            }
+        },
+        [audioUrl]
+    );
 
     const getPermissionColor = (status: string): string => {
         switch (status) {
@@ -300,7 +309,14 @@ const PatientProfile = (): JSX.Element => {
                                         <Typography variant="body2" color={getPermissionColor(permissionStatus)}>
                                             Microphone Permission: {permissionStatus}
                                         </Typography>
-                                        <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column', alignItems: 'center' }}>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 2,
+                                                flexDirection: 'column',
+                                                alignItems: 'center'
+                                            }}
+                                        >
                                             {(showPermissionPrompt || permissionStatus === 'denied') && (
                                                 <Button
                                                     variant="outlined"
@@ -314,12 +330,12 @@ const PatientProfile = (): JSX.Element => {
                                             <Box sx={{ display: 'flex', gap: 2 }}>
                                                 <Button
                                                     variant="contained"
-                                                    color={isRecording ? "error" : "primary"}
+                                                    color={isRecording ? 'error' : 'primary'}
                                                     startIcon={isRecording ? <StopIcon /> : <MicIcon />}
                                                     onClick={isRecording ? stopRecording : startRecording}
                                                     disabled={permissionStatus !== 'granted'}
                                                 >
-                                                    {isRecording ? "Stop Recording" : "Start Recording"}
+                                                    {isRecording ? 'Stop Recording' : 'Start Recording'}
                                                 </Button>
                                                 {audioUrl && (
                                                     <Button
@@ -328,7 +344,7 @@ const PatientProfile = (): JSX.Element => {
                                                         startIcon={isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
                                                         onClick={togglePlayback}
                                                     >
-                                                        {isPlaying ? "Pause" : "Play"}
+                                                        {isPlaying ? 'Pause' : 'Play'}
                                                     </Button>
                                                 )}
                                             </Box>
@@ -340,21 +356,13 @@ const PatientProfile = (): JSX.Element => {
                                                 onEnded={() => setIsPlaying(false)}
                                                 style={{ display: 'none' }}
                                             >
-                                                <track 
-                                                    kind="captions" 
-                                                    srcLang="en" 
-                                                    label="English captions" 
-                                                />
+                                                <track kind="captions" srcLang="en" label="English captions" />
                                             </audio>
                                         )}
                                     </Card>
                                 </Grid>
                             </Grid>
-                            <Button
-                                variant='contained'
-                                sx={{ mt: '0.5rem' }}
-                                onClick={() => navigate(routes.goals)}
-                            >
+                            <Button variant="contained" sx={{ mt: '0.5rem' }} onClick={() => navigate(routes.goals)}>
                                 Goals
                             </Button>
                         </Box>
