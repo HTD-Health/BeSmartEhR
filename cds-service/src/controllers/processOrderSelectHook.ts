@@ -15,6 +15,8 @@ export const processOrderSelectHook = async (
     const hookData = req.body;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
 
+    // Filtering for resources starting with 'Medication'
+    // to support both MedicationOrder and other medication-related resources.
     const medicationResource = draftOrders?.entry?.find((resource) =>
       (resource.resource?.resourceType as string).startsWith('Medication')
     )?.resource as unknown as Record<string, unknown>;
