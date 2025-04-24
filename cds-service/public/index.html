@@ -150,7 +150,7 @@
         <div class="testing-section">
           <h3>CDS Hooks Sandbox</h3>
           <div class="testing-steps">
-            <p>To test this service in the CDS Hooks Sandbox:</p>
+            <h4>To test this service in the CDS Hooks Sandbox:</h4>
             <ol>
               <li>
                 Go to
@@ -167,7 +167,30 @@
               </li>
               <li>Click "Save"</li>
             </ol>
-            <p>To test specific hooks:</p>
+            <h4>
+              To use different FHIR servers and display different resources in
+              the SMART app:
+            </h4>
+            <ol>
+              <li>Click on "Settings" in the top right corner</li>
+              <li>Click "Change FHIR Server"</li>
+              <li>
+                Change the default server URL
+                (<code>https://launch.smarthealthit.org/v/r2/fhir</code>) to
+                <code>https://r4.smarthealthit.org</code>
+              </li>
+              <li>Click "Next" to update the FHIR server.</li>
+              <li>Click on "Settings" in the top right corner</li>
+              <li>Click "Change Patient"</li>
+              <li>Select a different patient from the list.</li>
+              <li>Click "Save" to update the patient.</li>
+              <p>
+                Using a different FHIR server allows you to access additional
+                resources and test the service with a wider range of clinical
+                data in the practitioner app.
+              </p>
+            </ol>
+            <h4>To test specific hooks:</h4>
             <ul>
               <li>
                 <strong>Patient-View Hook</strong>: View the patient in the

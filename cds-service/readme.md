@@ -112,6 +112,21 @@ You can test this service using the CDS Hooks Sandbox:
 4. Enter `https://cds-service.htdhealth.com/cds-services` as the discovery endpoint
 5. Click "Save"
 
+#### Using Different FHIR Servers and Patient Data
+
+To use different FHIR servers and display different resources in the SMART app:
+
+1. Click on "Settings" in the top right corner
+2. Click "Change FHIR Server"
+3. Change the default server URL (`https://launch.smarthealthit.org/v/r2/fhir`) to `https://r4.smarthealthit.org`
+4. Click "Next" to update the FHIR server
+5. Click on "Settings" in the top right corner
+6. Click "Change Patient"
+7. Select a different patient from the list
+8. Click "Save" to update the patient
+
+Using a different FHIR server allows you to access additional resources and test the service with a wider range of clinical data in the practitioner app.
+
 #### Testing Specific Hooks
 
 - **Patient-View Hook**: View the patient in the `Patient View` tab. The service will provide recommended check-ups based on patient demographics in the form of a Routine Health Assessment card.
