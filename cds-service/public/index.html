@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTD Health CDS Service</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        color: #333;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #2c3e50;
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .container {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+      }
+      .endpoint {
+        background-color: #e8f4f8;
+        border-left: 4px solid #3498db;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      code {
+        background-color: #f1f1f1;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+      .method {
+        font-weight: bold;
+        color: #2980b9;
+      }
+      .testing-section {
+        background-color: #f0f7fa;
+        border: 1px solid #bfe3ec;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .testing-section h3 {
+        color: #2980b9;
+        margin-top: 0;
+      }
+      .testing-steps {
+        background-color: #fff;
+        border-left: 3px solid #2980b9;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+      }
+      .testing-steps ol {
+        margin-left: 0;
+        padding-left: 20px;
+      }
+      .two-column {
+        display: flex;
+        gap: 30px;
+      }
+      .column {
+        flex: 1;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+      }
+      @media (max-width: 768px) {
+        .two-column {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>HTD Health CDS Service</h1>
+
+      <div class="container">
+        <p>
+          This service implements
+          <a href="https://cds-hooks.org/" target="_blank"
+            >Clinical Decision Support (CDS) Hooks</a
+          >
+          to provide healthcare-related recommendations and insights. It's
+          designed to showcase how to integrate with healthcare systems and
+          provide real-time decision support for clinicians.
+        </p>
+      </div>
+    </div>
+
+    <div class="two-column">
+      <!-- Left Column: Endpoints -->
+      <div class="column">
+        <h2>Available Endpoints</h2>
+
+        <div class="endpoint">
+          <p><span class="method">GET</span> <code>/cds-services</code></p>
+          <p>Lists all available CDS services.</p>
+        </div>
+
+        <div class="endpoint">
+          <p>
+            <span class="method">POST</span>
+            <code>/cds-services/patient-assessment</code>
+          </p>
+          <p>Provides routine check recommendations based on patient data.</p>
+        </div>
+
+        <div class="endpoint">
+          <p>
+            <span class="method">POST</span>
+            <code>/cds-services/order-assistant</code>
+          </p>
+          <p>Informs about medication when selecting orders.</p>
+        </div>
+
+        <div class="endpoint">
+          <p>
+            <span class="method">POST</span>
+            <code>/cds-services/order-review</code>
+          </p>
+          <p>Reviews medication orders prior to signature.</p>
+        </div>
+
+        <div class="endpoint">
+          <p><span class="method">GET</span> <code>/health</code></p>
+          <p>Returns the status of the service.</p>
+        </div>
+      </div>
+
+      <!-- Right Column: Testing Instructions -->
+      <div class="column">
+        <h2>Testing Instructions</h2>
+
+        <div class="testing-section">
+          <h3>CDS Hooks Sandbox</h3>
+          <div class="testing-steps">
+            <p>To test this service in the CDS Hooks Sandbox:</p>
+            <ol>
+              <li>
+                Go to
+                <a href="https://sandbox.cds-hooks.org/" target="_blank"
+                  >https://sandbox.cds-hooks.org/</a
+                >
+              </li>
+              <li>Click on "Settings" in the top right corner</li>
+              <li>Click "Add CDS Services"</li>
+              <li>
+                Enter
+                <code>https://cds-service.htdhealth.com/cds-services</code> as
+                the discovery endpoint
+              </li>
+              <li>Click "Save"</li>
+            </ol>
+            <p>To test specific hooks:</p>
+            <ul>
+              <li>
+                <strong>Patient-View Hook</strong>: View the patient in the
+                <code>Patient View</code> tab. The service will provide
+                recommended check-ups based on patient demographics in the form
+                of a Routine Health Assessment card.
+              </li>
+              <li>
+                <strong>Order-Select Hook</strong>: Begin the process of
+                ordering a medication in the <code>Rx View</code> tab. Start
+                writing in the autocomplete input. Select the type, the dosage,
+                and then the formulation. The service will provide relevant
+                information about the selected medication in the form of a Order
+                Selection Review card.
+              </li>
+              <li>
+                <strong>Order-Sign Hook</strong>: When signing orders in the
+                <code>Rx Sign</code> tab, the service will provide a final check
+                for potential issues in the form of a Pre-Signature Order Review
+                card.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="testing-section">
+          <h3>Epic Integration</h3>
+          <div class="testing-steps">
+            <p>To test this service in Epic:</p>
+            <ol>
+              <li>Contact Epic to acquire access to vendor services account</li>
+              <li>Register this CDS Service in your Epic environment</li>
+              <li>
+                Test the service in Hyperspace by accessing patient records and
+                medication workflows
+              </li>
+            </ol>
+            <p>
+              For detailed integration instructions with Epic, please contact
+              our support team.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>
+        For more information, please refer to the
+        <a
+          href="https://github.com/HTD-Health/BeSmartEhR/blob/main/cds-service/readme.md"
+          target="_blank"
+          >documentation</a
+        >.
+      </p>
+      <p>&copy; 2025 HTD Health. All rights reserved.</p>
+    </div>
+  </body>
+</html>

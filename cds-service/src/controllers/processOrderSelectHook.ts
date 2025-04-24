@@ -16,9 +16,8 @@ export const processOrderSelectHook = async (
     const hookData = req.body;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
 
-    const medicationOrder = draftOrders?.entry?.find(
-      (resource) =>
-        (resource.resource?.resourceType as string) === 'MedicationOrder'
+    const medicationOrder = draftOrders?.entry?.find((resource) =>
+      (resource.resource?.resourceType as string).startsWith('Medication')
     )?.resource as unknown as MedicationOrder;
 
     if (!medicationOrder) {
@@ -49,7 +48,7 @@ export const processOrderSelectHook = async (
           detail: `HTD Health has reviewed order of ${medication.coding?.[0].display}.`,
           source: {
             label: config.serviceName,
-            url: 'https://htdhealth.com/',
+            url: 'https://cds-service.htdhealth.com/',
             icon: config.icons.logo,
           },
           links: [

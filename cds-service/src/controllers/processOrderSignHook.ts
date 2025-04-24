@@ -18,9 +18,8 @@ export const processOrderSignHook = async (
 
     const medicationOrders =
       draftOrders?.entry
-        ?.filter(
-          (resource) =>
-            (resource.resource?.resourceType as string) === 'MedicationOrder'
+        ?.filter((resource) =>
+          (resource.resource?.resourceType as string).startsWith('Medication')
         )
         ?.map((entry) => entry.resource as unknown as MedicationOrder) || [];
 
@@ -60,7 +59,7 @@ export const processOrderSignHook = async (
           detail: `HTD Health has reviewed the ${orderText} prior to signature and found no significant concerns.`,
           source: {
             label: config.serviceName,
-            url: 'https://htdhealth.com/',
+            url: 'https://cds-service.htdhealth.com/',
             icon: config.icons.logo,
           },
           links: [
