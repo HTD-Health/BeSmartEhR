@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { MedicationOrder } from 'fhir/r2';
-import { Bundle } from 'fhir/r4';
+import { Bundle, CodeableConcept } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
 import { CdsHooksEvent } from '../types';
@@ -16,21 +15,23 @@ export const processOrderSelectHook = async (
     const hookData = req.body;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
 
-    const medicationOrder = draftOrders?.entry?.find(
-      (resource) =>
-        (resource.resource?.resourceType as string) === 'MedicationOrder'
-    )?.resource as unknown as MedicationOrder;
+    // Filtering for resources starting with 'Medication'
+    // to support both MedicationOrder and other medication-related resources.
+    const medicationResource = draftOrders?.entry?.find((resource) =>
+      (resource.resource?.resourceType as string).startsWith('Medication')
+    )?.resource as unknown as Record<string, unknown>;
 
-    if (!medicationOrder) {
-      logger.warn('Missing medication order');
+    if (!medicationResource) {
+      logger.warn('Missing medication resource');
       res.status(400).json({
-        error: 'Missing medication order data',
+        error: 'Missing medication resource data',
         cards: [],
       });
       return;
     }
 
-    const medication = medicationOrder.medicationCodeableConcept;
+    const medication =
+      medicationResource?.medicationCodeableConcept as CodeableConcept;
 
     if (!medication) {
       logger.warn('Missing medication data');
@@ -49,7 +50,7 @@ export const processOrderSelectHook = async (
           detail: `HTD Health has reviewed order of ${medication.coding?.[0].display}.`,
           source: {
             label: config.serviceName,
-            url: 'https://htdhealth.com/',
+            url: 'https://cds-service.htdhealth.com/',
             icon: config.icons.logo,
           },
           links: [

@@ -28,6 +28,21 @@ export const processPatientViewHook = async (
     // Generate clinical assessment
     const assessment = await generatePatientAssessment(patient);
 
+    const smartAppLink = (hookData.fhirServer as string)
+      .toLowerCase()
+      .includes('epic')
+      ? {
+          label: 'HTD Health SMART app',
+          url: `https://localhost:3010`,
+          type: 'smart',
+          appContext: hookData,
+        }
+      : {
+          label: 'HTD Health SMART app',
+          url: `https://localhost:3010?context=${encodeURIComponent(JSON.stringify(hookData))}`,
+          type: 'absolute',
+        };
+
     // Return CDS Hooks cards
     res.json({
       cards: [
@@ -37,17 +52,11 @@ export const processPatientViewHook = async (
           detail: assessment.detail,
           source: {
             label: config.serviceName,
-            url: 'https://htdhealth.com/',
+            url: 'https://cds-service.htdhealth.com/',
             icon: config.icons.logo,
           },
           suggestions: assessment.suggestions,
-          links: [
-            {
-              label: 'More about HTD Health',
-              url: `https://htdhealth.com`,
-              type: 'absolute',
-            },
-          ],
+          links: [smartAppLink],
         },
       ],
     });

@@ -5,7 +5,7 @@ HTD Health CDS Service is a Node.js application that implements [Clinical Decisi
 ## Features
 
 - **CDS Hooks Implementation**: Supports `patient-view`, `order-select`, and `order-sign` hooks.
-- **FHIR Integration**: Processes FHIR resources such as [Patient](https://hl7.org/fhir/R4/patient.html), [Bundle](https://hl7.org/fhir/R4/bundle.html), and [MedicationOrder](https://www.hl7.org/fhir/DSTU2/medicationorder.html).
+- **FHIR Integration**: Processes FHIR resources such as [Patient](https://hl7.org/fhir/R4/patient.html), [Bundle](https://hl7.org/fhir/R4/bundle.html), and Medication-related resources e.g. [MedicationOrder](https://www.hl7.org/fhir/DSTU2/medicationorder.html).
 - **Customizable Logging**: Uses [Winston](https://github.com/winstonjs/winston) for structured and customizable logging.
 - **Error Handling**: Provides robust error handling.
 
@@ -99,6 +99,47 @@ npm start
 - **URL**: `/health`
 - **Method**: `GET`
 - **Description**: Returns the status of the service.
+
+## Testing Instructions
+
+### CDS Hooks Sandbox Testing
+
+You can test this service using the CDS Hooks Sandbox:
+
+1. Go to [https://sandbox.cds-hooks.org/](https://sandbox.cds-hooks.org/)
+2. Click on "Settings" in the top right corner
+3. Click "Add CDS Services"
+4. Enter `https://cds-service.htdhealth.com/cds-services` as the discovery endpoint
+5. Click "Save"
+
+#### Using Different FHIR Servers and Patient Data
+
+To use different FHIR servers and display different resources in the SMART app:
+
+1. Click on "Settings" in the top right corner
+2. Click "Change FHIR Server"
+3. Change the default server URL (`https://launch.smarthealthit.org/v/r2/fhir`) to `https://r4.smarthealthit.org`
+4. Click "Next" to update the FHIR server
+5. Select a patient from the list
+6. Click "Save" to update the patient
+
+Using a different FHIR server allows you to access additional resources and test the service with a wider range of clinical data in the practitioner app.
+
+#### Testing Specific Hooks
+
+- **Patient-View Hook**: View the patient in the `Patient View` tab. The service will provide recommended check-ups based on patient demographics in the form of a Routine Health Assessment card.
+- **Order-Select Hook**: Begin the process of ordering a medication in the `Rx View` tab. Start writing in the autocomplete input. Select the type, the dosage, and then the formulation. The service will provide relevant information about the selected medication in the form of a Order Selection Review card.
+- **Order-Sign Hook**: When signing orders in the `Rx Sign` tab, the service will provide a final check for potential issues in the form of a Pre-Signature Order Review card.
+
+### Epic Integration Testing
+
+To test this service in Epic:
+
+1. Contact Epic to acquire access to a vendor services account
+2. Register this CDS Service in your Epic environment
+3. Test the service in Hyperspace by accessing patient records and medication workflows
+
+For detailed Epic integration instructions, please contact our support team.
 
 ## Project Structure
 

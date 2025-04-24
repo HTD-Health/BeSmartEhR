@@ -1,12 +1,10 @@
 import ReactDOM from 'react-dom/client';
 
-import EhrWrapper from './ehr_wrapper';
+import LaunchRouter from './launch_router';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-    <EhrWrapper />
-);
+root.render(<LaunchRouter />);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

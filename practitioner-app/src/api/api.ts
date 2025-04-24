@@ -96,12 +96,18 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
 };
 
 const getClient = async (): Promise<Client> => {
-    if (!client) {
-        client = await FHIR.oauth2.ready();
+    if (client) {
+        return client;
     }
+
+    if (window.FHIRClient) {
+        client = window.FHIRClient;
+        return client;
+    }
+
+    client = await FHIR.oauth2.ready();
     return client;
 };
-
 const getPatient = async (): Promise<Patient> => {
     const c = await getClient();
     if (!c.patient) throw new Error('Missing selected patient data');
@@ -445,19 +451,19 @@ const getAllergies = async (): Promise<Bundle> => {
 };
 
 export {
-    getPatient,
-    getUser,
-    getQuestionnaires,
+    addGoal,
     assignForms,
+    finishTask,
+    getAllergies,
+    getConditions,
+    getGoal,
+    getGoals,
+    getMedications,
+    getPatient,
     getQuestionnaire,
+    getQuestionnaires,
     getQuestionnaireTasks,
     getResponse,
-    submitResponse,
-    finishTask,
-    getGoals,
-    addGoal,
-    getGoal,
-    getConditions,
-    getMedications,
-    getAllergies
+    getUser,
+    submitResponse
 };

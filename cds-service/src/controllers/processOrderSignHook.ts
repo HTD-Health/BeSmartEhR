@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { MedicationOrder } from 'fhir/r2';
-import { Bundle } from 'fhir/r4';
+import { Bundle, CodeableConcept } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
 import { CdsHooksEvent } from '../types';
@@ -16,25 +15,30 @@ export const processOrderSignHook = async (
     const hookData = req.body;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
 
-    const medicationOrders =
+    // Filtering for resources starting with 'Medication'
+    // to support both MedicationOrder and other medication-related resources.
+    const medicationResources =
       draftOrders?.entry
-        ?.filter(
-          (resource) =>
-            (resource.resource?.resourceType as string) === 'MedicationOrder'
+        ?.filter((resource) =>
+          (resource.resource?.resourceType as string).startsWith('Medication')
         )
-        ?.map((entry) => entry.resource as unknown as MedicationOrder) || [];
+        ?.map((entry) => entry.resource) || [];
 
-    if (medicationOrders.length === 0) {
-      logger.warn('No medication orders found to be signed');
+    if (medicationResources.length === 0) {
+      logger.warn('No medication resources found to be signed');
       res.status(400).json({
-        error: 'No medication orders found to be signed',
+        error: 'No medication resources found to be signed',
         cards: [],
       });
       return;
     }
 
-    const primaryOrder = medicationOrders[0];
-    const medication = primaryOrder.medicationCodeableConcept;
+    const primaryOrder = medicationResources[0] as unknown as Record<
+      string,
+      unknown
+    >;
+    const medication =
+      primaryOrder?.medicationCodeableConcept as CodeableConcept;
 
     if (!medication) {
       logger.warn('Missing medication data');
@@ -46,7 +50,7 @@ export const processOrderSignHook = async (
     }
 
     // Number of orders being signed
-    const orderCount = medicationOrders.length;
+    const orderCount = medicationResources.length;
     const orderText =
       orderCount === 1
         ? `order for ${medication.coding?.[0].display}`
@@ -60,7 +64,7 @@ export const processOrderSignHook = async (
           detail: `HTD Health has reviewed the ${orderText} prior to signature and found no significant concerns.`,
           source: {
             label: config.serviceName,
-            url: 'https://htdhealth.com/',
+            url: 'https://cds-service.htdhealth.com/',
             icon: config.icons.logo,
           },
           links: [
