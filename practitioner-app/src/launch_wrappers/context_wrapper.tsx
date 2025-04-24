@@ -1,4 +1,3 @@
-// cds_hooks_wrapper.tsx
 import { CircularProgress } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import FHIR from 'fhirclient';
@@ -8,7 +7,6 @@ import ErrorPage from '../pages/error_page/error_page';
 
 import App from 'app';
 
-// Add to window interface
 declare global {
     interface Window {
         FHIRClient?: any;
