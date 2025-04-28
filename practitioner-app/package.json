@@ -8,8 +8,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "server": "node server.js",
-        "heroku-start": "react-scripts start",
-        "heroku-postbuild": "ls -a"
+        "heroku-start": "node --max_old_space_size=4096 node_modules/.bin/react-scripts start"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
