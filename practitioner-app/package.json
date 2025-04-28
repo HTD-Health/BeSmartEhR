@@ -7,7 +7,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "server": "node server.js"
+        "server": "node server.js",
+        "heroku-postbuild": "ls -a"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
@@ -29,7 +30,7 @@
         "@types/react-dom": "^18.2.14",
         "date-fns": "^2.30.0",
         "express": "^4.21.2",
-        "fhir-questionnaire-json-schema": "^1.0.0",
+        "fhir-questionnaire-json-schema": "file:../fhir-questionnaire-json-schema",
         "fhirclient": "^2.5.2",
         "jsonschema": "^1.4.1",
         "morgan": "^1.10.0",
