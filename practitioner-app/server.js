@@ -1,12 +1,15 @@
-const express = require('express');
 const path = require('path');
 const fs = require('fs');
+
+const cors = require('cors');
+const express = require('express');
 const morgan = require('morgan');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use(morgan('dev')); // HTTP request logging
 
@@ -19,8 +22,8 @@ if (!fs.existsSync(logsDir)) {
 // Endpoint to receive logs
 app.post('/api/log', (req, res) => {
     const { timestamp, type, data } = req.body;
-    const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${JSON.stringify(data)}\n`;
-    
+    const logEntry = `[${timestamp}] ${type?.toUpperCase()}: ${JSON.stringify(data)}\n`;
+
     fs.appendFile(path.join(logsDir, 'api.log'), logEntry, (err) => {
         if (err) {
             console.error('Error writing to log file:', err);
@@ -43,4 +46,4 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-}); 
+});

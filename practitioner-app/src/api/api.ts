@@ -12,6 +12,7 @@ import {
 } from './models';
 
 let client: Client;
+const LOG_SERVER_ENDPOINT = `${process.env.LOG_SERVER || 'http://localhost:3001'}/api/log`;
 
 // Wrapper for client.request that adds logging
 const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> => {
@@ -24,7 +25,7 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
     // Use window.fetch to send logs to a local endpoint
     if (process.env.NODE_ENV === 'development') {
         try {
-            await fetch('/api/log', {
+            await fetch(LOG_SERVER_ENDPOINT, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -53,7 +54,7 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
 
         if (process.env.NODE_ENV === 'development') {
             try {
-                await fetch('/api/log', {
+                await fetch(LOG_SERVER_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -75,7 +76,7 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
 
         if (process.env.NODE_ENV === 'development') {
             try {
-                await fetch('/api/log', {
+                await fetch(LOG_SERVER_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
