@@ -8,6 +8,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "server": "node server.js",
+        "heroku-start": "react-scripts start",
         "heroku-postbuild": "ls -a"
     },
     "dependencies": {
