@@ -8,7 +8,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "server": "node server.js",
-        "heroku-prebuild": "mkdir -p ./node_modules && cp -r ../fhir-questionnaire-json-schema ./node_modules/"
+        "heroku-prebuild": "ls -a && mkdir -p ./node_modules && cp -r ../fhir-questionnaire-json-schema ./node_modules/"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
