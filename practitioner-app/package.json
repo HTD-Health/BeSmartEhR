@@ -9,7 +9,7 @@
         "eject": "react-scripts eject",
         "server": "node server.js",
         "heroku-start": "node --max_old_space_size=4096 node_modules/.bin/react-scripts start",
-        "heroku-prebuild": "mkdir -p ./node_modules/fhir-questionnaire-json-schema && cp -r ../fhir-questionnaire-json-schema/src ./node_modules/fhir-questionnaire-json-schema/ && cp ../fhir-questionnaire-json-schema/package.json ./node_modules/fhir-questionnaire-json-schema/"
+        "heroku-prebuild": "mkdir -p ./node_modules/fhir-questionnaire-json-schema && cp -r ./fhir-questionnaire-json-schema/src ./node_modules/fhir-questionnaire-json-schema/ && cp ./fhir-questionnaire-json-schema/package.json ./node_modules/fhir-questionnaire-json-schema/"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
