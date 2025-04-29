@@ -8,8 +8,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "server": "node server.js",
-        "heroku-start": "node --max-old-space-size=512 node_modules/.bin/react-scripts start",
-        "heroku-prebuild": "cd fhir-questionnaire-json-schema && npm link && cd .. && npm link fhir-questionnaire-json-schema"
+        "heroku-start": "node --max-old-space-size=512 node_modules/.bin/react-scripts start"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
@@ -32,7 +31,7 @@
         "cors": "^2.8.5",
         "date-fns": "^2.30.0",
         "express": "^4.21.2",
-        "fhir-questionnaire-json-schema": "file:../fhir-questionnaire-json-schema",
+        "fhir-questionnaire-json-schema": "github:HTD-Health/fhir-questionnaire-json-schema",
         "fhirclient": "^2.5.2",
         "jsonschema": "^1.4.1",
         "morgan": "^1.10.0",
