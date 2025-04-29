@@ -32,7 +32,7 @@
         "cors": "^2.8.5",
         "date-fns": "^2.30.0",
         "express": "^4.21.2",
-        "fhir-questionnaire-json-schema": "^1.0.0",
+        "fhir-questionnaire-json-schema": "file:../fhir-questionnaire-json-schema",
         "fhirclient": "^2.5.2",
         "jsonschema": "^1.4.1",
         "morgan": "^1.10.0",
