@@ -1,10 +1,11 @@
 {
   "name": "fhir-questionnaire-json-schema",
   "version": "1.0.0",
-  "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "files": [
-    "/dist"
+    "/dist",
+    "/src"
   ],
   "dependencies": {
     "@types/fhir": "^0.0.35",
