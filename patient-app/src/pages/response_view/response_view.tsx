@@ -2,7 +2,7 @@ import { CircularProgress, Container } from '@mui/material';
 import Form from '@rjsf/mui';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { responseToJSONSchema, toJSONSchema } from 'fhir-questionnaire-json-schema/src/schema';
+import { responseToJSONSchema, toJSONSchema } from 'fhir-questionnaire-json-schema';
 import { Schema } from 'jsonschema';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
