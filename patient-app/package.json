@@ -20,7 +20,7 @@
         "@types/react": "^18.0.26",
         "@types/react-dom": "^18.0.9",
         "date-fns": "^2.29.3",
-        "fhir-questionnaire-json-schema": "file:/../fhir-questionnaire-json-schema",
+        "fhir-questionnaire-json-schema": "github:HTD-Health/fhir-questionnaire-json-schema",
         "fhirclient": "^2.5.2",
         "jsonschema": "^1.4.1",
         "fs": "^0.0.1-security",
