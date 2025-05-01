@@ -73,6 +73,11 @@ export const processOrderSignHook = async (
               url: `https://mor.nlm.nih.gov/RxNav/search?searchBy=RXCUI&searchTerm=${medication.coding?.[0].code}`,
               type: 'absolute',
             },
+            {
+              label: 'More about HTD Health',
+              url: `https://htdhealth.com/`,
+              type: 'absolute',
+            },
           ],
         },
       ],

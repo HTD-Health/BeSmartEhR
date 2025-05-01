@@ -32,14 +32,14 @@ export const processPatientViewHook = async (
       .toLowerCase()
       .includes('epic')
       ? {
-          label: 'HTD Health SMART app',
-          url: `https://localhost:3010`,
+          label: config.smartApp.name,
+          url: config.smartApp.url,
           type: 'smart',
           appContext: hookData,
         }
       : {
-          label: 'HTD Health SMART app',
-          url: `https://localhost:3010?context=${encodeURIComponent(JSON.stringify(hookData))}`,
+          label: config.smartApp.name,
+          url: `${config.smartApp.url}?context=${encodeURIComponent(JSON.stringify(hookData))}`,
           type: 'absolute',
         };
 

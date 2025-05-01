@@ -11,4 +11,8 @@ export default {
   logging: {
     level: process.env.LOG_LEVEL || 'info',
   },
+  smartApp: {
+    url: process.env.SMART_APP_URL || 'https://smart-app.htdhealth.com',
+    name: 'Patient in SMART app',
+  },
 };
