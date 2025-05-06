@@ -9,3 +9,5 @@ export enum Services {
   ORDER_ASSISTANT = 'order-assistant',
   ORDER_REVIEW = 'order-review',
 }
+
+export type CardIndicator = 'info' | 'warning' | 'critical';
