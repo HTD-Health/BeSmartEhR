@@ -1,21 +1,21 @@
-import { Box, Card, CircularProgress, Typography } from '@mui/material';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import { Box, Card, CircularProgress, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import type { Condition, OperationOutcome } from 'fhir/r4';
 
-import { useGetConditions } from 'api/queries';
+import { useGetConditions } from '@/api/queries';
+import { JSX } from 'react';
 
 const ConditionsSummary = (): JSX.Element => {
     const { data, isLoading } = useGetConditions();
 
-    const isOperationOutcome = (entry: any): entry is { resource: OperationOutcome } => 
+    const isOperationOutcome = (entry: any): entry is { resource: OperationOutcome } =>
         entry?.resource?.resourceType === 'OperationOutcome';
 
-    const isCondition = (entry: any): entry is { resource: Condition } => 
-        entry?.resource?.resourceType === 'Condition';
+    const isCondition = (entry: any): entry is { resource: Condition } => entry?.resource?.resourceType === 'Condition';
 
     const renderCondition = (condition: Condition): JSX.Element => {
-        const recordedDate = condition.recordedDate 
+        const recordedDate = condition.recordedDate
             ? format(new Date(condition.recordedDate), 'MMM d, yyyy')
             : 'Date not recorded';
 
@@ -23,9 +23,9 @@ const ConditionsSummary = (): JSX.Element => {
         const notes = condition.note?.[0]?.text;
 
         return (
-            <Box 
+            <Box
                 key={condition.id}
-                sx={{ 
+                sx={{
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: '0.5rem',
@@ -37,9 +37,9 @@ const ConditionsSummary = (): JSX.Element => {
             >
                 <MonitorHeartIcon sx={{ color: 'error.main', mt: '2px' }} />
                 <Box>
-                    <Typography 
+                    <Typography
                         variant="body1"
-                        sx={{ 
+                        sx={{
                             fontWeight: 500,
                             color: 'text.primary',
                             mb: '0.25rem'
@@ -47,9 +47,9 @@ const ConditionsSummary = (): JSX.Element => {
                     >
                         {condition.code?.text || 'Unnamed condition'}
                     </Typography>
-                    <Typography 
+                    <Typography
                         variant="body2"
-                        sx={{ 
+                        sx={{
                             color: 'text.secondary',
                             fontSize: '0.875rem',
                             mb: notes ? '0.25rem' : 0
@@ -98,11 +98,7 @@ const ConditionsSummary = (): JSX.Element => {
             );
         }
 
-        return (
-            <>
-                {conditionEntries.map((entry) => renderCondition(entry.resource))}
-            </>
-        );
+        return <>{conditionEntries.map((entry) => renderCondition(entry.resource))}</>;
     };
 
     return (
@@ -113,13 +109,13 @@ const ConditionsSummary = (): JSX.Element => {
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)'
                 }
             }}
         >
-            <Typography 
-                variant="h6" 
-                sx={{ 
+            <Typography
+                variant="h6"
+                sx={{
                     mb: '1rem',
                     fontWeight: 600,
                     color: 'text.primary'
@@ -132,4 +128,4 @@ const ConditionsSummary = (): JSX.Element => {
     );
 };
 
-export default ConditionsSummary; 
+export default ConditionsSummary;

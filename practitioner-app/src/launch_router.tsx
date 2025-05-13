@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 
 import ContextWrapper from './launch_wrappers/context_wrapper';
 import EhrWrapper from './launch_wrappers/ehr_wrapper';

@@ -1,9 +1,10 @@
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import { Box, Button, Card, Typography, Tooltip } from '@mui/material';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import { Box, Button, Card, Tooltip, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import type { Task } from 'fhir/r4';
+import { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 type AssignedFormItemProps = {
     name: string;
@@ -28,29 +29,25 @@ const AssignedFormItem = (props: AssignedFormItemProps): JSX.Element => {
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)'
                 }
             }}
         >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <AssignmentTurnedInIcon sx={{ color: 'primary.main' }} />
                 <Box>
-                    <Typography 
-                        variant="h6" 
+                    <Typography
+                        variant="h6"
                         color="text.primary"
                         sx={{
                             fontWeight: 500,
-                            letterSpacing: '-0.01em',
+                            letterSpacing: '-0.01em'
                         }}
                     >
                         {name}
                     </Typography>
                     {date && (
-                        <Typography 
-                            variant="body2" 
-                            color="text.secondary"
-                            sx={{ mt: '0.25rem' }}
-                        >
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: '0.25rem' }}>
                             Assigned on: {format(new Date(date), 'iii, MM/dd/yyyy HH:mm:ss')}
                         </Typography>
                     )}
@@ -70,8 +67,8 @@ const AssignedFormItem = (props: AssignedFormItemProps): JSX.Element => {
                             '&:hover': {
                                 borderColor: 'primary.dark',
                                 backgroundColor: 'primary.main',
-                                color: 'white',
-                            },
+                                color: 'white'
+                            }
                         }}
                     >
                         View
@@ -81,15 +78,17 @@ const AssignedFormItem = (props: AssignedFormItemProps): JSX.Element => {
                 <Tooltip title="Fill form">
                     <Button
                         variant="contained"
-                        onClick={() => navigate(`${questionnaireId}/fill`, {
-                            state: {
-                                taskId: task?.id
-                            }
-                        })}
+                        onClick={() =>
+                            navigate(`${questionnaireId}/fill`, {
+                                state: {
+                                    taskId: task?.id
+                                }
+                            })
+                        }
                         endIcon={<ArrowRightAltIcon />}
                         sx={{
                             textTransform: 'none',
-                            fontWeight: 500,
+                            fontWeight: 500
                         }}
                     >
                         Fill

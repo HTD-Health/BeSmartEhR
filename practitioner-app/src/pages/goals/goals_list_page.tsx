@@ -1,26 +1,31 @@
-import { Button, Grid, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Button, Grid2, Typography } from '@mui/material';
+import { JSX, useEffect, useState } from 'react';
 
-import { useGetGoals } from 'api/queries';
-import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
-import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import { useCreateGoal } from 'api/mutations';
+import { useCreateGoal } from '@/api/mutations';
+import { useGetGoals } from '@/api/queries';
+import CustomSnackbar from '@/components/custom_snackbar/custom_snackbar';
+import SmartAppBar from '@/components/smart_app_bar/smart_app_bar';
 
 const GoalsListPage = (): JSX.Element => {
     const [newGoal, setNewGoal] = useState<string>('');
     const [errorSnackbar, setErrorSnackbar] = useState<boolean>(false);
 
-    const { data, isLoading, error, isSuccess } = useGetGoals()
-    const { mutate: createGoal, error: goalCreateError, isLoading: goalCreateIsLoading, isSuccess: goalCreateSuccess } = useCreateGoal();
-    
-    console.log(`Get Goals: loading-${isLoading}, error-${error}, success-${isSuccess}`);
-    console.log(`Create Goal: loading-${goalCreateIsLoading}, error-${goalCreateError}, success-${goalCreateSuccess}`);
+    const { data, isLoading, error, isSuccess } = useGetGoals();
+    const {
+        mutate: createGoal,
+        error: goalCreateError,
+        isPending: goalCreateIsPending,
+        isSuccess: goalCreateSuccess
+    } = useCreateGoal();
+
+    console.info(`Get Goals: loading-${isLoading}, error-${error}, success-${isSuccess}`);
+    console.info(`Create Goal: loading-${goalCreateIsPending}, error-${goalCreateError}, success-${goalCreateSuccess}`);
 
     const handleAddGoal = (): void => {
-        console.log(`Adding goal: ${newGoal}`);
+        console.info(`Adding goal: ${newGoal}`);
         createGoal(newGoal);
-    }
-        
+    };
+
     useEffect(() => {
         if (error) {
             setErrorSnackbar(true);
@@ -30,8 +35,8 @@ const GoalsListPage = (): JSX.Element => {
             setErrorSnackbar(true);
             console.error(goalCreateError);
         }
-    }, [error]);
-    
+    }, [error, goalCreateError]);
+
     return (
         <>
             <SmartAppBar />
@@ -43,21 +48,21 @@ const GoalsListPage = (): JSX.Element => {
             <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
                 Patient Goals
             </Typography>
-            <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12}>
-                    {
-                        data && Array.isArray(data) ? data.map((goal: any) => (
-                            <Typography key={goal.id}>{goal?.description?.text}</Typography>
-                        )) : <Typography>No goals found</Typography>
-                    }
-                </Grid>
+            <Grid2 container spacing={2} justifyContent="center">
+                <Grid2 size={12}>
+                    {data && Array.isArray(data) ? (
+                        data.map((goal: any) => <Typography key={goal.id}>{goal?.description?.text}</Typography>)
+                    ) : (
+                        <Typography>No goals found</Typography>
+                    )}
+                </Grid2>
 
-                <Grid item xs={12}>
+                <Grid2 size={12}>
                     <h3>Add Goal</h3>
-                    <input type="text" onChange={e => setNewGoal(e.target.value)} />
+                    <input type="text" onChange={(e) => setNewGoal(e.target.value)} />
                     <Button onClick={handleAddGoal}>Add</Button>
-                </Grid>
-            </Grid>
+                </Grid2>
+            </Grid2>
         </>
     );
 };

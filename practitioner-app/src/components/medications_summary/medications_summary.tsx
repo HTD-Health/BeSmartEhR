@@ -1,28 +1,29 @@
-import { Box, Card, CircularProgress, Typography } from '@mui/material';
 import MedicationIcon from '@mui/icons-material/Medication';
+import { Box, Card, CircularProgress, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import type { MedicationRequest, OperationOutcome } from 'fhir/r4';
 
-import { useGetMedications } from 'api/queries';
+import { useGetMedications } from '@/api/queries';
+import { JSX } from 'react';
 
 const MedicationsSummary = (): JSX.Element => {
     const { data, isLoading } = useGetMedications();
 
-    const isOperationOutcome = (entry: any): entry is { resource: OperationOutcome } => 
+    const isOperationOutcome = (entry: any): entry is { resource: OperationOutcome } =>
         entry?.resource?.resourceType === 'OperationOutcome';
 
-    const isMedicationRequest = (entry: any): entry is { resource: MedicationRequest } => 
+    const isMedicationRequest = (entry: any): entry is { resource: MedicationRequest } =>
         entry?.resource?.resourceType === 'MedicationRequest';
 
     const renderMedication = (medication: MedicationRequest): JSX.Element => {
-        const authoredDate = medication.authoredOn 
+        const authoredDate = medication.authoredOn
             ? format(new Date(medication.authoredOn), 'MMM d, yyyy')
             : 'Date not recorded';
 
         return (
-            <Box 
+            <Box
                 key={medication.id}
-                sx={{ 
+                sx={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
@@ -34,18 +35,18 @@ const MedicationsSummary = (): JSX.Element => {
             >
                 <MedicationIcon sx={{ color: 'primary.main' }} />
                 <Box>
-                    <Typography 
+                    <Typography
                         variant="body1"
-                        sx={{ 
+                        sx={{
                             fontWeight: 500,
                             color: 'text.primary'
                         }}
                     >
                         {medication.medicationCodeableConcept?.text || 'Unnamed medication'}
                     </Typography>
-                    <Typography 
+                    <Typography
                         variant="body2"
-                        sx={{ 
+                        sx={{
                             color: 'text.secondary',
                             fontSize: '0.875rem'
                         }}
@@ -81,11 +82,7 @@ const MedicationsSummary = (): JSX.Element => {
             );
         }
 
-        return (
-            <>
-                {medicationEntries.map((entry) => renderMedication(entry.resource))}
-            </>
-        );
+        return <>{medicationEntries.map((entry) => renderMedication(entry.resource))}</>;
     };
 
     return (
@@ -96,13 +93,13 @@ const MedicationsSummary = (): JSX.Element => {
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)'
                 }
             }}
         >
-            <Typography 
-                variant="h6" 
-                sx={{ 
+            <Typography
+                variant="h6"
+                sx={{
                     mb: '1rem',
                     fontWeight: 600,
                     color: 'text.primary'
@@ -115,4 +112,4 @@ const MedicationsSummary = (): JSX.Element => {
     );
 };
 
-export default MedicationsSummary; 
+export default MedicationsSummary;

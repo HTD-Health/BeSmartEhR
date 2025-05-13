@@ -1,60 +1,91 @@
 import type { Bundle, FhirResource, Patient, Practitioner, Questionnaire, QuestionnaireResponse } from 'fhir/r4';
-import { useQuery, UseQueryResult } from 'react-query';
 
-import { addGoal, getAllergies, getConditions, getGoals, getMedications, getPatient, getQuestionnaire, getQuestionnaires, getQuestionnaireTasks, getResponse, getUser } from './api';
+import { keepPreviousData, useQuery, UseQueryResult } from '@tanstack/react-query';
+import {
+    addGoal,
+    getAllergies,
+    getConditions,
+    getGoals,
+    getMedications,
+    getPatient,
+    getQuestionnaire,
+    getQuestionnaires,
+    getQuestionnaireTasks,
+    getResponse,
+    getUser
+} from './api';
 import { GetPaginatedRecordsParams } from './models';
 
-const useGetPatient = (): UseQueryResult<Patient> => useQuery('getPatient', getPatient);
+const useGetPatient = (): UseQueryResult<Patient> => useQuery({ queryKey: ['getPatient'], queryFn: getPatient });
 
-const useGetUser = (): UseQueryResult<Practitioner> => useQuery('getUser', getUser);
+const useGetUser = (): UseQueryResult<Practitioner> => useQuery({ queryKey: ['getUser'], queryFn: getUser });
 
 const useGetConditions = (): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getConditions'], getConditions, { keepPreviousData: true });
+    useQuery({ queryKey: ['getConditions'], queryFn: getConditions, placeholderData: keepPreviousData });
 
 const useGetQuestionnaires = (params: GetPaginatedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getQuestionnaires', params.page], async () => getQuestionnaires(params), { keepPreviousData: true });
+    useQuery({
+        queryKey: ['getQuestionnaires', params],
+        queryFn: async () => getQuestionnaires(params),
+        placeholderData: keepPreviousData
+    });
 
 const useGetAssignedForms = (params: GetPaginatedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getAssignedForms', params.page], async () => getQuestionnaireTasks(params, false), {
-        keepPreviousData: true
+    useQuery({
+        queryKey: ['getAssignedForms', params],
+        queryFn: async () => getQuestionnaireTasks(params, false),
+        placeholderData: keepPreviousData
     });
 
 const useGetFilledForms = (params: GetPaginatedRecordsParams): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getFilledForms', params.page], async () => getQuestionnaireTasks(params, true), {
-        keepPreviousData: true
+    useQuery({
+        queryKey: ['getFilledForms', params],
+        queryFn: async () => getQuestionnaireTasks(params, true),
+        placeholderData: keepPreviousData
     });
 
 const useGetResponse = (responseId: string): UseQueryResult<QuestionnaireResponse> =>
-    useQuery(['getResponse', responseId], async () => getResponse(responseId), {
-        keepPreviousData: true
+    useQuery({
+        queryKey: ['getResponse', responseId],
+        queryFn: async () => getResponse(responseId),
+        placeholderData: keepPreviousData
     });
 
 const useGetQuestionnaire = (id?: string): UseQueryResult<Questionnaire> =>
-    useQuery(['getQuestionnaire', id], async () => getQuestionnaire(id), { keepPreviousData: true, enabled: !!id });
+    useQuery({
+        queryKey: ['getQuestionnaire', id],
+        queryFn: async () => getQuestionnaire(id),
+        placeholderData: keepPreviousData,
+        enabled: !!id
+    });
 
 const useGetGoals = (): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getGoals'], async () => getGoals(), { keepPreviousData: true });
+    useQuery({ queryKey: ['getGoals'], queryFn: async () => getGoals(), placeholderData: keepPreviousData });
 
 const useAddGoal = (description: string): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['addGoal'], async () => addGoal(description), { keepPreviousData: true });
+    useQuery({
+        queryKey: ['addGoal', description],
+        queryFn: async () => addGoal(description),
+        placeholderData: keepPreviousData
+    });
 
 const useGetMedications = (): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getMedications'], getMedications, { keepPreviousData: true });
+    useQuery({ queryKey: ['getMedications'], queryFn: getMedications, placeholderData: keepPreviousData });
 
 const useGetAllergies = (): UseQueryResult<Bundle<FhirResource>> =>
-    useQuery(['getAllergies'], getAllergies, { keepPreviousData: true });
+    useQuery({ queryKey: ['getAllergies'], queryFn: getAllergies, placeholderData: keepPreviousData });
 
 export {
-    useGetPatient,
-    useGetUser,
-    useGetConditions,
-    useGetQuestionnaires,
-    useGetQuestionnaire,
-    useGetAssignedForms,
-    useGetFilledForms,
-    useGetResponse,
-    useGetGoals,
     useAddGoal,
+    useGetAllergies,
+    useGetAssignedForms,
+    useGetConditions,
+    useGetFilledForms,
+    useGetGoals,
     useGetMedications,
-    useGetAllergies
+    useGetPatient,
+    useGetQuestionnaire,
+    useGetQuestionnaires,
+    useGetResponse,
+    useGetUser
 };

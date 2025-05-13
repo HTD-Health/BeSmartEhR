@@ -1,19 +1,19 @@
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { Box, Button, CircularProgress, Container, Typography } from '@mui/material';
-import { IChangeEvent } from '@rjsf/core';
+import type { IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/mui';
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { toJSONSchema, toQuestionnaireResponse } from 'fhir-questionnaire-json-schema';
 import { Schema } from 'jsonschema';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { useFinishTask, useSubmitResponse } from '../../api/mutations';
 import { useGetQuestionnaire } from '../../api/queries';
 
-import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
-import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
+import CustomSnackbar from '@/components/custom_snackbar/custom_snackbar';
+import SmartAppBar from '@/components/smart_app_bar/smart_app_bar';
 
 const FormFill = (): JSX.Element => {
     const {
@@ -21,14 +21,14 @@ const FormFill = (): JSX.Element => {
         mutate: submitResponse,
         isSuccess: submitSuccess,
         error: submitError,
-        isLoading: submitIsLoading
+        isPending: submitIsPending
     } = useSubmitResponse();
 
     const {
         mutate: finishTask,
         isSuccess: finishTaskSuccess,
         error: finishTaskError,
-        isLoading: finishTaskIsLoading
+        isPending: finishTaskIsLPending
     } = useFinishTask();
 
     const { id } = useParams();
@@ -78,7 +78,7 @@ const FormFill = (): JSX.Element => {
     }, [submitError, finishTaskError]);
 
     const renderContent = (): JSX.Element => {
-        if (isLoading || submitIsLoading || finishTaskIsLoading) {
+        if (isLoading || submitIsPending || finishTaskIsLPending) {
             return <CircularProgress sx={{ m: '2rem' }} />;
         }
 
@@ -94,37 +94,34 @@ const FormFill = (): JSX.Element => {
         }
 
         return (
-            <>
-                <Container maxWidth="md" sx={{ marginTop: '25px' }}>
-                    {rawSchema && (
-                        <Form
-                            validator={validator}
-                            schema={rawSchema as RJSFSchema}
-                            uiSchema={generatedSchema}
-                            onSubmit={handleSubmit}
-                            formData={formData}
-                            onChange={(form: IChangeEvent) => setFormData(form.formData)}
-                        >
-                            <Box display="flex" gap="1rem" justifyContent="center">
-                                <Button
-                                    variant="outlined"
-                                    color="error"
-                                    onClick={() => {
-                                        if (window.confirm('If you cancel, your progress will not be saved.'))
-                                            navigate(-1);
-                                    }}
-                                    sx={{ my: '0.5rem' }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button type="submit" variant="contained" sx={{ my: '0.5rem' }}>
-                                    Submit
-                                </Button>
-                            </Box>
-                        </Form>
-                    )}
-                </Container>
-            </>
+            <Container maxWidth="md" sx={{ marginTop: '25px' }}>
+                {rawSchema && (
+                    <Form
+                        validator={validator}
+                        schema={rawSchema as RJSFSchema}
+                        uiSchema={generatedSchema}
+                        onSubmit={handleSubmit}
+                        formData={formData}
+                        onChange={(form: IChangeEvent) => setFormData(form.formData)}
+                    >
+                        <Box display="flex" gap="1rem" justifyContent="center">
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={() => {
+                                    if (window.confirm('If you cancel, your progress will not be saved.')) navigate(-1);
+                                }}
+                                sx={{ my: '0.5rem' }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button type="submit" variant="contained" sx={{ my: '0.5rem' }}>
+                                Submit
+                            </Button>
+                        </Box>
+                    </Form>
+                )}
+            </Container>
         );
     };
 

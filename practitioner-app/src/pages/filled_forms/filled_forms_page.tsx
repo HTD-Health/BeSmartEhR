@@ -3,7 +3,8 @@ import type { Bundle, FhirResource, Task } from 'fhir/r4';
 
 import { getIdFromReference } from '../../utils/reference';
 
-import FilledFormItem from 'components/items/filled_form_item';
+import FilledFormItem from '@/components/items/filled_form_item';
+import { JSX } from 'react';
 
 type FilledFormsPageProps = {
     data: Bundle<FhirResource> | undefined;

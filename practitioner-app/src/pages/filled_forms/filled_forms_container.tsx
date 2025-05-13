@@ -1,12 +1,12 @@
-import { Grid, Pagination, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Grid2, Pagination, Typography } from '@mui/material';
+import { JSX, useEffect, useState } from 'react';
 
 import FilledFormsPage from './filled_forms_page';
 
-import { useGetFilledForms } from 'api/queries';
-import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
-import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import calculatePagesCount from 'utils/calculate_total';
+import { useGetFilledForms } from '@/api/queries';
+import CustomSnackbar from '@/components/custom_snackbar/custom_snackbar';
+import SmartAppBar from '@/components/smart_app_bar/smart_app_bar';
+import calculatePagesCount from '@/utils/calculate_total';
 
 const RESPONSES_PER_PAGE = 5;
 
@@ -48,11 +48,11 @@ const FilledFormsContainer = (): JSX.Element => {
             <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
                 Filled forms
             </Typography>
-            <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12}>
+            <Grid2 container spacing={2} justifyContent="center">
+                <Grid2 size={12}>
                     <FilledFormsPage data={data} isLoading={isLoading} />
-                </Grid>
-                <Grid item>
+                </Grid2>
+                <Grid2>
                     <Pagination
                         size="large"
                         color="primary"
@@ -60,8 +60,8 @@ const FilledFormsContainer = (): JSX.Element => {
                         page={page}
                         onChange={(_: React.ChangeEvent<unknown>, val: number) => setPage(val)}
                     />
-                </Grid>
-            </Grid>
+                </Grid2>
+            </Grid2>
         </>
     );
 };

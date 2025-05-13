@@ -1,11 +1,10 @@
 import { CircularProgress } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import FHIR from 'fhirclient';
-import React, { useCallback, useEffect, useState } from 'react';
+import { JSX, StrictMode, useCallback, useEffect, useState } from 'react';
 
+import App from '@/app';
 import ErrorPage from '../pages/error_page/error_page';
-
-import App from 'app';
 
 const EhrWrapper = (): JSX.Element => {
     const [loading, setLoading] = useState(true);
@@ -14,9 +13,9 @@ const EhrWrapper = (): JSX.Element => {
     const smartLaunch = useCallback(async (): Promise<void> => {
         try {
             await FHIR.oauth2.init({
-                clientId: process.env.REACT_APP_CLIENT_ID,
-                scope: process.env.REACT_APP_CLIENT_SCOPE,
-                redirectUri: process.env.REACT_APP_REDIRECT_URI
+                clientId: process.env.VITE_APP_CLIENT_ID,
+                scope: process.env.VITE_APP_CLIENT_SCOPE,
+                redirectUri: process.env.VITE_APP_REDIRECT_URI
             });
         } catch (e: any) {
             console.error('Error during SMART launch:', e);
@@ -45,10 +44,10 @@ const EhrWrapper = (): JSX.Element => {
     }, [error, loading]);
 
     return (
-        <React.StrictMode>
+        <StrictMode>
             <CssBaseline />
             {getContent()}
-        </React.StrictMode>
+        </StrictMode>
     );
 };
 

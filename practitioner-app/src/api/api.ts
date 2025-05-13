@@ -1,14 +1,22 @@
-import type { Bundle, BundleEntry, FhirResource, Patient, Practitioner, QuestionnaireResponse } from 'fhir/r4';
+import type {
+    AllergyIntolerance,
+    Bundle,
+    BundleEntry,
+    FhirResource,
+    Patient,
+    Practitioner,
+    Questionnaire,
+    QuestionnaireResponse
+} from 'fhir/r4';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
-
 import {
-    createAssignmentTask,
     FinishTaskParams,
     FormMeta,
     GetPaginatedRecordsParams,
     SubmitResponseParams,
-    TASK_QUESTIONNAIRE_TAG
+    TASK_QUESTIONNAIRE_TAG,
+    createAssignmentTask
 } from './models';
 
 let client: Client;
@@ -20,7 +28,7 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
     const requestInfo = typeof requestConfig === 'string' ? requestConfig : requestConfig.url;
 
     // Log to both console and terminal
-    console.log(`[${timestamp}] 🚀 API Request:`, requestInfo);
+    console.info(`[${timestamp}] 🚀 API Request:`, requestInfo);
 
     // Use window.fetch to send logs to a local endpoint
     if (process.env.NODE_ENV === 'development') {
@@ -50,7 +58,7 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
             data: response
         };
 
-        console.log(`[${timestamp}] ✅ API Response:`, responseLog);
+        console.info(`[${timestamp}] ✅ API Response:`, responseLog);
 
         if (process.env.NODE_ENV === 'development') {
             try {
@@ -122,7 +130,7 @@ const getUser = async (): Promise<Practitioner> => {
     return requestWithLogging(c, userUrl);
 };
 
-const getQuestionnaires = async (params: GetPaginatedRecordsParams): Promise<Bundle> => {
+const getQuestionnaires = async (params: GetPaginatedRecordsParams): Promise<Bundle<FhirResource>> => {
     const c = await getClient();
 
     const { bundleId, page, recordsPerPage } = params;
@@ -193,7 +201,10 @@ const finishTask = async ({ taskId, responseRef }: FinishTaskParams): Promise<st
     return `${createdResource.resourceType}/${createdResource.id}`;
 };
 
-const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, completed: boolean): Promise<Bundle> => {
+const getQuestionnaireTasks = async (
+    params: GetPaginatedRecordsParams,
+    completed: boolean
+): Promise<Bundle<FhirResource>> => {
     const c = await getClient();
 
     const { bundleId, page, recordsPerPage } = params;
@@ -228,7 +239,11 @@ const getQuestionnaireTasks = async (params: GetPaginatedRecordsParams, complete
     });
 };
 
-const performPaginateSearch = async (bundleId: string, pagesOffset: number, count: number): Promise<Bundle> => {
+const performPaginateSearch = async (
+    bundleId: string,
+    pagesOffset: number,
+    count: number
+): Promise<Bundle<FhirResource>> => {
     const c = await getClient();
 
     const params = [
@@ -249,7 +264,7 @@ const performPaginateSearch = async (bundleId: string, pagesOffset: number, coun
     });
 };
 
-const getQuestionnaire = async (id?: string): Promise<Bundle> => {
+const getQuestionnaire = async (id?: string): Promise<Questionnaire> => {
     const c = await getClient();
 
     if (!c.state.serverUrl) {
@@ -334,7 +349,7 @@ const getGoal = async (goalId: string): Promise<any> => {
                 Accept: 'application/json'
             }
         });
-        console.log(`Get Goal: ${JSON.stringify(response)}`);
+        console.info(`Get Goal: ${JSON.stringify(response)}`);
         return response;
     } catch (e) {
         console.error(`Error Retrieving Goal: ${e}`);
@@ -412,7 +427,7 @@ const addGoal = async (description: string): Promise<any> => {
     }
 };
 
-const getConditions = async (): Promise<Bundle> => {
+const getConditions = async (): Promise<Bundle<FhirResource>> => {
     const c = await getClient();
     if (!c.patient) throw new Error('Missing selected patient data');
     return requestWithLogging(c, {
@@ -425,7 +440,7 @@ const getConditions = async (): Promise<Bundle> => {
     });
 };
 
-const getMedications = async (): Promise<Bundle> => {
+const getMedications = async (): Promise<Bundle<FhirResource>> => {
     const c = await getClient();
     if (!c.patient) throw new Error('Missing selected patient data');
     return requestWithLogging(c, {
@@ -438,7 +453,7 @@ const getMedications = async (): Promise<Bundle> => {
     });
 };
 
-const getAllergies = async (): Promise<Bundle> => {
+const getAllergies = async (): Promise<Bundle<AllergyIntolerance>> => {
     const c = await getClient();
     if (!c.patient) throw new Error('Missing selected patient data');
     return requestWithLogging(c, {
@@ -462,8 +477,8 @@ export {
     getMedications,
     getPatient,
     getQuestionnaire,
-    getQuestionnaires,
     getQuestionnaireTasks,
+    getQuestionnaires,
     getResponse,
     getUser,
     submitResponse

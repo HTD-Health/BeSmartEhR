@@ -1,9 +1,14 @@
-const path = require('path');
-const fs = require('fs');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const cors = require('cors');
-const express = require('express');
-const morgan = require('morgan');
+import cors from 'cors';
+import express from 'express';
+import morgan from 'morgan';
+
+// __dirname workaround for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -11,7 +16,7 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(morgan('dev')); // HTTP request logging
+app.use(morgan('dev'));
 
 // Create logs directory if it doesn't exist
 const logsDir = path.join(__dirname, 'logs');
@@ -19,7 +24,7 @@ if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir);
 }
 
-// Endpoint to receive logs
+// POST endpoint for logging
 app.post('/api/log', (req, res) => {
     const { timestamp, type, data } = req.body;
     const logEntry = `[${timestamp}] ${type?.toUpperCase()}: ${JSON.stringify(data)}\n`;
@@ -29,7 +34,6 @@ app.post('/api/log', (req, res) => {
             console.error('Error writing to log file:', err);
             res.status(500).json({ error: 'Failed to write log' });
         } else {
-            // Also print to terminal
             process.stdout.write(logEntry);
             res.status(200).json({ success: true });
         }
@@ -38,12 +42,13 @@ app.post('/api/log', (req, res) => {
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'build')));
+    const buildPath = path.join(__dirname, 'build');
+    app.use(express.static(buildPath));
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+        res.sendFile(path.join(buildPath, 'index.html'));
     });
 }
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.info(`Server is running on port ${PORT}`);
 });

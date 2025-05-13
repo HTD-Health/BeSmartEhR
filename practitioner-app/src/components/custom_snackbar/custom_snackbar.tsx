@@ -1,8 +1,8 @@
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import React from 'react';
+import { forwardRef, JSX } from 'react';
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
+const Alert = forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
     <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
 Alert.displayName = 'Alert';
