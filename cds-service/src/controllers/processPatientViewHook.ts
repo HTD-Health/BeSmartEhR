@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import type { Patient } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
-import { generatePatientAssessment } from '../services/clinical-service';
+import { generatePatientAssessment } from '../services/assessment-service';
 import { CdsHooksEvent } from '../types';
 
 export const processPatientViewHook = async (
