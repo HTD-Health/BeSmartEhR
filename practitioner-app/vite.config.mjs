@@ -19,9 +19,11 @@ export default defineConfig({
     },
     server: {
         port: 3010,
-        https: {
-            key: fs.readFileSync(path.resolve(__dirname, './localhost-key.pem')),
-            cert: fs.readFileSync(path.resolve(__dirname, './localhost.pem'))
-        }
+        ...(import.meta.env.NODE_ENV === 'development' && {
+            https: {
+                key: fs.readFileSync(path.resolve(__dirname, './localhost-key.pem')),
+                cert: fs.readFileSync(path.resolve(__dirname, './localhost.pem'))
+            }
+        })
     }
 });
