@@ -2,7 +2,6 @@
     "name": "practitioner-app",
     "version": "1.0.0",
     "private": true,
-    "type": "module",
     "scripts": {
         "start": "concurrently \"PORT=3010 vite\" \"node server.js\"",
         "dev": "vite",
@@ -11,7 +10,8 @@
         "test": "vitest",
         "server": "node server.js",
         "lint": "eslint .",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "heroku-start": "serve -s dist"
     },
     "engines": {
         "node": "22.x"
@@ -72,6 +72,7 @@
         "morgan": "^1.10.0",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
-        "react-router-dom": "^7.5.3"
+        "react-router-dom": "^7.5.3",
+        "serve": "^14.2.4"
     }
 }

@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react';
+import fs from 'fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -18,6 +19,9 @@ export default defineConfig({
     },
     server: {
         port: 3010,
-        strictPort: true // this will fail if port is already in use instead of trying another port
+        https: {
+            key: fs.readFileSync(path.resolve(__dirname, './localhost-key.pem')),
+            cert: fs.readFileSync(path.resolve(__dirname, './localhost.pem'))
+        }
     }
 });

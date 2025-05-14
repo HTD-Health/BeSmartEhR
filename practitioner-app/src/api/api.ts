@@ -20,7 +20,7 @@ import {
 } from './models';
 
 let client: Client;
-const LOG_SERVER_ENDPOINT = `${process.env.LOG_SERVER || 'http://localhost:3001'}/api/log`;
+const LOG_SERVER_ENDPOINT = `${import.meta.env.VITE_LOG_SERVER || 'http://localhost:3001'}/api/log`;
 
 // Wrapper for client.request that adds logging
 const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> => {
