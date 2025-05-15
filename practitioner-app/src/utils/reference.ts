@@ -10,5 +10,4 @@ const getIdFromReference = (reference?: Reference): string | undefined => {
     return reference?.id;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export { getIdFromReference };

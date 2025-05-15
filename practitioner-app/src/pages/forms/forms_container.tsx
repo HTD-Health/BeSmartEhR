@@ -1,17 +1,16 @@
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Grid, Pagination, Typography } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+import { Box, Button, Grid2, Pagination, Typography } from '@mui/material';
+import { JSX, useEffect, useMemo, useState } from 'react';
 
 import FormsPage from './forms_page';
 
-import { FormMeta } from 'api/models';
-import { useAssignForms } from 'api/mutations';
-import { useGetQuestionnaires } from 'api/queries';
-import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
-import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
-import { FormsContext } from 'hooks/useFormsData';
-import calculatePagesCount from 'utils/calculate_total';
+import { FormMeta } from '@/api/models';
+import { useAssignForms } from '@/api/mutations';
+import { useGetQuestionnaires } from '@/api/queries';
+import CustomSnackbar from '@/components/custom_snackbar/custom_snackbar';
+import SmartAppBar from '@/components/smart_app_bar/smart_app_bar';
+import { FormsContext } from '@/hooks/useFormsData';
+import calculatePagesCount from '@/utils/calculate_total';
 
 const QUESTIONNAIRES_PER_PAGE = 5;
 
@@ -36,7 +35,7 @@ const FormsContainer = (): JSX.Element => {
     const {
         mutate: assign,
         error: mutationError,
-        isLoading: isMutationLoading,
+        isPending: isMutationPending,
         isSuccess: isMutationSuccess
     } = useAssignForms();
     const [successSnackbar, setSuccessSnackbar] = useState(false);
@@ -73,8 +72,13 @@ const FormsContainer = (): JSX.Element => {
     );
 
     const renderMultipleAssignBar = (): JSX.Element => (
-        <Grid container spacing={2} px=".5rem">
-            <Grid item xs={12} sm={6}>
+        <Grid2 container spacing={2} px=".5rem">
+            <Grid2
+                size={{
+                    xs: 12,
+                    sm: 6
+                }}
+            >
                 <Box sx={{ display: 'flex' }}>
                     <Typography variant="h6" color="inherit" noWrap>
                         Marked to assign: {formsToAssign.length}
@@ -83,19 +87,20 @@ const FormsContainer = (): JSX.Element => {
                         <DisabledByDefaultIcon color="action" />
                     </Button>
                 </Box>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid2>
+            <Grid2
+                size={{
+                    xs: 12,
+                    sm: 6
+                }}
+            >
                 <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                    <LoadingButton
-                        variant="contained"
-                        loading={isMutationLoading}
-                        onClick={() => assign(formsToAssign)}
-                    >
+                    <Button variant="contained" loading={isMutationPending} onClick={() => assign(formsToAssign)}>
                         Assign multiple
-                    </LoadingButton>
+                    </Button>
                 </Box>
-            </Grid>
-        </Grid>
+            </Grid2>
+        </Grid2>
     );
 
     const renderPage = (): JSX.Element => (
@@ -123,14 +128,10 @@ const FormsContainer = (): JSX.Element => {
             <Typography sx={{ ml: '.5rem', my: '1.5rem' }} variant="h4" color="inherit" noWrap>
                 Questionnaires
             </Typography>
-
             {formsToAssign.length > 0 && renderMultipleAssignBar()}
-
-            <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12}>
-                    {renderPage()}
-                </Grid>
-                <Grid item>
+            <Grid2 container spacing={2} justifyContent="center">
+                <Grid2 size={12}>{renderPage()}</Grid2>
+                <Grid2>
                     <Pagination
                         size="large"
                         color="primary"
@@ -138,8 +139,8 @@ const FormsContainer = (): JSX.Element => {
                         page={page}
                         onChange={(_: React.ChangeEvent<unknown>, val: number) => setPage(val)}
                     />
-                </Grid>
-            </Grid>
+                </Grid2>
+            </Grid2>
         </>
     );
 };

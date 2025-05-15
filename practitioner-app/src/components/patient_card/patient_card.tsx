@@ -1,6 +1,7 @@
-import { Box, Card, Typography, Skeleton } from '@mui/material';
-import type { Patient } from 'fhir/r4';
 import PersonIcon from '@mui/icons-material/Person';
+import { Box, Card, Skeleton, Typography } from '@mui/material';
+import type { Patient } from 'fhir/r4';
+import { JSX } from 'react';
 
 type PatientCardProps = {
     patient: Patient | undefined;
@@ -37,18 +38,18 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
         id: { label: 'ID', value: patient?.id },
         gender: { label: 'Gender', value: patient?.gender },
         birthDate: { label: 'Birth Date', value: patient?.birthDate },
-        address: { 
-            label: 'Address', 
-            value: patient?.address?.[0]?.line?.join(', ') 
+        address: {
+            label: 'Address',
+            value: patient?.address?.[0]?.line?.join(', ')
         },
-        phone: { 
-            label: 'Phone', 
-            value: patient?.telecom?.find(t => t.system === 'phone')?.value 
+        phone: {
+            label: 'Phone',
+            value: patient?.telecom?.find((t) => t.system === 'phone')?.value
         },
-        email: { 
-            label: 'Email', 
-            value: patient?.telecom?.find(t => t.system === 'email')?.value 
-        },
+        email: {
+            label: 'Email',
+            value: patient?.telecom?.find((t) => t.system === 'email')?.value
+        }
     });
 
     const renderPatientData = (): JSX.Element[] => {
@@ -57,20 +58,20 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
         return Object.keys(data).map((key: string) => {
             const el = data[key as keyof PatientDisplayData];
             return (
-                <Box 
+                <Box
                     key={key}
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
                         mb: '0.75rem',
                         '&:last-child': {
-                            mb: 0,
+                            mb: 0
                         }
                     }}
                 >
-                    <Typography 
-                        component="span" 
-                        sx={{ 
+                    <Typography
+                        component="span"
+                        sx={{
                             fontWeight: 600,
                             color: 'text.secondary',
                             minWidth: '100px',
@@ -79,7 +80,7 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
                     >
                         {el?.label}
                     </Typography>
-                    <Typography 
+                    <Typography
                         component="span"
                         sx={{
                             color: 'text.primary',
@@ -111,13 +112,13 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
             <Box sx={{ p: '1.5rem' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: '1.5rem' }}>
                     <PersonIcon sx={{ mr: '0.75rem', color: 'primary.main', fontSize: '2rem' }} />
-                    <Typography 
-                        variant="h5" 
-                        color="text.primary" 
+                    <Typography
+                        variant="h5"
+                        color="text.primary"
                         noWrap
                         sx={{
                             fontWeight: 600,
-                            letterSpacing: '-0.02em',
+                            letterSpacing: '-0.02em'
                         }}
                     >
                         {getPatientName()}
@@ -129,14 +130,14 @@ const PatientCard = (props: PatientCardProps): JSX.Element => {
     };
 
     return (
-        <Card 
-            sx={{ 
+        <Card
+            sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                    transform: 'translateY(-2px)',
+                    transform: 'translateY(-2px)'
                 }
             }}
         >

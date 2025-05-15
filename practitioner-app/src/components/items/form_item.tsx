@@ -1,12 +1,11 @@
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Checkbox, Typography, Tooltip } from '@mui/material';
-import type { Questionnaire } from 'fhir/r4';
-import { useContext, useEffect, useState } from 'react';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { Box, Button, Card, Checkbox, Tooltip, Typography } from '@mui/material';
+import type { Questionnaire } from 'fhir/r4';
+import { JSX, useContext, useEffect, useState } from 'react';
 
-import { useAssignForms } from 'api/mutations';
-import CustomSnackbar from 'components/custom_snackbar/custom_snackbar';
-import { FormsContext } from 'hooks/useFormsData';
+import { useAssignForms } from '@/api/mutations';
+import CustomSnackbar from '@/components/custom_snackbar/custom_snackbar';
+import { FormsContext } from '@/hooks/useFormsData';
 
 type FormItemProps = {
     questionnaire: Questionnaire;
@@ -45,17 +44,20 @@ const FormItem = (props: FormItemProps): JSX.Element => {
 
     const handleChange = (): void => {
         if (!questionnaire.id) return;
-        
+
         if (isCheckedToAssign()) {
             setFormsToAssign(formsToAssign.filter((form) => form.id !== questionnaire.id));
         } else {
-            setFormsToAssign([...formsToAssign, { id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }]);
+            setFormsToAssign([
+                ...formsToAssign,
+                { id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }
+            ]);
         }
     };
 
     const handleAssign = async (): Promise<void> => {
         if (!questionnaire.id) return;
-        
+
         setIsLoading(true);
         try {
             await assign([{ id: questionnaire.id, name: questionnaire.title ?? 'Form name not provided' }]);
@@ -79,7 +81,7 @@ const FormItem = (props: FormItemProps): JSX.Element => {
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)'
                 }
             }}
         >
@@ -98,42 +100,42 @@ const FormItem = (props: FormItemProps): JSX.Element => {
             />
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <AssignmentIcon sx={{ color: 'primary.main' }} />
-                <Typography 
-                    variant="h6" 
+                <Typography
+                    variant="h6"
                     color="text.primary"
                     sx={{
                         fontWeight: 500,
-                        letterSpacing: '-0.01em',
+                        letterSpacing: '-0.01em'
                     }}
                 >
                     {questionnaire?.title || 'Form name not provided'}
                 </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <Tooltip title={isCheckedToAssign() ? "Remove from batch" : "Add to batch"}>
-                    <Checkbox 
-                        checked={isCheckedToAssign()} 
+                <Tooltip title={isCheckedToAssign() ? 'Remove from batch' : 'Add to batch'}>
+                    <Checkbox
+                        checked={isCheckedToAssign()}
                         onChange={handleChange}
                         sx={{
                             color: 'primary.main',
                             '&.Mui-checked': {
-                                color: 'primary.main',
-                            },
+                                color: 'primary.main'
+                            }
                         }}
                     />
                 </Tooltip>
-                <LoadingButton 
-                    loading={isLoading} 
-                    variant="contained" 
+                <Button
+                    loading={isLoading}
+                    variant="contained"
                     onClick={handleAssign}
                     startIcon={<AssignmentIcon />}
                     sx={{
                         textTransform: 'none',
-                        fontWeight: 500,
+                        fontWeight: 500
                     }}
                 >
                     Assign
-                </LoadingButton>
+                </Button>
             </Box>
         </Card>
     );

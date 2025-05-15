@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# Practitioner App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A SMART on FHIR application that enables healthcare practitioners to manage and view patient questionnaires and form responses.
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+The Practitioner App is a React-based web application that integrates with Electronic Health Record (EHR) systems through the SMART on FHIR standard. It allows practitioners to:
 
-### `npm start`
+- View patient information
+- Assign questionnaires to patients
+- Review completed questionnaires
+- Track patient goals and conditions
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **SMART on FHIR Integration**: Launch directly from an EHR system or standalone
+- **Patient Context**: Automatic loading of patient information
+- **Form Management**: Assign, view, and track forms for patients
+- **Responsive UI**: Material UI based interface for desktop and mobile use
 
-### `npm test`
+## Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v16+)
+- npm or yarn
+- Access to a FHIR server for development and testing
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Clone the repository
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/yourusername/BeSmartEhR.git
+cd BeSmartEhR/practitioner-app
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Create `.pem` files (access through secure https)
 
-### `npm run eject`
+Install mkcert (requires Homebrew)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+brew install mkcert
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Install local CA
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+mkcert -install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Generate certificate for localhost
 
-## Learn More
+```bash
+mkcert localhost
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Create environment variables
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Create a `.env` file based on `.env.example`
 
-### Code Splitting
+| Variable Name           | Description                                                         |
+| ----------------------- | ------------------------------------------------------------------- |
+| `VITE_APP_CLIENT_ID`    | Client ID from fhir.epic.com                                        |
+| `VITE_APP_CLIENT_SCOPE` | Space-separated scopes for OAuth access                             |
+| `VITE_APP_REDIRECT_URI` | URI to redirect after successful authentication (your frontend URL) |
+| `VITE_LOG_SERVER`       | URL of the logging server used by the app                           |
+| `SSL_CRT_FILE`          | Path to your local SSL certificate file                             |
+| `SSL_KEY_FILE`          | Path to your local SSL key file                                     |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Development
 
-### Analyzing the Bundle Size
+Start the development server:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm start
+```
 
-### Making a Progressive Web App
+This will run the app in development mode. Open http://localhost:3010 to view it in your browser.
+This will also run the logging server. It will be open on http://localhost:3011.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Project Structure
 
-### Advanced Configuration
+```
+practitioner-app/
+├── public/                 # Static assets
+├── src/
+│   ├── api/                # FHIR client and API interactions
+│   ├── components/         # Reusable UI components
+│   ├── launch_wrappers/    # SMART launch context handlers
+│   ├── pages/              # Application views and pages
+│   └── index.ts            # Application entry point
+│   ├── routes.ts           # API routes
+└── .gitignore              # Ignored files and directories
+├── server.js               # Logging server (receive & save)
+├── package.json            # Project metadata and scripts
+├── tsconfig.json           # TypeScript configuration
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Dependencies
 
-### Deployment
+- React - UI framework
+- Material UI - Component library
+- fhirclient - SMART on FHIR client library
+- fhir-questionnaire-json-schema - Converts FHIR questionnaires to JSON schema
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[Your license information here]

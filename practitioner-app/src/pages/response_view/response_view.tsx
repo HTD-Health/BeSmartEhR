@@ -10,9 +10,9 @@ import { useParams } from 'react-router-dom';
 import { useGetQuestionnaire, useGetResponse } from '../../api/queries';
 import CustomSnackbar from '../../components/custom_snackbar/custom_snackbar';
 
-import SmartAppBar from 'components/smart_app_bar/smart_app_bar';
+import SmartAppBar from '@/components/smart_app_bar/smart_app_bar';
 
-const ResponseView = (): JSX.Element => {
+const ResponseView = () => {
     const { responseId } = useParams();
 
     const [rawSchema, setRawSchema] = useState<Schema>();
@@ -52,28 +52,26 @@ const ResponseView = (): JSX.Element => {
         }
     }, [error, formError]);
 
-    const renderContent = (): JSX.Element => {
+    const renderContent = () => {
         if (isLoading || formIsLoading) {
             return <CircularProgress sx={{ m: '2rem' }} />;
         }
 
         return (
-            <>
-                <Container maxWidth="md" sx={{ marginTop: '25px' }}>
-                    {rawSchema && (
-                        <Form
-                            validator={validator}
-                            schema={rawSchema as RJSFSchema}
-                            uiSchema={generatedSchema}
-                            formData={formData}
-                            readonly
-                        >
-                            {/* To hide the submit button */}
-                            <></>
-                        </Form>
-                    )}
-                </Container>
-            </>
+            <Container maxWidth="md" sx={{ marginTop: '25px' }}>
+                {rawSchema && (
+                    <Form
+                        validator={validator}
+                        schema={rawSchema as RJSFSchema}
+                        uiSchema={generatedSchema}
+                        formData={formData}
+                        readonly
+                    >
+                        {/* To hide the submit button */}
+                        {}
+                    </Form>
+                )}
+            </Container>
         );
     };
 

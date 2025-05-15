@@ -3,6 +3,8 @@
     "source.addMissingImports": "explicit"
   },
   "editor.formatOnSave": true,
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "javascript.preferences.importModuleSpecifier": "shortest",
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

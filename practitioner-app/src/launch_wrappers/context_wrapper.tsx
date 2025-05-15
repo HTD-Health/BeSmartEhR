@@ -1,11 +1,11 @@
 import { CircularProgress } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import FHIR from 'fhirclient';
-import { StrictMode, useCallback, useEffect, useState } from 'react';
+import { JSX, StrictMode, useCallback, useEffect, useState } from 'react';
 
 import ErrorPage from '../pages/error_page/error_page';
 
-import App from 'app';
+import App from '@/app';
 
 declare global {
     interface Window {
