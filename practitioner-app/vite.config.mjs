@@ -1,7 +1,10 @@
 import react from '@vitejs/plugin-react';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'node:path';
 import { defineConfig } from 'vite';
+
+dotenv.config();
 
 export default defineConfig({
     plugins: [react()],
@@ -18,8 +21,8 @@ export default defineConfig({
         port: 3010,
         ...(process.env.NODE_ENV === 'development' && {
             https: {
-                key: fs.readFileSync(path.resolve(__dirname, './localhost-key.pem')),
-                cert: fs.readFileSync(path.resolve(__dirname, './localhost.pem'))
+                key: fs.readFileSync(path.resolve(__dirname, process.env.SSL_KEY_FILE)),
+                cert: fs.readFileSync(path.resolve(__dirname, process.env.SSL_CRT_FILE))
             }
         })
     }

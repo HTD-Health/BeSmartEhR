@@ -62,10 +62,9 @@ Create a `.env` file based on `.env.example`
 | `VITE_APP_CLIENT_ID`    | Client ID from fhir.epic.com                                        |
 | `VITE_APP_CLIENT_SCOPE` | Space-separated scopes for OAuth access                             |
 | `VITE_APP_REDIRECT_URI` | URI to redirect after successful authentication (your frontend URL) |
-| `VITE_HTTPS`            | Enables HTTPS for Vite dev server if set to `true`                  |
-| `VITE_SSL_CRT_FILE`     | Path to your local SSL certificate file                             |
-| `VITE_SSL_KEY_FILE`     | Path to your local SSL key file                                     |
 | `VITE_LOG_SERVER`       | URL of the logging server used by the app                           |
+| `SSL_CRT_FILE`          | Path to your local SSL certificate file                             |
+| `SSL_KEY_FILE`          | Path to your local SSL key file                                     |
 
 ## Development
 
