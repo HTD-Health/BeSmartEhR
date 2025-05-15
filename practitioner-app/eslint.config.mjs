@@ -14,7 +14,7 @@ export default tseslint.config({
             version: 'detect'
         }
     },
-    ignores: ['.react-router/**', './server.js'],
+    ignores: ['.react-router/**', '*.js', '*.mjs'],
     plugins: {
         '@typescript-eslint': typescriptEslint,
         react,

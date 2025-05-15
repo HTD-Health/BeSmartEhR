@@ -10,17 +10,13 @@ const EhrWrapper = (): JSX.Element => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>();
 
-    console.log('EHR Wrapper: Initializing SMART on FHIR');
-
     const smartLaunch = useCallback(async (): Promise<void> => {
         try {
-            console.log('Initializing SMART on FHIR');
             await FHIR.oauth2.init({
                 clientId: import.meta.env.VITE_APP_CLIENT_ID,
                 scope: import.meta.env.VITE_APP_CLIENT_SCOPE,
                 redirectUri: import.meta.env.VITE_APP_REDIRECT_URI
             });
-            console.log('SMART on FHIR initialized');
         } catch (e: any) {
             console.error('Error during SMART launch:', e);
             if (e instanceof Error) {
