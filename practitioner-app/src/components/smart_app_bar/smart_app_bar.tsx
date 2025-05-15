@@ -23,9 +23,9 @@ const SmartAppBar = (): JSX.Element => {
         }
     }, [error]);
 
-    const getUserName = (user: Practitioner): string => {
-        if (!user.name || user.name.length === 0) {
-            return '';
+    const getUserName = (user?: Practitioner): string => {
+        if (!user?.name || user.name.length === 0) {
+            return 'Unknown User';
         }
         const name = user.name[0];
         if (name && name.given && name.family) {
@@ -38,9 +38,6 @@ const SmartAppBar = (): JSX.Element => {
     };
 
     const renderUserData = (): JSX.Element => {
-        if (!data) {
-            return <Box />;
-        }
         return (
             <Box
                 sx={{
@@ -81,13 +78,12 @@ const SmartAppBar = (): JSX.Element => {
                     alignItems: 'center',
                     py: '0.75rem',
                     px: 0,
-                    maxWidth: '1400px',
-                    margin: '0 auto',
+                    paddingX: 4,
                     width: '100%',
                     position: 'relative'
                 }}
             >
-                <Box sx={{ display: 'flex', alignItems: 'center', pl: '2rem' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {!location.pathname.includes('/patient-profile') && (
                         <Tooltip title="Go back">
                             <IconButton
@@ -130,7 +126,7 @@ const SmartAppBar = (): JSX.Element => {
                         />
                     </Box>
                 </Box>
-                <Box sx={{ pr: '2rem' }}>{renderUserData()}</Box>
+                <Box>{renderUserData()}</Box>
             </Box>
             <CustomSnackbar
                 open={errorSnackbar}
