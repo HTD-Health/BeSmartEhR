@@ -6,42 +6,66 @@ A SMART on FHIR application that enables healthcare practitioners to manage and 
 
 The Practitioner App is a React-based web application that integrates with Electronic Health Record (EHR) systems through the SMART on FHIR standard. It allows practitioners to:
 
--   View patient information
--   Assign questionnaires to patients
--   Review completed questionnaires
--   Track patient goals and conditions
+- View patient information
+- Assign questionnaires to patients
+- Review completed questionnaires
+- Track patient goals and conditions
 
 ### Features
 
--   **SMART on FHIR Integration**: Launch directly from an EHR system or standalone
--   **Patient Context**: Automatic loading of patient information
--   **Form Management**: Assign, view, and track forms for patients
--   **Responsive UI**: Material UI based interface for desktop and mobile use
+- **SMART on FHIR Integration**: Launch directly from an EHR system or standalone
+- **Patient Context**: Automatic loading of patient information
+- **Form Management**: Assign, view, and track forms for patients
+- **Responsive UI**: Material UI based interface for desktop and mobile use
 
 ## Prerequisites
 
--   Node.js (v16+)
--   npm or yarn
--   Access to a FHIR server for development and testing
+- Node.js (v16+)
+- npm or yarn
+- Access to a FHIR server for development and testing
 
 ## Installation
 
-Clone the repository:
+### Clone the repository
 
 ```bash
 git clone https://github.com/yourusername/BeSmartEhR.git
 cd BeSmartEhR/practitioner-app
 ```
 
-Create a `.env` file based on `.env.example`:
+### Create `.pem` files (access through secure https)
 
-```
-# .env
+Install mkcert (requires Homebrew)
 
-VITE_APP_CLIENT_ID=your_client_id
-VITE_APP_CLIENT_SCOPE=patient/*.read launch/patient
-VITE_APP_REDIRECT_URI=http://localhost:3010/
+```bash
+brew install mkcert
 ```
+
+Install local CA
+
+```bash
+mkcert -install
+```
+
+Generate certificate for localhost
+
+```bash
+mkcert localhost
+```
+
+### Create environment variables
+
+Create a `.env` file based on `.env.example`
+
+| Variable Name           | Description                                                         |
+| ----------------------- | ------------------------------------------------------------------- |
+| `VITE_APP_CLIENT_ID`    | Client ID from fhir.epic.com                                        |
+| `VITE_APP_CLIENT_SCOPE` | Space-separated scopes for OAuth access                             |
+| `VITE_APP_REDIRECT_URI` | URI to redirect after successful authentication (your frontend URL) |
+| `VITE_HTTPS`            | Enables HTTPS for Vite dev server if set to `true`                  |
+| `VITE_SSL_CRT_FILE`     | Path to your local SSL certificate file                             |
+| `VITE_SSL_KEY_FILE`     | Path to your local SSL key file                                     |
+| `VITE_LOG_SERVER`       | URL of the logging server used by the app                           |
 
 ## Development
 
@@ -74,10 +98,10 @@ practitioner-app/
 
 ## Dependencies
 
--   React - UI framework
--   Material UI - Component library
--   fhirclient - SMART on FHIR client library
--   fhir-questionnaire-json-schema - Converts FHIR questionnaires to JSON schema
+- React - UI framework
+- Material UI - Component library
+- fhirclient - SMART on FHIR client library
+- fhir-questionnaire-json-schema - Converts FHIR questionnaires to JSON schema
 
 ## License
 
