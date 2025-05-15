@@ -2,8 +2,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log('Environment Variables:', process.env);
-
 export default {
   port: process.env.PORT || 3011,
   serviceName: `HTD Health CDS Service${process.env.NODE_ENV === 'development' ? ' (DEV)' : ''}`,
