@@ -48,16 +48,21 @@ class SubspaceService {
     /**
      * Initialize Subspace connection
      */
-    public async initialize(hubUrl: string, hubTopic: string): Promise<SubspaceConfig> {
+    public async initialize({
+        hubUrl,
+        hubTopic,
+        accessToken
+    }: {
+        hubUrl: string;
+        hubTopic: string;
+        accessToken: string;
+    }): Promise<SubspaceConfig> {
         if (this.isInitialized) {
             throw new Error('Subspace already initialized');
         }
 
         try {
-            console.log('Initializing Subspace with:', { hubUrl, hubTopic });
-
-            // Step 1: Get access token
-            const accessToken = await this.getAccessToken(hubUrl);
+            console.log('Initializing Subspace with:', { hubUrl, hubTopic, accessToken });
 
             // Step 2: Subscribe to events
             const wsEndpoint = await this.subscribe(hubUrl, hubTopic, accessToken);
@@ -187,92 +192,92 @@ class SubspaceService {
 
     // Private methods
 
-    private async getAccessToken(hubUrl: string): Promise<string> {
-        try {
-            const clientAssertion = await this.createClientAssertion(hubUrl);
+    // private async getAccessToken(hubUrl: string): Promise<string> {
+    //     try {
+    //         const clientAssertion = await this.createClientAssertion(hubUrl);
 
-            const response = await fetch(`${hubUrl}/token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    grant_type: 'client_credentials',
-                    client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-                    client_assertion: clientAssertion
-                })
-            });
+    //         const response = await fetch(`${hubUrl}/token`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded'
+    //             },
+    //             body: new URLSearchParams({
+    //                 grant_type: 'client_credentials',
+    //                 client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+    //                 client_assertion: clientAssertion
+    //             })
+    //         });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(
-                    `Token request failed: ${response.status} - ${errorData.error_description || response.statusText}`
-                );
-            }
+    //         if (!response.ok) {
+    //             const errorData = await response.json().catch(() => ({}));
+    //             throw new Error(
+    //                 `Token request failed: ${response.status} - ${errorData.error_description || response.statusText}`
+    //             );
+    //         }
 
-            const tokenData = await response.json();
-            console.log('Access token obtained, scope:', tokenData.scope);
+    //         const tokenData = await response.json();
+    //         console.log('Access token obtained, scope:', tokenData.scope);
 
-            return tokenData.access_token;
-        } catch (error) {
-            console.error('Failed to get access token:', error);
-            throw error;
-        }
-    }
+    //         return tokenData.access_token;
+    //     } catch (error) {
+    //         console.error('Failed to get access token:', error);
+    //         throw error;
+    //     }
+    // }
 
-    private async createClientAssertion(hubUrl: string): Promise<string> {
-        // Get configuration endpoint to determine audience
-        let audience = hubUrl;
+    // private async createClientAssertion(hubUrl: string): Promise<string> {
+    //     // Get configuration endpoint to determine audience
+    //     let audience = hubUrl;
 
-        try {
-            const configResponse = await fetch(`${hubUrl}/subspace-configuration`, {
-                headers: {
-                    'Epic-Client-ID': import.meta.env.VITE_APP_CLIENT_ID
-                }
-            });
+    //     try {
+    //         const configResponse = await fetch(`${hubUrl}/subspace-configuration`, {
+    //             headers: {
+    //                 'Epic-Client-ID': import.meta.env.VITE_APP_CLIENT_ID
+    //             }
+    //         });
 
-            if (configResponse.ok) {
-                const configData = await configResponse.json();
-                audience = configData.audience || hubUrl;
-                console.log('Using audience from config:', audience);
-            }
-        } catch (error) {
-            console.warn('Could not get subspace configuration, using hubUrl as audience');
-        }
+    //         if (configResponse.ok) {
+    //             const configData = await configResponse.json();
+    //             audience = configData.audience || hubUrl;
+    //             console.log('Using audience from config:', audience);
+    //         }
+    //     } catch (error) {
+    //         console.warn('Could not get subspace configuration, using hubUrl as audience');
+    //     }
 
-        const header = {
-            alg: 'RS384',
-            typ: 'JWT'
-        };
+    //     const header = {
+    //         alg: 'RS384',
+    //         typ: 'JWT'
+    //     };
 
-        const payload = {
-            iss: import.meta.env.VITE_APP_CLIENT_ID,
-            sub: import.meta.env.VITE_APP_CLIENT_ID,
-            aud: audience,
-            exp: Math.floor(Date.now() / 1000) + 300, // 5 minutes
-            jti: this.generateId()
-        };
+    //     const payload = {
+    //         iss: import.meta.env.VITE_APP_CLIENT_ID,
+    //         sub: import.meta.env.VITE_APP_CLIENT_ID,
+    //         aud: audience,
+    //         exp: Math.floor(Date.now() / 1000) + 300, // 5 minutes
+    //         jti: this.generateId()
+    //     };
 
-        // TODO: Implement actual JWT signing with RS384
-        // You'll need to use a library like 'jose' or implement signing
-        // For now, this throws an error to remind you to implement it
+    //     // TODO: Implement actual JWT signing with RS384
+    //     // You'll need to use a library like 'jose' or implement signing
+    //     // For now, this throws an error to remind you to implement it
 
-        const privateKey = import.meta.env.VITE_SUBSPACE_PRIVATE_KEY;
-        if (!privateKey) {
-            throw new Error('VITE_SUBSPACE_PRIVATE_KEY environment variable not set');
-        }
+    //     // const privateKey = import.meta.env.VITE_SUBSPACE_PRIVATE_KEY;
+    //     // if (!privateKey) {
+    //     //     throw new Error('VITE_SUBSPACE_PRIVATE_KEY environment variable not set');
+    //     // }
 
-        // Placeholder for JWT signing - replace with actual implementation
-        throw new Error('JWT signing not implemented. You need to implement RS384 signing with your private key.');
+    //     // Placeholder for JWT signing - replace with actual implementation
+    //     // throw new Error('JWT signing not implemented. You need to implement RS384 signing with your private key.');
 
-        // Example of what you'd do with 'jose' library:
-        // import { SignJWT } from 'jose';
-        // const privateKeyObject = await importPKCS8(privateKey, 'RS384');
-        // return await new SignJWT(payload)
-        //     .setProtectedHeader(header)
-        //     .setIssuedAt()
-        //     .sign(privateKeyObject);
-    }
+    //     // Example of what you'd do with 'jose' library:
+    //     // import { SignJWT } from 'jose';
+    //     // const privateKeyObject = await importPKCS8(privateKey, 'RS384');
+    //     // return await new SignJWT(payload)
+    //     //     .setProtectedHeader(header)
+    //     //     .setIssuedAt()
+    //     //     .sign(privateKeyObject);
+    // }
 
     private async subscribe(hubUrl: string, hubTopic: string, accessToken: string): Promise<string> {
         const events = [
