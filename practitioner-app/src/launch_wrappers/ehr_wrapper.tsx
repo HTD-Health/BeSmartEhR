@@ -44,18 +44,31 @@ const EhrWrapper = (): JSX.Element => {
     }, [subspaceConfig]);
 
     const initializeSubspace = useCallback(
-        async ({ hubUrl, hubTopic }: { hubUrl?: string; hubTopic?: string }): Promise<void> => {
+        async ({
+            hubUrl,
+            hubTopic,
+            accessToken
+        }: {
+            hubUrl?: string;
+            hubTopic?: string;
+            accessToken?: string;
+        }): Promise<void> => {
             try {
                 if (!hubUrl || !hubTopic) {
                     console.log('No Subspace parameters found - app launched without Subspace support');
-                    return; // This is OK, not all launches include Subspace
+                    return;
+                }
+
+                if (!accessToken) {
+                    console.warn('No access token provided for Subspace');
+                    return;
                 }
 
                 console.log('Subspace parameters found, setting up handlers...');
                 subspaceService.setEventHandlers(setupSubspaceHandlers());
 
                 console.log('Initializing Subspace...');
-                const config = await subspaceService.initialize(hubUrl, hubTopic);
+                const config = await subspaceService.initialize({ hubUrl, hubTopic, accessToken });
                 setSubspaceConfig(config);
 
                 console.log('Subspace initialized successfully');
@@ -84,10 +97,12 @@ const EhrWrapper = (): JSX.Element => {
             console.log('SMART on FHIR initialized successfully');
             const hubUrl = decodeURIComponent(client.state?.tokenResponse?.hubUrl ?? '');
             const hubTopic = client.state?.tokenResponse?.hubTopic;
+            const accessToken = client.state?.tokenResponse?.access_token;
             // Try to initialize Subspace (optional)
             await initializeSubspace({
                 hubUrl,
-                hubTopic
+                hubTopic,
+                accessToken
             });
         } catch (e: any) {
             console.error('Error during SMART launch:', e);
