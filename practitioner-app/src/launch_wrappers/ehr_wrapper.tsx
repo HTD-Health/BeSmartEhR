@@ -43,47 +43,50 @@ const EhrWrapper = (): JSX.Element => {
         };
     }, [subspaceConfig]);
 
-    const initializeSubspace = useCallback(async (): Promise<void> => {
-        try {
-            // Extract Subspace parameters from launch
-            const { hubUrl, hubTopic } = subspaceService.extractLaunchParams();
+    const initializeSubspace = useCallback(
+        async ({ hubUrl, hubTopic }: { hubUrl?: string; hubTopic?: string }): Promise<void> => {
+            try {
+                if (!hubUrl || !hubTopic) {
+                    console.log('No Subspace parameters found - app launched without Subspace support');
+                    return; // This is OK, not all launches include Subspace
+                }
 
-            if (!hubUrl || !hubTopic) {
-                console.log('No Subspace parameters found - app launched without Subspace support');
-                return; // This is OK, not all launches include Subspace
+                console.log('Subspace parameters found, setting up handlers...');
+                subspaceService.setEventHandlers(setupSubspaceHandlers());
+
+                console.log('Initializing Subspace...');
+                const config = await subspaceService.initialize(hubUrl, hubTopic);
+                setSubspaceConfig(config);
+
+                console.log('Subspace initialized successfully');
+            } catch (error) {
+                console.error('Subspace initialization failed:', error);
+                // Don't throw here - Subspace failure shouldn't prevent the app from working
+                // Just log it and continue without Subspace functionality
+                if (error instanceof Error && error.message.includes('JWT signing not implemented')) {
+                    console.warn('Subspace not available: JWT signing needs to be implemented');
+                } else {
+                    setError(`Subspace setup failed: ${error instanceof Error ? error.message : String(error)}`);
+                }
             }
-
-            console.log('Subspace parameters found, setting up handlers...');
-            subspaceService.setEventHandlers(setupSubspaceHandlers());
-
-            console.log('Initializing Subspace...');
-            const config = await subspaceService.initialize(hubUrl, hubTopic);
-            setSubspaceConfig(config);
-
-            console.log('Subspace initialized successfully');
-        } catch (error) {
-            console.error('Subspace initialization failed:', error);
-            // Don't throw here - Subspace failure shouldn't prevent the app from working
-            // Just log it and continue without Subspace functionality
-            if (error instanceof Error && error.message.includes('JWT signing not implemented')) {
-                console.warn('Subspace not available: JWT signing needs to be implemented');
-            } else {
-                setError(`Subspace setup failed: ${error instanceof Error ? error.message : String(error)}`);
-            }
-        }
-    }, [setupSubspaceHandlers]);
+        },
+        [setupSubspaceHandlers]
+    );
 
     const smartLaunch = useCallback(async (): Promise<void> => {
         try {
             console.log('Starting SMART on FHIR launch...');
-            await FHIR.oauth2.init({
+            const client = await FHIR.oauth2.init({
                 clientId: import.meta.env.VITE_APP_CLIENT_ID,
                 scope: import.meta.env.VITE_APP_CLIENT_SCOPE,
                 redirectUri: import.meta.env.VITE_APP_REDIRECT_URI
             });
             console.log('SMART on FHIR initialized successfully');
             // Try to initialize Subspace (optional)
-            await initializeSubspace();
+            await initializeSubspace({
+                hubUrl: client.state?.tokenResponse?.hubUrl,
+                hubTopic: client.state?.tokenResponse?.hubTopic
+            });
         } catch (e: any) {
             console.error('Error during SMART launch:', e);
             if (e instanceof Error) {
