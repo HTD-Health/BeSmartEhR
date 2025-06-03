@@ -82,10 +82,12 @@ const EhrWrapper = (): JSX.Element => {
                 redirectUri: import.meta.env.VITE_APP_REDIRECT_URI
             });
             console.log('SMART on FHIR initialized successfully');
+            const hubUrl = decodeURIComponent(client.state?.tokenResponse?.hubUrl ?? '');
+            const hubTopic = client.state?.tokenResponse?.hubTopic;
             // Try to initialize Subspace (optional)
             await initializeSubspace({
-                hubUrl: client.state?.tokenResponse?.hubUrl,
-                hubTopic: client.state?.tokenResponse?.hubTopic
+                hubUrl,
+                hubTopic
             });
         } catch (e: any) {
             console.error('Error during SMART launch:', e);
