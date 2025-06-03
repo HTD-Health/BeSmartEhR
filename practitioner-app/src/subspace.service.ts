@@ -20,7 +20,7 @@ export interface SubspaceEventHandlers {
     onPatientOpen?: (context: any[]) => void;
     onPatientClose?: (context: any[]) => void;
     onUserLogin?: (context: any[]) => void;
-    onShutdown?: (context: any[]) => void;
+    onLogout?: (context: any[]) => void;
     onError?: (error: string) => void;
     onConnectionChange?: (isConnected: boolean) => void;
 }
@@ -280,13 +280,7 @@ class SubspaceService {
     // }
 
     private async subscribe(hubUrl: string, hubTopic: string, accessToken: string): Promise<string> {
-        const events = [
-            'Patient-open',
-            'Patient-close',
-            'com.epic.userlogin',
-            'com.epic.userlogout',
-            'com.epic.shutdown'
-        ];
+        const events = ['Patient-open', 'Patient-close', 'com.epic.userlogin', 'com.epic.userlogout'];
 
         const response = await fetch(hubUrl, {
             method: 'POST',
@@ -407,8 +401,7 @@ class SubspaceService {
                 this.eventHandlers.onUserLogin?.(context);
                 break;
             case 'com.epic.userlogout':
-            case 'com.epic.shutdown':
-                this.eventHandlers.onShutdown?.(context);
+                this.eventHandlers.onLogout?.(context);
                 break;
             default:
                 console.log('Unknown event type:', eventType);

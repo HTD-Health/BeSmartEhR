@@ -26,9 +26,9 @@ const EhrWrapper = (): JSX.Element => {
                 console.log('User logged in to Epic:', context);
                 // Handle user login events
             },
-            onShutdown: (context) => {
-                console.log('Epic shutting down:', context);
-                // Handle Epic shutdown
+            onLogout: (context) => {
+                console.log('User logged out from Epic:', context);
+                // Handle Epic logout
             },
             onError: (errorMessage) => {
                 console.error('Subspace error:', errorMessage);
@@ -83,7 +83,7 @@ const EhrWrapper = (): JSX.Element => {
                 }
             }
         },
-        [setupSubspaceHandlers]
+        []
     );
 
     const smartLaunch = useCallback(async (): Promise<void> => {
@@ -113,7 +113,7 @@ const EhrWrapper = (): JSX.Element => {
             }
         }
         setLoading(false);
-    }, [initializeSubspace]);
+    }, []);
 
     useEffect(() => {
         smartLaunch();
@@ -121,7 +121,7 @@ const EhrWrapper = (): JSX.Element => {
         return () => {
             subspaceService.cleanup();
         };
-    }, [smartLaunch]);
+    }, []);
 
     const getContent = useCallback((): JSX.Element => {
         if (error) {
