@@ -9,20 +9,23 @@ export const introspectCallMiddleware = async (
   logger.info('Introspect call');
 
   const { body } = req;
-  const fhirServer = body?.fhirServer as string;
   const accessToken = body?.fhirAuthorization?.access_token;
 
-  const introspectRes = await fetch(`${fhirServer}/oauth2/Introspect`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      token: body?.fhirAuthorization?.access_token,
-      epic_user_id_type: 'internal',
-    }),
-  });
+  const introspectRes = await fetch(
+    `https://vendorservices.epic.com/oauth2/Introspect`,
+    {
+      // https://vendorservices.epic.com/interconnect-amcurprd-oauth/api/FHIR/R4
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        token: body?.fhirAuthorization?.access_token,
+        epic_user_id_type: 'internal',
+      }),
+    }
+  );
 
   if (!introspectRes.ok) {
     logger.error('Introspect call failed', {
