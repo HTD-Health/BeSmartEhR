@@ -49,7 +49,7 @@ export const requestLogger = (
     query: req.query,
     isRequest: true,
   });
-  logger.info('Request body & headers', {
+  logger.debug('Request body & headers', {
     body: req.body,
     headers: req.headers,
     isRequest: true,
