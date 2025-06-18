@@ -96,6 +96,10 @@ npm start
 - **Method**: `GET`
 - **Description**: Lists all available CDS services.
 
+- **URL**: `/cds-services`
+- **Method**: `POST`
+- **Description**: Routes the hook request to appropriate hook handler.
+
 2. Patient-View Hook
 
 - **URL**: `/cds-services/patient-assessment`

@@ -12,8 +12,6 @@ export const processPatientViewHook = async (
   next: NextFunction
 ) => {
   try {
-    logger.info(`Processing ${CDSHooksEvent.PATIENT_VIEW} hook request`);
-
     const hookData = req.body;
     const patient: Patient = hookData?.prefetch?.patient;
 

@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
-import { logger } from '../middleware/logger';
 import { CDSHooksEvent, Services } from '../types';
 
 export const getCdsServices = (_req: Request, res: Response) => {
-  logger.info('CDS services discovery endpoint called');
-
   res.json({
     services: [
       {

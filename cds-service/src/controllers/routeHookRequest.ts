@@ -10,7 +10,6 @@ export const routeHookRequest = (
   res: Response,
   next: NextFunction
 ) => {
-  logger.info('CDS services discovery endpoint called with POST method');
   const { body } = req;
 
   switch (body.hook) {

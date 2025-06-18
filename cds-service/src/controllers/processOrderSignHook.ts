@@ -9,8 +9,6 @@ export const processOrderSignHook = async (
   res: Response,
   next: NextFunction
 ) => {
-  logger.info(`Processing ${CDSHooksEvent.ORDER_SIGN} hook request`);
-
   try {
     const hookData = req.body;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
