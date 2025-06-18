@@ -27,8 +27,12 @@ export const processPatientViewHook = async (
       return;
     }
 
+    const isSupportHTML = SERVERS_SUPPORTING_HTML.includes(
+      hookData.fhirServer as string
+    );
+
     // Generate clinical assessment
-    const assessment = await generatePatientAssessment(patient);
+    const assessment = await generatePatientAssessment(patient, isSupportHTML);
 
     const smartAppLink = (hookData.fhirServer as string)
       .toLowerCase()
