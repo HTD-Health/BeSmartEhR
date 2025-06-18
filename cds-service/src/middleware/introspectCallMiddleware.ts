@@ -13,9 +13,8 @@ export const introspectCallMiddleware = async (
 
   try {
     const introspectRes = await fetch(
-      `https://vendorservices.epic.com/interconnect-amcurprd-oauth/oauth2/Introspect`,
+      `https://vendorservices.epic.com/oauth2/Introspect`,
       {
-        // https://vendorservices.epic.com/interconnect-amcurprd-oauth/api/FHIR/R4
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
