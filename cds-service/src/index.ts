@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import https from 'https';
 import config from './config';
 import { errorHandler } from './middleware/error-handler';
+import { introspectCallMiddleware } from './middleware/introspectCallMiddleware';
 import { requestLogger } from './middleware/logger';
 import { router } from './routes';
 
@@ -21,6 +22,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Logging
 app.use(requestLogger);
+
+// Other middleware
+app.use(introspectCallMiddleware);
 
 // CDS Hooks routes
 app.use('/', router);
