@@ -17,7 +17,8 @@ export interface AssessmentResult {
 }
 
 export async function generatePatientAssessment(
-  patient: Patient
+  patient: Patient,
+  supportHTML: boolean = false
 ): Promise<AssessmentResult> {
   logger.info(`Generating assessment for patient ${patient.id}`);
 
@@ -26,11 +27,12 @@ export async function generatePatientAssessment(
   const ageGroup = getAgeGroupInfo(patientAge);
 
   const detailHtml = generateAssessmentHtml(fullName, patientAge, ageGroup);
+  const detailText = `${fullName}'s health profile has been reviewed by HTD Health.\n\nAge Group: ${ageGroup.name}\n\nAge: ${patientAge}`;
 
   return {
     summary: `Health Assessment`,
     indicator: ageGroup.indicator,
-    detail: detailHtml,
+    detail: supportHTML ? detailHtml : detailText,
     suggestions: [
       {
         label: 'Schedule Routine Follow-up',

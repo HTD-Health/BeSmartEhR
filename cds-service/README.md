@@ -24,13 +24,33 @@ git clone <repository-url>
 cd cds-service
 ```
 
-2. Install dependencies:
+2. Create `.pem` files (access through secure https)
+
+Install mkcert (requires Homebrew)
+
+```bash
+brew install mkcert
+```
+
+Install local CA
+
+```bash
+mkcert -install
+```
+
+Generate certificate for localhost
+
+```bash
+mkcert localhost
+```
+
+3. Install dependencies:
 
 ```bash
 npm ci
 ```
 
-3. Build the project:
+4. Build the project:
 
 ```bash
 npm run build
@@ -130,6 +150,21 @@ Using a different FHIR server allows you to access additional resources and test
 - **Patient-View Hook**: View the patient in the `Patient View` tab. The service will provide recommended check-ups based on patient demographics in the form of a Routine Health Assessment card.
 - **Order-Select Hook**: Begin the process of ordering a medication in the `Rx View` tab. Start writing in the autocomplete input. Select the type, the dosage, and then the formulation. The service will provide relevant information about the selected medication in the form of a Order Selection Review card.
 - **Order-Sign Hook**: When signing orders in the `Rx Sign` tab, the service will provide a final check for potential issues in the form of a Pre-Signature Order Review card.
+
+#### Card HTML styling
+
+Some CDS Hooks clients do not support HTML rendering in cards. This may affect how recommendations and information are displayed in the interface.
+
+Servers that we know DO NOT support HTML:
+
+- VendorServices – `https://vendorservices.epic.com/interconnect-amcurprd-oauth/api/FHIR/R4`
+- Meld – `https://gw.interop.community/CDSHooksTest/data`
+
+If you are testing with a server that **does not** support HTML, card content will be rendered in plain text. Consider adjusting your card formatting accordingly to ensure critical information is still clearly presented.
+
+If you identify a server that **does** support HTML in cards, please add it to the `SERVERS_SUPPORTING_HTML` array in `/src/utils/serversSupportingHTML.ts` file.
+
+Maintaining this list helps ensure better compatibility and more predictable behavior across different environments.
 
 ### Epic Integration Testing
 

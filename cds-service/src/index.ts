@@ -1,6 +1,8 @@
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs';
 import helmet from 'helmet';
+import https from 'https';
 import config from './config';
 import { errorHandler } from './middleware/error-handler';
 import { requestLogger } from './middleware/logger';
@@ -32,6 +34,17 @@ app.get('/health', (req, res) => {
 app.use(errorHandler);
 
 // Start server
-app.listen(port, () => {
-  console.log(`HTD Health CDS Service running on port ${port}`);
-});
+if (process.env.USE_HTTPS === 'true') {
+  const httpsOptions = {
+    key: fs.readFileSync('./localhost-key.pem'),
+    cert: fs.readFileSync('./localhost.pem'),
+  };
+
+  https.createServer(httpsOptions, app).listen(port, () => {
+    console.log(`HTD Health CDS Service running on https://localhost:${port}`);
+  });
+} else {
+  app.listen(port, () => {
+    console.log(`HTD Health CDS Service running on http://localhost:${port}`);
+  });
+}

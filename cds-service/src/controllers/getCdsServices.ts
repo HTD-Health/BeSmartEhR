@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { logger } from '../middleware/logger';
-import { CdsHooksEvent, Services } from '../types';
+import { CDSHooksEvent, Services } from '../types';
 
 export const getCdsServices = (_req: Request, res: Response) => {
   logger.info('CDS services discovery endpoint called');
@@ -8,7 +8,7 @@ export const getCdsServices = (_req: Request, res: Response) => {
   res.json({
     services: [
       {
-        hook: CdsHooksEvent.PATIENT_VIEW,
+        hook: CDSHooksEvent.PATIENT_VIEW,
         name: 'HTD Health Patient Assessment',
         description:
           'Provides routine check recommendation based on patient data',
@@ -18,13 +18,13 @@ export const getCdsServices = (_req: Request, res: Response) => {
         },
       },
       {
-        hook: CdsHooksEvent.ORDER_SELECT,
+        hook: CDSHooksEvent.ORDER_SELECT,
         name: 'HTD Health Order Assistant',
         description: 'Informs about medication when selecting orders',
         id: Services.ORDER_ASSISTANT,
       },
       {
-        hook: CdsHooksEvent.ORDER_SIGN,
+        hook: CDSHooksEvent.ORDER_SIGN,
         name: 'HTD Health Order Review',
         description: 'Reviews medication when selecting orders',
         id: Services.ORDER_REVIEW,

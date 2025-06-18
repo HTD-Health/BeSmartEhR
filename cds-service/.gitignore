@@ -2,3 +2,6 @@
 /dist
 
 .env
+
+localhost-key.pem
+localhost.pem
