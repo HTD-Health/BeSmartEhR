@@ -24,13 +24,33 @@ git clone <repository-url>
 cd cds-service
 ```
 
-2. Install dependencies:
+2. Create `.pem` files (access through secure https)
+
+Install mkcert (requires Homebrew)
+
+```bash
+brew install mkcert
+```
+
+Install local CA
+
+```bash
+mkcert -install
+```
+
+Generate certificate for localhost
+
+```bash
+mkcert localhost
+```
+
+3. Install dependencies:
 
 ```bash
 npm ci
 ```
 
-3. Build the project:
+4. Build the project:
 
 ```bash
 npm run build
