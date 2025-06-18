@@ -3,7 +3,8 @@ import type { Patient } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
 import { generatePatientAssessment } from '../services/assessment-service';
-import { CdsHooksEvent } from '../types';
+import { CDSHooksEvent } from '../types';
+import { SERVERS_SUPPORTING_HTML } from '../utils/serversSupportingHTML';
 
 export const processPatientViewHook = async (
   req: Request,
@@ -11,7 +12,7 @@ export const processPatientViewHook = async (
   next: NextFunction
 ) => {
   try {
-    logger.info(`Processing ${CdsHooksEvent.PATIENT_VIEW} hook request`);
+    logger.info(`Processing ${CDSHooksEvent.PATIENT_VIEW} hook request`);
 
     const hookData = req.body;
     const patient: Patient = hookData?.prefetch?.patient;
@@ -23,6 +24,7 @@ export const processPatientViewHook = async (
         error: 'Missing required patient data',
         cards: [],
       });
+      return;
     }
 
     // Generate clinical assessment
@@ -35,7 +37,6 @@ export const processPatientViewHook = async (
           label: config.smartApp.name,
           url: config.smartApp.url,
           type: 'smart',
-          appContext: hookData,
         }
       : {
           label: config.smartApp.name,
@@ -61,7 +62,7 @@ export const processPatientViewHook = async (
       ],
     });
   } catch (error) {
-    logger.error(`Error processing ${CdsHooksEvent.PATIENT_VIEW} hook`, error);
+    logger.error(`Error processing ${CDSHooksEvent.PATIENT_VIEW} hook`, error);
     next(error);
   }
 };

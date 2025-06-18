@@ -49,6 +49,11 @@ export const requestLogger = (
     query: req.query,
     isRequest: true,
   });
+  logger.info('Request body & headers', {
+    body: req.body,
+    headers: req.headers,
+    isRequest: true,
+  });
 
   res.on('finish', () => {
     logger.info('Response sent', {

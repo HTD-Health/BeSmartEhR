@@ -2,14 +2,14 @@ import { NextFunction, Request, Response } from 'express';
 import { Bundle, CodeableConcept } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
-import { CdsHooksEvent } from '../types';
+import { CDSHooksEvent } from '../types';
 
 export const processOrderSignHook = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  logger.info(`Processing ${CdsHooksEvent.ORDER_SIGN} hook request`);
+  logger.info(`Processing ${CDSHooksEvent.ORDER_SIGN} hook request`);
 
   try {
     const hookData = req.body;
@@ -83,7 +83,7 @@ export const processOrderSignHook = async (
       ],
     });
   } catch (error) {
-    logger.error(`Error processing ${CdsHooksEvent.ORDER_SIGN} hook`, error);
+    logger.error(`Error processing ${CDSHooksEvent.ORDER_SIGN} hook`, error);
     next(error);
   }
 };
