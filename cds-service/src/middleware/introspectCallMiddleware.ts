@@ -22,7 +22,7 @@ export const introspectCallMiddleware = async (
         },
         body: JSON.stringify({
           token: body?.fhirAuthorization?.access_token,
-          epic_user_id_type: 'external',
+          epic_user_id_type: 'internal',
         }),
       }
     );
