@@ -4,6 +4,7 @@ import { getCdsServices } from './controllers/getCdsServices';
 import { processOrderSelectHook } from './controllers/processOrderSelectHook';
 import { processOrderSignHook } from './controllers/processOrderSignHook';
 import { processPatientViewHook } from './controllers/processPatientViewHook';
+import { routeHookRequest } from './controllers/routeHookRequest';
 import { Services } from './types';
 
 const router = Router();
@@ -13,6 +14,7 @@ router.get('/', (_req, res) => {
 });
 
 router.get('/cds-services', getCdsServices);
+router.post('/cds-services', routeHookRequest);
 
 router.post(
   `/cds-services/${Services.PATIENT_ASSESSMENT}`,

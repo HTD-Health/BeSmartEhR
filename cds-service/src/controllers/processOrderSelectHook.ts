@@ -2,15 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import { Bundle, CodeableConcept } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
-import { CdsHooksEvent } from '../types';
+import { CDSHooksEvent } from '../types';
 
 export const processOrderSelectHook = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  logger.info(`Processing ${CdsHooksEvent.ORDER_SELECT} hook request`);
-
   try {
     const hookData = req.body;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
@@ -69,7 +67,7 @@ export const processOrderSelectHook = async (
       ],
     });
   } catch (error) {
-    logger.error(`Error processing ${CdsHooksEvent.ORDER_SELECT} hook`, error);
+    logger.error(`Error processing ${CDSHooksEvent.ORDER_SELECT} hook`, error);
     next(error);
   }
 };
