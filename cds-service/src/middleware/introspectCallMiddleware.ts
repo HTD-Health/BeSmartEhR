@@ -3,7 +3,7 @@ import { logger } from './logger';
 
 export const introspectCallMiddleware = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) => {
   logger.info('Introspect call');
@@ -27,7 +27,7 @@ export const introspectCallMiddleware = async (
       }
     );
 
-    logger.info('Introspect response', {
+    logger.debug('Introspect response', {
       status: introspectRes.status,
       statusText: introspectRes.statusText,
     });
@@ -38,7 +38,7 @@ export const introspectCallMiddleware = async (
     }
 
     const introspectResBody = await introspectRes.json();
-    logger.info('Introspect response', {
+    logger.debug('Introspect response', {
       body: introspectResBody,
     });
   } catch (error) {
