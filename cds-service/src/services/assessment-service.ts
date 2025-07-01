@@ -1,4 +1,4 @@
-import type { MedicationRequest, Patient, Resource } from 'fhir/r4';
+import type { Patient, Resource, ServiceRequest } from 'fhir/r4';
 import { generateAssessmentHtml } from '../components/assessmentTemplate';
 import { logger } from '../middleware/logger';
 import { getAgeGroupInfo } from '../styles/ageGroupStyles';
@@ -16,7 +16,7 @@ export interface AssessmentResult {
     actions: Array<{
       type: string;
       description: string;
-      resource: MedicationRequest | Resource;
+      resource: ServiceRequest | Resource;
     }>;
   }>;
 }
@@ -39,71 +39,74 @@ export async function generatePatientAssessment(
     indicator: ageGroup.indicator,
     detail: supportHTML ? detailHtml : detailText,
     suggestions: [
+      // {
+      //   label: 'Arthritis',
+      //   uuid: 'cf72fe83-1eb9-410c-94aa-04ec98736388',
+      //   actions: [
+      //     {
+      //       type: 'create',
+      //       description: 'Arthritis',
+      //       resource: {
+      //         resourceType: 'Condition',
+      //         category: [
+      //           {
+      //             coding: [
+      //               {
+      //                 system:
+      //                   'http://terminology.hl7.org/CodeSystem/condition-category',
+      //                 code: 'encounter-diagnosis',
+      //                 display: 'Encounter diagnosis',
+      //               },
+      //             ],
+      //             text: 'Encounter diagnosis',
+      //           },
+      //         ],
+      //         code: {
+      //           coding: [
+      //             {
+      //               system: 'urn:com.epic.cdshooks.action.code.system.cms-hcc',
+      //               code: '40',
+      //               display: 'Arthritis',
+      //             },
+      //           ],
+      //           text: 'Stomach ache',
+      //         },
+      //       },
+      //     },
+      //   ],
+      // },
       {
-        label: 'Schedule Routine Follow-up',
-        uuid: '9eee42c7-2d2c-490a-bf9b-8c79815bccc2',
+        label: 'CBC',
+        uuid: '613b0192-4243-4384-8294-4316dfb726bb',
         actions: [
           {
             type: 'create',
-            description:
-              'Create a resource with the newly suggested medication',
+            description: 'CBC from CDS Hooks',
             resource: {
-              resourceType: 'MedicationRequest',
-              id: 'request-123',
+              resourceType: 'ServiceRequest',
               status: 'draft',
-              subject: {
-                reference: 'Patient/ae8a896e-bbd9-4e1a-a732-1568df9d7527',
-              },
-              authoredOn: '2025-07-01',
-              dosageInstruction: [
-                {
-                  timing: {
-                    repeat: {
-                      frequency: 1,
-                      period: 1,
-                      periodUnit: 'd',
-                    },
-                  },
-                  doseAndRate: [
-                    {
-                      doseQuantity: {
-                        value: 1,
-                        system: 'http://unitsofmeasure.org',
-                        code: '{pill}',
-                      },
-                    },
-                  ],
-                },
-              ],
-              dispenseRequest: {
-                expectedSupplyDuration: {
-                  value: 1,
-                  unit: 'days',
-                  system: 'http://unitsofmeasure.org',
-                  code: 'd',
-                },
-              },
-              intent: 'order',
+              intent: 'proposal',
               category: [
                 {
                   coding: [
                     {
                       system:
                         'http://terminology.hl7.org/CodeSystem/medicationrequest-category',
-                      code: 'community',
+                      code: 'outpatient',
+                      display: 'Outpatient',
                     },
                   ],
                 },
               ],
-              medicationCodeableConcept: {
-                text: 'Ibuprofen 200 MG Oral Tablet',
+              code: {
                 coding: [
                   {
-                    code: '310965',
-                    system: 'http://www.nlm.nih.gov/research/umls/rxnorm',
-                    display: 'Ibuprofen 200 MG Oral Tablet',
+                    system:
+                      'urn:com.epic.cdshooks.action.code.system.preference-list-item',
+                    code: 'CBC_IP',
                   },
                 ],
+                text: 'Test Proc Display name',
               },
             },
           },
