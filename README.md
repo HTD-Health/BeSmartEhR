@@ -10,3 +10,5 @@ Repository used during research project on developing [SMART](https://smarthealt
 - /questionnaires - example questionnaires (forms) for testing purposes.
 - /patient-app - _outdated_ SMART app for a Patient, standalone launch. The code has been migrated to [BeSmartEhR-Patient](https://github.com/HTD-Health/BeSmartEhR-Patient) repo, improved and deployed.
 - /practitioner-app - SMART app for a Practitioner, EHR launch. The code has been migrated to [BeSmartEhR-Practitioner](https://github.com/HTD-Health/BeSmartEhR-Practitioner) repo, improved and deployed.
+
+- /cds-service – example integration code for self-hosted CDS Service with a SMART app launch.
