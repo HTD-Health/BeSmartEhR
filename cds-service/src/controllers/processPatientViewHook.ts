@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import type { Patient } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
-import { generatePatientAssessment } from '../services/assessment-service';
 import { CDSHooksEvent } from '../types';
-import { SERVERS_SUPPORTING_HTML } from '../utils/serversSupportingHTML';
 
 export const processPatientViewHook = async (
   req: Request,
@@ -25,12 +23,12 @@ export const processPatientViewHook = async (
       return;
     }
 
-    const isSupportHTML = SERVERS_SUPPORTING_HTML.includes(
-      hookData.fhirServer as string
-    );
+    // const isSupportHTML = SERVERS_SUPPORTING_HTML.includes(
+    //   hookData.fhirServer as string
+    // );
 
     // Generate clinical assessment
-    const assessment = await generatePatientAssessment(patient, isSupportHTML);
+    // const assessment = await generatePatientAssessment(patient, isSupportHTML);
 
     const smartAppLink = (hookData.fhirServer as string)
       .toLowerCase()

@@ -37,5 +37,7 @@ export async function generatePatientAssessment(
   return {
     summary: `Health Assessment`,
     indicator: ageGroup.indicator,
+    detail: supportHTML ? detailHtml : detailText,
+    suggestions: [],
   };
 }
