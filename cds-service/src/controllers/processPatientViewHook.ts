@@ -39,6 +39,7 @@ export const processPatientViewHook = async (
           label: config.smartApp.name,
           url: config.smartApp.url,
           type: 'smart',
+          autolaunchable: true,
         }
       : {
           label: config.smartApp.name,
@@ -50,15 +51,15 @@ export const processPatientViewHook = async (
     res.json({
       cards: [
         {
-          summary: assessment.summary,
-          indicator: assessment.indicator,
-          detail: assessment.detail,
-          source: {
-            label: config.serviceName,
-            url: 'https://cds-service.htdhealth.com/',
-            icon: config.icons.logo,
-          },
-          suggestions: assessment.suggestions,
+          // summary: assessment.summary,
+          // indicator: assessment.indicator,
+          // detail: assessment.detail,
+          // source: {
+          //   label: config.serviceName,
+          //   url: 'https://cds-service.htdhealth.com/',
+          //   icon: config.icons.logo,
+          // },
+          // suggestions: assessment.suggestions,
           links: [smartAppLink],
         },
       ],
