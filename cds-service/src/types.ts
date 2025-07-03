@@ -5,9 +5,9 @@ export enum CDSHooksEvent {
 }
 
 export enum Services {
-  PATIENT_ASSESSMENT = 'patient-view',
-  ORDER_ASSISTANT = 'order-select',
-  ORDER_REVIEW = 'order-sign',
+  PATIENT_ASSESSMENT = 'patient-assessment',
+  ORDER_ASSISTANT = 'order-assistant',
+  ORDER_REVIEW = 'order-review',
 }
 
 export type CardIndicator = 'info' | 'warning' | 'critical';
