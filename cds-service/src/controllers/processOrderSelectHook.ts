@@ -11,12 +11,24 @@ export const processOrderSelectHook = async (
 ) => {
   try {
     const hookData = req.body;
+    const selections: string[] = hookData?.context?.selections;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
 
-    // Filtering for resources starting with 'Medication'
-    // to support both MedicationOrder and other medication-related resources.
-    const medicationResource = draftOrders?.entry?.find((resource) =>
-      (resource.resource?.resourceType as string).startsWith('Medication')
+    if (!selections || selections.length < 1 || !draftOrders) {
+      logger.warn('Missing selections or draftOrders in context');
+      res.status(400).json({
+        error: 'Missing required selections or draftOrders data',
+        cards: [],
+      });
+      return;
+    }
+
+    const [selectionType, selectionId] = selections[0].split('/');
+
+    const medicationResource = draftOrders?.entry?.find(
+      (resource) =>
+        (resource.resource?.resourceType as string) === selectionType &&
+        (resource.resource?.id as string) === selectionId
     )?.resource as unknown as Record<string, unknown>;
 
     if (!medicationResource) {
