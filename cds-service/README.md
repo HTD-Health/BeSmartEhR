@@ -161,12 +161,11 @@ Some CDS Hooks clients do not support HTML rendering in cards. This may affect h
 
 Servers that we know DO NOT support HTML:
 
-- VendorServices – `https://vendorservices.epic.com/interconnect-amcurprd-oauth/api/FHIR/R4`
 - Meld – `https://gw.interop.community/CDSHooksTest/data`
 
 If you are testing with a server that **does not** support HTML, card content will be rendered in plain text. Consider adjusting your card formatting accordingly to ensure critical information is still clearly presented.
 
-If you identify a server that **does** support HTML in cards, please add it to the `SERVERS_SUPPORTING_HTML` array in `/src/utils/serversSupportingHTML.ts` file.
+If you identify a server that **does** support HTML in cards, please add it to the appropriate ServerConfig in the `src/utils/getServerConfig.ts` file.
 
 Maintaining this list helps ensure better compatibility and more predictable behavior across different environments.
 
