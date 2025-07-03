@@ -159,9 +159,10 @@ Using a different FHIR server allows you to access additional resources and test
 
 Some CDS Hooks clients do not support HTML rendering in cards. This may affect how recommendations and information are displayed in the interface.
 
-Servers that we know DO NOT support HTML:
+Servers we know that DO NOT support HTML:
 
 - Meld – `https://gw.interop.community/CDSHooksTest/data`
+- SMART Health IT - `https://r4.smarthealthit.org`
 
 If you are testing with a server that **does not** support HTML, card content will be rendered in plain text. Consider adjusting your card formatting accordingly to ensure critical information is still clearly presented.
 
