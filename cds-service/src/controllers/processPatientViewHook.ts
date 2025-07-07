@@ -36,7 +36,7 @@ export const processPatientViewHook = async (
     const smartAppLink = serverConfig?.smartAppLink || {
       label: config.smartApp.name,
       url: `${config.smartApp.url}?context=${encodeURIComponent(JSON.stringify(hookData))}`,
-      type: 'smart',
+      type: 'absolute',
     };
 
     // Return CDS Hooks cards
@@ -45,9 +45,7 @@ export const processPatientViewHook = async (
         {
           summary: assessment.summary,
           indicator: assessment.indicator,
-          extension: {
-            'com.epic.cdshooks.card.detail.content-type': 'text/html',
-          },
+          extension: serverConfig?.extension || {},
           detail: assessment.detail,
           source: {
             label: config.serviceName,
