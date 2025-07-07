@@ -119,6 +119,7 @@ const getClient = async (): Promise<Client> => {
 };
 const getPatient = async (): Promise<Patient> => {
     const c = await getClient();
+    console.log('Current patient:', c.patient);
     if (!c.patient) throw new Error('Missing selected patient data');
     return requestWithLogging(c, `Patient/${c.patient.id}`);
 };
