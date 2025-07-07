@@ -411,8 +411,8 @@ const addGoal = async (description: string): Promise<any> => {
             body: JSON.stringify(goal),
             headers: {
                 'content-type': 'application/json',
-                Accept: 'application/json',
-                Prefer: 'return=representation'
+                Accept: 'application/json'
+                // Prefer: 'return=representation'
             }
         });
 
