@@ -31,26 +31,7 @@ const EhrWrapper = (): JSX.Element => {
     }, []);
 
     useEffect(() => {
-        // smartLaunch();
-
-        const doSmart = async () => {
-            try {
-                const client = await FHIR.oauth2.ready();
-                console.log('SMART client ready:', client);
-                setLoading(false);
-            } catch (err) {
-                console.log('Not ready, launching...');
-                await FHIR.oauth2.authorize({
-                    clientId: import.meta.env.VITE_APP_CLIENT_ID,
-                    scope: import.meta.env.VITE_APP_CLIENT_SCOPE,
-                    redirectUri: import.meta.env.VITE_APP_REDIRECT_URI
-                });
-                console.log('SMART client launched');
-                setLoading(false);
-            }
-        };
-
-        doSmart();
+        smartLaunch();
     }, [smartLaunch]);
 
     const getContent = useCallback((): JSX.Element => {
