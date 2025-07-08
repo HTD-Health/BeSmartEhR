@@ -1,4 +1,4 @@
-import type { Patient, Resource, ServiceRequest } from 'fhir/r4';
+import type { Condition, Patient, Resource, ServiceRequest } from 'fhir/r4';
 import { generateAssessmentHtml } from '../components/assessmentTemplate';
 import { logger } from '../middleware/logger';
 import { getAgeGroupInfo } from '../styles/ageGroupStyles';
@@ -13,10 +13,11 @@ export interface AssessmentResult {
   suggestions: Array<{
     label: string;
     uuid?: string;
+    isRecommended?: boolean;
     actions: Array<{
       type: string;
       description: string;
-      resource: ServiceRequest | Resource;
+      resource: ServiceRequest | Condition | Resource;
     }>;
   }>;
 }
@@ -38,6 +39,46 @@ export async function generatePatientAssessment(
     summary: `Health Assessment`,
     indicator: ageGroup.indicator,
     detail: supportHTML ? detailHtml : detailText,
-    suggestions: [],
+    suggestions: [
+      {
+        label: 'Create Problem List Condition', //required
+        uuid: '8c0193ab-f511-4dd7-8400-fd45a087c719', //Should be implemented as guid
+        isRecommended: false, //Determines if automatically selected as follow-up or if user has to manually select problem list suggestion
+        actions: [
+          {
+            type: 'create', //always "create"
+            description: 'Create Problem List Dx', //Used as display next to "Add Problem"/"Do Not Add" next to description of diagnosis obtained from code mapping
+            resource: {
+              resourceType: 'Condition', //Required
+              code: {
+                text: 'Other primary thrombophilia', //unused
+                coding: [
+                  {
+                    code: 'D68.59', //coding is mapped to diagnosis data in Epic
+                    system: 'urn:oid:2.16.840.1.113883.6.90',
+                  },
+                ],
+              },
+              category: [
+                {
+                  //Required element
+                  text: 'Problem List Item',
+                  coding: [
+                    {
+                      code: 'problem-list-item',
+                      system:
+                        'http://terminology.hl7.org/CodeSystem/condition-category',
+                    },
+                  ],
+                },
+              ],
+              subject: {
+                reference: 'Patient/' + patient.id, //Patient FHIR ID required
+              },
+            },
+          },
+        ],
+      },
+    ],
   };
 }
