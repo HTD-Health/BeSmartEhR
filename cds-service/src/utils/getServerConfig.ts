@@ -15,10 +15,6 @@ export const getServerConfig = (fhirServer: string): ServerConfig => {
     return {};
   }
 
-  console.log(
-    `Configuring server for FHIR server: ${fhirServer}:` + config.smartApp.url
-  );
-
   switch (fhirServer) {
     case 'https://launch.smarthealthit.org/v/r2/fhir':
       return {

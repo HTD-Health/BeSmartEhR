@@ -39,8 +39,6 @@ export const processPatientViewHook = async (
       type: 'absolute',
     };
 
-    console.log('smartapplink', smartAppLink);
-
     // Return CDS Hooks cards
     res.json({
       cards: [
