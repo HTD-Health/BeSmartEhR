@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Bundle, CodeableConcept } from 'fhir/r4';
+import { Bundle, CodeableConcept, Medication, Reference } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
 import { CDSHooksEvent } from '../types';
@@ -27,23 +27,36 @@ export const processOrderSelectHook = async (
 
     const medicationResource = draftOrders?.entry?.find(
       (resource) =>
-        (resource.resource?.resourceType as string) === selectionType &&
-        (resource.resource?.id as string) === selectionId
-    )?.resource as unknown as Record<string, unknown>;
+        resource.resource?.resourceType === selectionType &&
+        resource.resource?.id === selectionId
+    )?.resource as unknown as Record<string, unknown>; // MedicationRequest | MedicationOrder
 
     if (!medicationResource) {
-      logger.warn('Missing medication resource');
+      logger.warn('Missing selected medication resource data');
       res.status(400).json({
-        error: 'Missing medication resource data',
+        error: 'Missing selected medication resource data',
         cards: [],
       });
       return;
     }
 
-    const medication =
+    let medicationCodeableConcept: CodeableConcept | undefined =
       medicationResource?.medicationCodeableConcept as CodeableConcept;
 
-    if (!medication) {
+    if (!medicationCodeableConcept) {
+      const medicationReference = (
+        medicationResource?.medicationReference as Reference
+      )?.reference;
+      if (medicationReference) {
+        const medicationId = medicationReference.split('/')[1];
+        const medication = draftOrders?.entry?.find(
+          (resource) => resource.resource?.id === medicationId
+        )?.resource as Medication;
+        medicationCodeableConcept = medication?.code;
+      }
+    }
+
+    if (!medicationCodeableConcept) {
       logger.warn('Missing medication data');
       res.status(400).json({
         error: 'Missing medication data',
@@ -52,12 +65,17 @@ export const processOrderSelectHook = async (
       return;
     }
 
+    const medicationRxNormCode = medicationCodeableConcept?.coding?.find(
+      (coding) =>
+        coding.system === 'http://www.nlm.nih.gov/research/umls/rxnorm'
+    );
+
     res.json({
       cards: [
         {
           summary: 'Order Selection Review',
           indicator: 'info',
-          detail: `HTD Health has reviewed order of ${medication.coding?.[0].display}.`,
+          detail: `HTD Health has reviewed order of ${medicationCodeableConcept?.text}.`,
           source: {
             label: config.serviceName,
             url: 'https://cds-service.htdhealth.com/',
@@ -66,7 +84,7 @@ export const processOrderSelectHook = async (
           links: [
             {
               label: 'View RxNorm Medication Information',
-              url: `https://mor.nlm.nih.gov/RxNav/search?searchBy=RXCUI&searchTerm=${medication.coding?.[0].code}`,
+              url: `https://mor.nlm.nih.gov/RxNav/search?searchBy=RXCUI&searchTerm=${medicationRxNormCode?.code}`,
               type: 'absolute',
             },
             {
