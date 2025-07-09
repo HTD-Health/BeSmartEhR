@@ -16,3 +16,8 @@ export type AssessmentResult = {
     uuid?: string;
   }>;
 };
+
+export type MedicationDetails = {
+  rxNormCode?: string;
+  displayName?: string;
+};

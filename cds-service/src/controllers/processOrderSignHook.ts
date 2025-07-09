@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { Bundle, CodeableConcept } from 'fhir/r4';
+import { Bundle } from 'fhir/r4';
 import config from '../config';
 import { logger } from '../middleware/logger';
+import { getMedicationDetails } from '../services/medication-service';
 import { CDSHooksEvent } from '../types';
 
 export const processOrderSignHook = async (
@@ -13,64 +14,48 @@ export const processOrderSignHook = async (
     const hookData = req.body;
     const draftOrders: Bundle = hookData?.context?.draftOrders;
 
-    // Filtering for resources starting with 'Medication'
-    // to support both MedicationOrder and other medication-related resources.
-    const medicationResources =
-      draftOrders?.entry
-        ?.filter((resource) =>
-          (resource.resource?.resourceType as string).startsWith('Medication')
-        )
-        ?.map((entry) => entry.resource) || [];
-
-    if (medicationResources.length === 0) {
-      logger.warn('No medication resources found to be signed');
+    if (!draftOrders?.entry) {
+      logger.warn('Missing draftOrders in context');
       res.status(400).json({
-        error: 'No medication resources found to be signed',
+        error: 'Missing required draftOrders data',
         cards: [],
       });
       return;
     }
 
-    const primaryOrder = medicationResources[0] as unknown as Record<
-      string,
-      unknown
-    >;
-    const medication =
-      primaryOrder?.medicationCodeableConcept as CodeableConcept;
+    const medicationDetails = getMedicationDetails(draftOrders.entry);
 
-    if (!medication) {
-      logger.warn('Missing medication data');
+    if (!medicationDetails || medicationDetails.length < 1) {
+      logger.warn('No medication details found for selected order');
       res.status(400).json({
-        error: 'Missing medication data',
+        error: 'No medication details found for selected order',
         cards: [],
       });
       return;
     }
 
-    // Number of orders being signed
-    const orderCount = medicationResources.length;
-    const orderText =
-      orderCount === 1
-        ? `order for ${medication.coding?.[0].display}`
-        : `${orderCount} medication orders including ${medication.coding?.[0].display}`;
+    const detailText =
+      medicationDetails?.length == 1
+        ? `HTD Health has reviewed the order of ${medicationDetails[0]?.displayName} prior to signature and found no significant concerns.`
+        : `HTD Health has reviewed the order of ${medicationDetails?.length} selections prior to signature and found no significant concerns.`;
 
     res.json({
       cards: [
         {
           summary: 'Pre-Signature Order Review',
           indicator: 'info',
-          detail: `HTD Health has reviewed the ${orderText} prior to signature and found no significant concerns.`,
+          detail: detailText,
           source: {
             label: config.serviceName,
             url: 'https://cds-service.htdhealth.com/',
             icon: config.icons.logo,
           },
           links: [
-            {
-              label: 'View RxNorm Medication Information',
-              url: `https://mor.nlm.nih.gov/RxNav/search?searchBy=RXCUI&searchTerm=${medication.coding?.[0].code}`,
+            ...medicationDetails?.map((det) => ({
+              label: `View RxNorm Information: ${det.displayName}`,
+              url: `https://mor.nlm.nih.gov/RxNav/search?searchBy=RXCUI&searchTerm=${det.rxNormCode}`,
               type: 'absolute',
-            },
+            })),
             {
               label: 'More about HTD Health',
               url: `https://htdhealth.com/`,
