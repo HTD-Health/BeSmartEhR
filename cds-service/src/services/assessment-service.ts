@@ -14,7 +14,7 @@ export interface AssessmentResult {
     label: string;
     uuid?: string;
     isRecommended?: boolean;
-    actions: Array<{
+    actions?: Array<{
       type: string;
       description: string;
       resource: ServiceRequest | Condition | Resource;
@@ -41,43 +41,7 @@ export async function generatePatientAssessment(
     detail: supportHTML ? detailHtml : detailText,
     suggestions: [
       {
-        label: 'Create Problem List Condition', //required
-        uuid: '8c0193ab-f511-4dd7-8400-fd45a087c719', //Should be implemented as guid
-        isRecommended: false, //Determines if automatically selected as follow-up or if user has to manually select problem list suggestion
-        actions: [
-          {
-            type: 'create', //always "create"
-            description: 'Create Problem List Dx', //Used as display next to "Add Problem"/"Do Not Add" next to description of diagnosis obtained from code mapping
-            resource: {
-              resourceType: 'Condition', //Required
-              code: {
-                text: 'Other primary thrombophilia', //unused
-                coding: [
-                  {
-                    code: 'D68.59', //coding is mapped to diagnosis data in Epic
-                    system: 'urn:oid:2.16.840.1.113883.6.90',
-                  },
-                ],
-              },
-              category: [
-                {
-                  //Required element
-                  text: 'Problem List Item',
-                  coding: [
-                    {
-                      code: 'problem-list-item',
-                      system:
-                        'http://terminology.hl7.org/CodeSystem/condition-category',
-                    },
-                  ],
-                },
-              ],
-              subject: {
-                reference: 'Patient/' + patient.id, //Patient FHIR ID required
-              },
-            },
-          },
-        ],
+        label: 'Schedule Routine Follow-up',
       },
     ],
   };
