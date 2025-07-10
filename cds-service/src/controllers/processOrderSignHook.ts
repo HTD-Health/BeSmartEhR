@@ -35,7 +35,7 @@ export const processOrderSignHook = async (
     }
 
     const detailText =
-      medicationDetails?.length == 1
+      medicationDetails?.length === 1
         ? `HTD Health has reviewed the order of ${medicationDetails[0]?.displayName} prior to signature and found no significant concerns.`
         : `HTD Health has reviewed the order of ${medicationDetails?.length} selections prior to signature and found no significant concerns.`;
 

@@ -53,7 +53,7 @@ export const processOrderSelectHook = async (
     }
 
     const detailText =
-      medicationDetails?.length == 1
+      medicationDetails?.length === 1
         ? `HTD Health has reviewed the order of ${medicationDetails[0]?.displayName}.`
         : `HTD Health has reviewed the order of ${medicationDetails?.length} selections.`;
 
