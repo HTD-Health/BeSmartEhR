@@ -397,7 +397,7 @@ const addGoal = async (description: string): Promise<any> => {
             }
         ],
         expressedBy: {
-            reference: `Practitioner/${c.user.fhirUser}`
+            reference: c.user.fhirUser
         },
         subject: {
             reference: `Patient/${c.patient.id}`

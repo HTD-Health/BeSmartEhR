@@ -4,7 +4,7 @@ import config from '../config';
 import { logger } from '../middleware/logger';
 import { generatePatientAssessment } from '../services/assessment-service';
 import { CDSHooksEvent } from '../types';
-import { SERVERS_SUPPORTING_HTML } from '../utils/serversSupportingHTML';
+import { getServerConfig } from '../utils/getServerConfig';
 
 export const processPatientViewHook = async (
   req: Request,
@@ -25,26 +25,19 @@ export const processPatientViewHook = async (
       return;
     }
 
-    const isSupportHTML = SERVERS_SUPPORTING_HTML.includes(
-      hookData.fhirServer as string
-    );
+    const serverConfig = getServerConfig(hookData.fhirServer as string);
 
     // Generate clinical assessment
-    const assessment = await generatePatientAssessment(patient, isSupportHTML);
+    const assessment = await generatePatientAssessment(
+      patient,
+      serverConfig?.supportsHTML
+    );
 
-    const smartAppLink = (hookData.fhirServer as string)
-      .toLowerCase()
-      .includes('epic')
-      ? {
-          label: config.smartApp.name,
-          url: config.smartApp.url,
-          type: 'smart',
-        }
-      : {
-          label: config.smartApp.name,
-          url: `${config.smartApp.url}?context=${encodeURIComponent(JSON.stringify(hookData))}`,
-          type: 'absolute',
-        };
+    const smartAppLink = serverConfig?.smartAppLink || {
+      label: config.smartApp.name,
+      url: `${config.smartApp.url}?context=${encodeURIComponent(JSON.stringify(hookData))}`,
+      type: 'absolute',
+    };
 
     // Return CDS Hooks cards
     res.json({
@@ -52,6 +45,7 @@ export const processPatientViewHook = async (
         {
           summary: assessment.summary,
           indicator: assessment.indicator,
+          extension: serverConfig?.extension || {},
           detail: assessment.detail,
           source: {
             label: config.serviceName,

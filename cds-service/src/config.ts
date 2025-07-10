@@ -4,7 +4,7 @@ dotenv.config();
 
 export default {
   port: process.env.PORT || 3011,
-  serviceName: `HTD Health CDS Service${process.env.NODE_ENV === 'development' ? ' (DEV)' : ''}`,
+  serviceName: `HTD Health CDS Service${process.env.NODE_ENV && process.env.NODE_ENV !== 'production' ? ` (${process.env.NODE_ENV.toUpperCase()})` : ''}`,
   icons: {
     logo: 'https://htdhealth.com/wp-content/themes/htd/assets/favicons/light/favicon-96x96.png',
   },

@@ -1,4 +1,4 @@
-import type { Patient } from 'fhir/r4';
+import type { Condition, Patient, Resource, ServiceRequest } from 'fhir/r4';
 import { generateAssessmentHtml } from '../components/assessmentTemplate';
 import { logger } from '../middleware/logger';
 import { getAgeGroupInfo } from '../styles/ageGroupStyles';
@@ -13,6 +13,12 @@ export interface AssessmentResult {
   suggestions: Array<{
     label: string;
     uuid?: string;
+    isRecommended?: boolean;
+    actions?: Array<{
+      type: string;
+      description: string;
+      resource: ServiceRequest | Condition | Resource;
+    }>;
   }>;
 }
 
