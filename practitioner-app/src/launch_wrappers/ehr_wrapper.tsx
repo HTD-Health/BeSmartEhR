@@ -12,11 +12,12 @@ const EhrWrapper = (): JSX.Element => {
 
     const smartLaunch = useCallback(async (): Promise<void> => {
         try {
-            await FHIR.oauth2.init({
+            const client = await FHIR.oauth2.init({
                 clientId: import.meta.env.VITE_APP_CLIENT_ID,
                 scope: import.meta.env.VITE_APP_CLIENT_SCOPE,
                 redirectUri: import.meta.env.VITE_APP_REDIRECT_URI
             });
+            console.debug('SMART client initialized:', client, client.state);
         } catch (e: any) {
             console.error('Error during SMART launch:', e);
             if (e instanceof Error) {
