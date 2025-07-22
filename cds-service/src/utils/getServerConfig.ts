@@ -6,7 +6,8 @@ type ServerConfig = {
   smartAppLink?: {
     label: string;
     url: string;
-    type: 'smart' | 'absolute';
+    type: 'smart';
+    appContext?: string;
   };
 };
 
@@ -30,6 +31,9 @@ export const getServerConfig = (fhirServer: string): ServerConfig => {
           label: config.smartApp.name,
           url: config.smartApp.url,
           type: 'smart',
+          appContext: encodeURIComponent(
+            JSON.stringify({ launchedFromCDS: true })
+          ),
         },
       };
     default:
