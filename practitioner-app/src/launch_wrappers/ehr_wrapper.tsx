@@ -17,7 +17,7 @@ const EhrWrapper = (): JSX.Element => {
                 scope: import.meta.env.VITE_APP_CLIENT_SCOPE,
                 redirectUri: import.meta.env.VITE_APP_REDIRECT_URI
             });
-            console.info('SMART client initialized:', client, client.state);
+            console.info('SMART launch from CDS Hooks', client.state.tokenResponse?.launchedFromCDS);
         } catch (e: any) {
             console.error('Error during SMART launch:', e);
             if (e instanceof Error) {

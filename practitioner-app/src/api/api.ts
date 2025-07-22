@@ -29,7 +29,6 @@ const requestWithLogging = async (c: Client, requestConfig: any): Promise<any> =
 
     // Log to both console and terminal
     console.info(`[${timestamp}] 🚀 API Request:`, requestInfo);
-    console.info(`[${timestamp}] ❓ Client:`, c);
 
     // Use window.fetch to send logs to a local endpoint
     if (process.env.NODE_ENV === 'development') {

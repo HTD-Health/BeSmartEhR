@@ -32,7 +32,7 @@ export const getServerConfig = (fhirServer: string): ServerConfig => {
           url: config.smartApp.url,
           type: 'smart',
           appContext: encodeURIComponent(
-            JSON.stringify({ user_id: 21404, prac_id: 81, patient_id: 1285600 })
+            JSON.stringify({ launchedFromCDS: true })
           ),
         },
       };
